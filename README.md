@@ -6,13 +6,20 @@ Like System Settings, Classes, etc.
 This plugin provides you with the migration helpers and further tools.
 
 ## Versioning
-| **Version** | **Function**  | **Implemented** |
-| ----------- |:--------------| ---------------:|
-| 0.1.0 | System Settings Migration | no |
-| 0.2.0 | Class Migration           | no |
-| 0.x.0 | Doktype Migration         | no |
-| 0.x.0 | static routes             | no |
-| 0.x.0 | ...fill list...           | no |
+| **Version** | **Function**  | **Pimcore Version** | **Implemented** |
+| ----------- |:--------------|:--------------| ---------------:|
+| 0.0.0 | initial Setup             |  | yes |
+| 0.1.0 | System Settings Migration | `> 6.6.x` | no |
+| 0.2.0 | Class Migration           | `> 6.6.x` | no |
+| 0.x.0 | Doktype Migration         | `> 6.6.x` | no |
+| 0.x.0 | static routes             | `> 6.6.x` | no |
+| 0.x.0 | ...fill list...           | `> 6.6.x` | no |
 
 ## Usage (tbd)
 tbd
+
+
+## Questions
+
+### 1. Do I need pimcore as a dependency?
+This does not work without pimcore, but is it a dependency?
