@@ -2,29 +2,24 @@
 
 namespace PimcorePluginMigrationToolkit\Helper;
 
-use Exception;
 use PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
-use PimcorePluginMigrationToolkit\Exceptions\MigrationToolkitException;
 use Pimcore\Config;
 use Pimcore\File;
 use Symfony\Component\Yaml\Yaml;
 
 class SystemSettingsMigrationHelper extends AbstractMigrationHelper
 {
-    /** @var array */
-    private $systemConfig;
-
     /** @var string */
     private $configFile;
+
+    /** @var array */
+    private $systemConfig;
 
     const SETTINGS_PIMCORE       = 'pimcore';
     const SETTINGS_ASSETS        = 'assets';
     const SETTINGS_PIMCORE_ADMIN = 'pimcore_admin';
     const SETTING_BRANDING       = 'branding';
 
-    /**
-     * @throws Exception
-     */
     public function __construct()
     {
         $this->configFile   = Config::locateConfigFile('system.yml');

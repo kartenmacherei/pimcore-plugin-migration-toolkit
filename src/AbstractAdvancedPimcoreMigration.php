@@ -2,6 +2,7 @@
 
 namespace PimcorePluginMigrationToolkit;
 
+use PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Migrations\Version;
@@ -15,6 +16,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var SystemSettingsMigrationHelper */
     private $systemSettingsMigrationHelper;
+
+    /** @var LanguageSettingsMigrationHelper */
+    private $languageSystemSettingsMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -41,5 +45,24 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->systemSettingsMigrationHelper;
+    }
+
+    /**
+     * @return LanguageSettingsMigrationHelper
+     */
+    public function getLanguageSystemSettingsMigrationHelper(): LanguageSettingsMigrationHelper
+    {
+        if ($this->languageSystemSettingsMigrationHelper === null) {
+            $this->languageSystemSettingsMigrationHelper = new LanguageSettingsMigrationHelper();
+            $this->languageSystemSettingsMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->languageSystemSettingsMigrationHelper;
     }
 }
