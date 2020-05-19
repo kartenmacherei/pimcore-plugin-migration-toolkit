@@ -131,7 +131,11 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
         $websiteSetting = WebsiteSetting::getByName($name);
 
         if ($websiteSetting instanceof WebsiteSetting) {
-            $this->getOutput()->writeMessage('Not creating Website Setting with name ' . $name . '. Setting with this name already exists.');
+            $message = sprintf(
+                'Not creating Website Setting with name "%s". Setting with this name already exists.',
+                $name
+            );
+            $this->getOutput()->writeMessage($message);
             return;
         }
 
