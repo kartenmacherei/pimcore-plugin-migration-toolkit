@@ -22,7 +22,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     private $languageSystemSettingsMigrationHelper;
 
     /** @var WebsiteSettingsMigrationHelper */
-    private $websiteSystemSettingsMigrationHelper;
+    private $websiteSettingsMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -66,9 +66,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     public function getWebsiteSettingsMigrationHelper(): WebsiteSettingsMigrationHelper
     {
-        if ($this->websiteSystemSettingsMigrationHelper === null) {
-            $this->websiteSystemSettingsMigrationHelper = new WebsiteSettingsMigrationHelper();
-            $this->websiteSystemSettingsMigrationHelper->setOutput(
+        if ($this->websiteSettingsMigrationHelper === null) {
+            $this->websiteSettingsMigrationHelper = new WebsiteSettingsMigrationHelper();
+            $this->websiteSettingsMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {
                         $this->writeMessage($message);
@@ -77,6 +77,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
             );
         }
 
-        return $this->websiteSystemSettingsMigrationHelper;
+        return $this->websiteSettingsMigrationHelper;
     }
 }
