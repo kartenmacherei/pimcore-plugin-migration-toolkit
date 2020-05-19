@@ -16,8 +16,6 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
     const SETTING_VALID_LANGUAGES        = 'valid_languages';
     const SETTING_FALLBACK_LANGUAGES     = 'fallback_languages';
 
-    const SETTINGS_GENERAL_ERROR_MESSAGE = 'There are no general SystemSettings available.';
-
     /** @var string */
     private $configFile;
 
@@ -70,7 +68,7 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
     public function addLanguageWithFallback(string $language, $fallback = ''): void
     {
         if (!isset($this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL])) {
-            throw new SettingsNotFoundException(self::SETTINGS_GENERAL_ERROR_MESSAGE);
+            throw new SettingsNotFoundException('There are no general SystemSettings available.');
         }
         $this->assertLanguageIsAvailable($language);
         $this->addToValidLanguages($language);
@@ -78,17 +76,10 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
         $this->saveSystemSettings();
     }
 
-    /**
-     * @param string $language
-     *
-     * @return void
-     *
-     * @throws SettingsNotFoundException
-     */
     public function removeLanguage(string $language): void
     {
         if (!isset($this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL])) {
-            throw new SettingsNotFoundException(self::SETTINGS_GENERAL_ERROR_MESSAGE);
+            return;
         }
         $this->removeFromValidLanguages($language);
         $this->removeFallbackLanguages($language);
