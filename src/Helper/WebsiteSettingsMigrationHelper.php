@@ -187,8 +187,12 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
     {
         $websiteSetting = WebsiteSetting::getByName($name);
 
-        if ($websiteSetting instanceof WebsiteSetting) {
-            $websiteSetting->delete();
+        if (empty($websiteSetting)) {
+            $message = sprintf('Website Setting with name "%s" can not be deleted, because it does not exist.', $name);
+            $this->getOutput()->writeMessage($message);
+            return;
         }
+
+        $websiteSetting->delete();
     }
 }
