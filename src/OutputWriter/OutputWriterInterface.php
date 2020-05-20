@@ -1,6 +1,6 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\OutputWriter;
+namespace Basilicom\PimcorePluginMigrationToolkit\OutputWriter;
 
 interface OutputWriterInterface
 {

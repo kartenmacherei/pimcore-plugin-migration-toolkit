@@ -1,9 +1,9 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore\Model\Staticroute;
-use PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class StaticRoutesMigrationHelper extends AbstractMigrationHelper
 {
