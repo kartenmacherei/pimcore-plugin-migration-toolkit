@@ -1,6 +1,6 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcoreMigrationToolkit\Helper;
 
 use Pimcore\Model\Document\DocType;
 use Pimcore\Model\Document\DocType\Listing;

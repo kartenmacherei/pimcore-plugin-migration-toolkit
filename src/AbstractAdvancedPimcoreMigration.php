@@ -1,15 +1,15 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit;
+namespace Basilicom\PimcoreMigrationToolkit;
 
 use Exception;
-use PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
-use PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
-use PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
-use PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
-use PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
-use PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
-use PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
+use Basilicom\PimcoreMigrationToolkit\Helper\DocTypesMigrationHelper;
+use Basilicom\PimcoreMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
+use Basilicom\PimcoreMigrationToolkit\Helper\StaticRoutesMigrationHelper;
+use Basilicom\PimcoreMigrationToolkit\Helper\SystemSettingsMigrationHelper;
+use Basilicom\PimcoreMigrationToolkit\Helper\UserRolesMigrationHelper;
+use Basilicom\PimcoreMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
+use Basilicom\PimcoreMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 use Pimcore\Migrations\Migration\AbstractPimcoreMigration;
 use ReflectionClass;

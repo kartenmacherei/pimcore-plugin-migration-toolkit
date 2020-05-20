@@ -1,12 +1,12 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcoreMigrationToolkit\Helper;
 
 use Pimcore;
 use Pimcore\Config;
 use Pimcore\File;
-use PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
-use PimcorePluginMigrationToolkit\Exceptions\SettingsNotFoundException;
+use Basilicom\PimcoreMigrationToolkit\Exceptions\InvalidSettingException;
+use Basilicom\PimcoreMigrationToolkit\Exceptions\SettingsNotFoundException;
 use Symfony\Component\Yaml\Yaml;
 
 class LanguageSettingsMigrationHelper extends AbstractMigrationHelper

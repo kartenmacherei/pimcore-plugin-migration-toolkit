@@ -1,6 +1,6 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Exceptions;
+namespace Basilicom\PimcoreMigrationToolkit\Exceptions;
 
 class SettingsNotFoundException extends MigrationToolkitException
 {

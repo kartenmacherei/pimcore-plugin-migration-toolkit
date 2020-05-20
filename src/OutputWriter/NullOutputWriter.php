@@ -1,6 +1,6 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\OutputWriter;
+namespace Basilicom\PimcoreMigrationToolkit\OutputWriter;
 
 class NullOutputWriter implements OutputWriterInterface
 {
