@@ -12,7 +12,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Basilicom\\PimcoreMigrationToolkit\\": "src/"
+            "Basilicom\\PimcorePluginMigrationToolkit\\": "src/"
         }
     },
     "require": {}
