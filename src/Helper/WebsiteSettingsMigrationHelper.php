@@ -140,9 +140,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
         }
 
         if ($language) {
-            $config = Config::getSystemConfiguration();
-
-            if (!in_array($language, explode(',', $config['general']['valid_languages']))) {
+            if (!$this->isLanguageValid($language)) {
                 $message = sprintf(
                     'Not creating Website Setting with name "%s". Language "%s" is not a valid system language.',
                     $name,

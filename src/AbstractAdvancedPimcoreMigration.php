@@ -5,6 +5,7 @@ namespace PimcorePluginMigrationToolkit;
 use PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
+use PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Migrations\Version;
@@ -27,6 +28,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var StaticRoutesMigrationHelper */
     private $staticRoutesMigrationHelper;
+
+    /** @var UserRolesMigrationHelper */
+    private $userRolesMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -98,5 +102,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->staticRoutesMigrationHelper;
+    }
+
+    public function getUserRolesMigrationHelper(): UserRolesMigrationHelper
+    {
+        if ($this->userRolesMigrationHelper === null) {
+            $this->userRolesMigrationHelper = new UserRolesMigrationHelper();
+            $this->userRolesMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->userRolesMigrationHelper;
     }
 }

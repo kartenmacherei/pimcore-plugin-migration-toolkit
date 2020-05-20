@@ -2,6 +2,7 @@
 
 namespace PimcorePluginMigrationToolkit\Helper;
 
+use Pimcore\Config;
 use PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
 use PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
 
@@ -27,5 +28,15 @@ abstract class AbstractMigrationHelper
         }
 
         return $this->output;
+    }
+
+    protected function isLanguageValid(string $language): bool
+    {
+        $config = Config::getSystemConfiguration();
+        if (in_array($language, explode(',', $config['general']['valid_languages']))) {
+            return true;
+        }
+
+        return false;
     }
 }
