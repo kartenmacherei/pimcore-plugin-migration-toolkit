@@ -1,6 +1,6 @@
 <?php
 
-namespace Basilicom\PimcoreMigrationToolkit\Exceptions;
+namespace Basilicom\PimcorePluginMigrationToolkit\Exceptions;
 
 use Exception;
 

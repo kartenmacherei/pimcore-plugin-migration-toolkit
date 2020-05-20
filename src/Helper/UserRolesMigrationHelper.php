@@ -1,9 +1,9 @@
 <?php
 
-namespace Basilicom\PimcoreMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore\Model\User\Role;
-use Basilicom\PimcoreMigrationToolkit\Exceptions\InvalidSettingException;
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class UserRolesMigrationHelper extends AbstractMigrationHelper
 {
