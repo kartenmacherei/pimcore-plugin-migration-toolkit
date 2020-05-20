@@ -26,6 +26,14 @@ This plugin provides you with the migration helpers and further tools.
 | 0.x.0 | Document (Folder) Migration  | `> 6.6.x` | no |
 | 0.x.0 | Asset (Folder) Migration     | `> 6.6.x` | no |
 
+## Commands
+### Migrate in separate process
+Executes the same migrations as the ```pimcore:migrations:migrate``` command,
+but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.
+``` 
+bin/console --no-interaction migrations:migrate-in-separate-processes
+```
+
 ## Usage Migration Helpers (WIP)
 
 For all migrations extend them from the class ```AbstractAdvancedPimcoreMigration```.
@@ -121,7 +129,6 @@ If a migration needs data it needs to be located in the following folder:
 ```/project/app/Migrations/data/<classname-of-the-migration>```
 
 ## Ideas
-* command: ```basilicom:migrations:migrate-in-separate-processes```
 * command: ```basilicom:migrations:generate <which type of migration>```
     * types e.g:
         * general migration for extended class only

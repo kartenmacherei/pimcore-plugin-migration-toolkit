@@ -19,7 +19,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     protected function configure()
     {
         $this->setDescription('Executes the same migrations as the pimcore:migrations:migrate command, '.
-            'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime');
+            'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
