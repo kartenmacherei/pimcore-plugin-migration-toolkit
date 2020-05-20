@@ -14,6 +14,7 @@ This plugin provides you with the migration helpers and further tools.
 | 0.0.0 | Website Settings Migration   | `> 6.6.x` | yes |
 | 0.0.0 | User Role Migration          | `> 6.6.x` | yes |
 | 0.1.0 | Document Types Migration     | `> 6.6.x` | yes |
+| 0.2.0 | Command: Migrate in separate process   | `> 6.6.x` | yes |
 | 0.x.0 | Bundle/Extension Migration   | `> 6.6.x` | no |
 | 0.x.0 | Object Class Migration       | `> 6.6.x` | no |
 | 0.x.0 | Fieldcollection Migration    | `> 6.6.x` | no |
