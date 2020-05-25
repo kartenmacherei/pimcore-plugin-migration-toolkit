@@ -4,6 +4,7 @@ namespace PimcorePluginMigrationToolkit;
 
 use PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
+use PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 use Pimcore\Migrations\Migration\AbstractPimcoreMigration;
@@ -20,6 +21,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     /** @var LanguageSettingsMigrationHelper */
     private $languageSystemSettingsMigrationHelper;
 
+    /** @var WebsiteSettingsMigrationHelper */
+    private $websiteSettingsMigrationHelper;
+
     public function __construct(Version $version)
     {
         parent::__construct($version);
@@ -28,9 +32,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         $this->dataFolder = 'data/' . str_replace('.php', '', $reflection->getFileName());
     }
 
-    /**
-     * @return SystemSettingsMigrationHelper
-     */
     public function getSystemSettingsMigrationHelper(): SystemSettingsMigrationHelper
     {
         if ($this->systemSettingsMigrationHelper === null) {
@@ -47,9 +48,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         return $this->systemSettingsMigrationHelper;
     }
 
-    /**
-     * @return LanguageSettingsMigrationHelper
-     */
     public function getLanguageSystemSettingsMigrationHelper(): LanguageSettingsMigrationHelper
     {
         if ($this->languageSystemSettingsMigrationHelper === null) {
@@ -64,5 +62,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->languageSystemSettingsMigrationHelper;
+    }
+
+    public function getWebsiteSettingsMigrationHelper(): WebsiteSettingsMigrationHelper
+    {
+        if ($this->websiteSettingsMigrationHelper === null) {
+            $this->websiteSettingsMigrationHelper = new WebsiteSettingsMigrationHelper();
+            $this->websiteSettingsMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->websiteSettingsMigrationHelper;
     }
 }
