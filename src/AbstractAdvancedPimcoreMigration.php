@@ -3,6 +3,7 @@
 namespace PimcorePluginMigrationToolkit;
 
 use PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
+use PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
@@ -19,10 +20,13 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     private $systemSettingsMigrationHelper;
 
     /** @var LanguageSettingsMigrationHelper */
-    private $languageSystemSettingsMigrationHelper;
+    private $languageSettingsMigrationHelper;
 
     /** @var WebsiteSettingsMigrationHelper */
     private $websiteSettingsMigrationHelper;
+
+    /** @var StaticRoutesMigrationHelper */
+    private $staticRoutesMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -48,11 +52,11 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         return $this->systemSettingsMigrationHelper;
     }
 
-    public function getLanguageSystemSettingsMigrationHelper(): LanguageSettingsMigrationHelper
+    public function getLanguageSettingsMigrationHelper(): LanguageSettingsMigrationHelper
     {
-        if ($this->languageSystemSettingsMigrationHelper === null) {
-            $this->languageSystemSettingsMigrationHelper = new LanguageSettingsMigrationHelper();
-            $this->languageSystemSettingsMigrationHelper->setOutput(
+        if ($this->languageSettingsMigrationHelper === null) {
+            $this->languageSettingsMigrationHelper = new LanguageSettingsMigrationHelper();
+            $this->languageSettingsMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {
                         $this->writeMessage($message);
@@ -61,7 +65,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
             );
         }
 
-        return $this->languageSystemSettingsMigrationHelper;
+        return $this->languageSettingsMigrationHelper;
     }
 
     public function getWebsiteSettingsMigrationHelper(): WebsiteSettingsMigrationHelper
@@ -78,5 +82,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->websiteSettingsMigrationHelper;
+    }
+
+    public function getStaticRoutesMigrationHelper(): StaticRoutesMigrationHelper
+    {
+        if ($this->staticRoutesMigrationHelper === null) {
+            $this->staticRoutesMigrationHelper = new StaticRoutesMigrationHelper();
+            $this->staticRoutesMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->staticRoutesMigrationHelper;
     }
 }
