@@ -2,7 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit;
 
-use Exception;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
@@ -11,6 +11,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Migrations\Version;
+use Exception;
 use Pimcore\Migrations\Migration\AbstractPimcoreMigration;
 use ReflectionClass;
 
@@ -36,6 +37,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var DocTypesMigrationHelper */
     private $docTypesMigrationHelper;
+
+    /** @var BundleMigrationHelper */
+    private $bundleMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -144,5 +148,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->docTypesMigrationHelper;
+    }
+
+    public function getBundleMigrationHelper(): BundleMigrationHelper
+    {
+        if ($this->bundleMigrationHelper === null) {
+            $this->bundleMigrationHelper = new BundleMigrationHelper();
+            $this->bundleMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->bundleMigrationHelper;
     }
 }

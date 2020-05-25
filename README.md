@@ -8,30 +8,30 @@ This plugin provides you with the migration helpers and further tools.
 ## Versioning
 | **Version** | **Function**  | **Pimcore Version** | **Implemented** |
 | ----------- |:--------------|:--------------| ---------------:|
-| 0.0.0 | initial Setup                |           | yes |
-| 0.0.0 | System Settings Migration    | `> 6.6.x` | yes |
-| 0.0.0 | Language Settings Migration  | `> 6.6.x` | yes |
-| 0.0.0 | Website Settings Migration   | `> 6.6.x` | yes |
-| 0.0.0 | User Role Migration          | `> 6.6.x` | yes |
-| 0.1.0 | Document Types Migration     | `> 6.6.x` | yes |
+| 0.0.0 | initial Setup                          |           | yes |
+| 0.0.0 | System Settings Migration              | `> 6.6.x` | yes |
+| 0.0.0 | Language Settings Migration            | `> 6.6.x` | yes |
+| 0.0.0 | Website Settings Migration             | `> 6.6.x` | yes |
+| 0.0.0 | User Role Migration                    | `> 6.6.x` | yes |
+| 0.1.0 | Document Types Migration               | `> 6.6.x` | yes |
 | 0.2.0 | Command: Migrate in separate process   | `> 6.6.x` | yes |
-| 0.x.0 | Bundle/Extension Migration   | `> 6.6.x` | no |
-| 0.x.0 | Object Class Migration       | `> 6.6.x` | no |
-| 0.x.0 | Fieldcollection Migration    | `> 6.6.x` | no |
-| 0.x.0 | Object Brick Migration       | `> 6.6.x` | no |
-| 0.x.0 | Custom Layouts Migration     | `> 6.6.x` | no |
-| 0.x.0 | QuantityValue Unit Migration | `> 6.6.x` | no |
-| 0.x.0 | Object (Folder) Migration    | `> 6.6.x` | no |
-| 0.x.0 | Thumbnail Migration          | `> 6.6.x` | no |
-| 0.x.0 | Document (Folder) Migration  | `> 6.6.x` | no |
-| 0.x.0 | Asset (Folder) Migration     | `> 6.6.x` | no |
+| 0.3.0 | Bundle Migration                       | `> 6.6.x` | yes |
+| 0.x.0 | Object Class Migration                 | `> 6.6.x` | no |
+| 0.x.0 | Fieldcollection Migration              | `> 6.6.x` | no |
+| 0.x.0 | Object Brick Migration                 | `> 6.6.x` | no |
+| 0.x.0 | Custom Layouts Migration               | `> 6.6.x` | no |
+| 0.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
+| 0.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
+| 0.x.0 | Object (Folder) Migration              | `> 6.6.x` | no |
+| 0.x.0 | Document (Folder) Migration            | `> 6.6.x` | no |
+| 0.x.0 | Asset (Folder) Migration               | `> 6.6.x` | no |
 
 ## Commands
 ### Migrate in separate process
 Executes the same migrations as the ```pimcore:migrations:migrate``` command,
 but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.
 ``` 
-bin/console --no-interaction migrations:migrate-in-separate-processes
+bin/console basilicom:migrations:migrate-in-separate-processes
 ```
 
 ## Usage Migration Helpers (WIP)
@@ -124,6 +124,22 @@ $docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
 $docTypesMigrationHelper->delete('newDoctype');
 ```
 
+### Bundle
+It is not possible to enable and install one bundle in one migration!
+
+You need to make two migrations one with enable (disable) and one with install (uninstall) and then run it with the command 
+[Migrate in separate process](#migrate-in-separate-process). Otherwise it would not find the newly enabled bundle for the installation.
+
+Example: Up
+``` 
+$bundleMigrationHelper = $this->getBundleMigrationHelper();
+$bundleMigrationHelper->enable('Basilicom\PimcorePluginMigrationToolkit\PimcorePluginMigrationToolkitBundle');
+```
+Example: Down
+```
+$bundleMigrationHelper = $this->getBundleMigrationHelper();
+$bundleMigrationHelper->disable('Basilicom\PimcorePluginMigrationToolkit\PimcorePluginMigrationToolkitBundle');
+```
 ### Migration Data
 If a migration needs data it needs to be located in the following folder:
 ```/project/app/Migrations/data/<classname-of-the-migration>```
@@ -134,6 +150,8 @@ If a migration needs data it needs to be located in the following folder:
         * general migration for extended class only
         * class migration template with folders
         * ...
+* enhance command: ```basilicom:migrations:migrate-in-separate-processes```
+    * to also revert ```prev``` or ```<versionnumber>```
 * Translations, how?
     * use csv file, which will get imported by command -> krombacher
     * use translation migration -> fleurop
