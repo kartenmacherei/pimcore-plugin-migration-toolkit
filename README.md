@@ -12,6 +12,7 @@ This plugin provides you with the migration helpers and further tools.
 | 0.1.0 | System Settings Migration | `> 6.6.x` | yes |
 | 0.2.0 | Language Settings Migration | `> 6.6.x` | yes |
 | 0.3.0 | Website Settings Migration  | `> 6.6.x` | yes |
+| 0.4.0 | User Role Migration         | `> 6.6.x` | yes |
 | 0.x.0 | Class Migration           | `> 6.6.x` | no |
 | 0.x.0 | Doktype Migration         | `> 6.6.x` | no |
 | 0.x.0 | static routes             | `> 6.6.x` | no |
@@ -75,6 +76,25 @@ $websiteSettingsMigrationHelper->delete('object');
 $websiteSettingsMigrationHelper->delete('bool');
 ```
 
+### UserRoles
+Example: Up
+``` 
+$userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
+$userRolesMigrationHelper->create(
+    'migrationRole',
+    ['dashboards', 'admin_translations'],
+    ['doctype'],
+    ['class'],
+    ['de', 'en'],
+    ['de']
+);
+```
+Example: Down
+```
+$userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
+$userRolesMigrationHelper->delete('migrationRole');
+```
+
 ### Migration Data
 If a migration needs data it needs to be located in the following folder:
 ```/project/app/Migrations/data/<classname-of-the-migration>```
@@ -86,3 +106,6 @@ If a migration needs data it needs to be located in the following folder:
         * general migration for extended class only
         * class migration template with folders
         * ...
+* Translations, how?
+    * use csv file, which will get imported by command -> krombacher
+    * use translation migration -> fleurop
