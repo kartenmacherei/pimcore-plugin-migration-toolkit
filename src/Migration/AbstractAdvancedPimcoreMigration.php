@@ -51,10 +51,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
         try {
             $reflection       = new ReflectionClass($this);
-
-            // bastodo: open for discussion, the Migrations folder will get really big and I wanted to extract
-            // the data to a subfolder
-            //$this->dataFolder = str_replace('.php', '', $reflection->getFileName());
             $path = str_replace($reflection->getShortName() . '.php', '', $reflection->getFileName());
             $this->dataFolder = $path . 'data/' . $reflection->getShortName();
         } catch (Exception $exception) {
