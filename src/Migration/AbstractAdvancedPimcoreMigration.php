@@ -1,8 +1,9 @@
 <?php
 
-namespace Basilicom\PimcorePluginMigrationToolkit;
+namespace Basilicom\PimcorePluginMigrationToolkit\Migration;
 
 use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
@@ -18,7 +19,7 @@ use ReflectionClass;
 abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 {
     /** @var string */
-    private $dataFolder;
+    protected $dataFolder;
 
     /** @var SystemSettingsMigrationHelper */
     private $systemSettingsMigrationHelper;
@@ -41,14 +42,17 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     /** @var BundleMigrationHelper */
     private $bundleMigrationHelper;
 
+    /** @var ClassDefinitionMigrationHelper */
+    private $classDefinitionMigrationHelper;
+
     public function __construct(Version $version)
     {
         parent::__construct($version);
 
-        $this->dataFolder = 'data/';
         try {
             $reflection       = new ReflectionClass($this);
-            $this->dataFolder .= str_replace('.php', '', $reflection->getFileName());
+            $path = str_replace($reflection->getShortName() . '.php', '', $reflection->getFileName());
+            $this->dataFolder = $path . 'data/' . $reflection->getShortName();
         } catch (Exception $exception) {
             // do nothing
         }
@@ -164,5 +168,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->bundleMigrationHelper;
+    }
+
+    public function getClassDefinitionMigrationHelper(): ClassDefinitionMigrationHelper
+    {
+        if ($this->classDefinitionMigrationHelper === null) {
+            $this->classDefinitionMigrationHelper = new ClassDefinitionMigrationHelper();
+            $this->classDefinitionMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->classDefinitionMigrationHelper;
     }
 }

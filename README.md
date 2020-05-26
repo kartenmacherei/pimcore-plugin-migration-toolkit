@@ -16,7 +16,7 @@ This plugin provides you with the migration helpers and further tools.
 | 0.1.0 | Document Types Migration               | `> 6.6.x` | yes |
 | 0.2.0 | Command: Migrate in separate process   | `> 6.6.x` | yes |
 | 0.3.0 | Bundle Migration                       | `> 6.6.x` | yes |
-| 0.x.0 | Object Class Migration                 | `> 6.6.x` | no |
+| 0.4.0 | Class Definition Migration             | `> 6.6.x` | yes |
 | 0.x.0 | Fieldcollection Migration              | `> 6.6.x` | no |
 | 0.x.0 | Object Brick Migration                 | `> 6.6.x` | no |
 | 0.x.0 | Custom Layouts Migration               | `> 6.6.x` | no |
@@ -140,6 +140,24 @@ Example: Down
 $bundleMigrationHelper = $this->getBundleMigrationHelper();
 $bundleMigrationHelper->disable('Basilicom\PimcorePluginMigrationToolkit\PimcorePluginMigrationToolkitBundle');
 ```
+
+### Class Definitions
+Example: Up
+``` 
+$className = 'testing';
+$classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
+$classDefinitionMigrationHelper->createOrUpdate($className, $this->dataFolder . '/class_' . $className . '_export.json');
+```
+Example: Down
+```
+$className = 'testing';
+$classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
+$classDefinitionMigrationHelper->delete($className);
+// OR
+$classDefinitionMigrationHelper->createOrUpdate($className, $this->dataFolder . '/down/class_' . $className . '_export.json');
+```
+
+
 ### Migration Data
 If a migration needs data it needs to be located in the following folder:
 ```/project/app/Migrations/data/<classname-of-the-migration>```
