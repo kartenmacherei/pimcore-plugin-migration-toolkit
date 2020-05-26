@@ -2,6 +2,8 @@
 
 namespace PimcorePluginMigrationToolkit;
 
+use Exception;
+use PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
@@ -32,12 +34,20 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     /** @var UserRolesMigrationHelper */
     private $userRolesMigrationHelper;
 
+    /** @var DocTypesMigrationHelper */
+    private $docTypesMigrationHelper;
+
     public function __construct(Version $version)
     {
         parent::__construct($version);
 
-        $reflection       = new ReflectionClass($this);
-        $this->dataFolder = 'data/' . str_replace('.php', '', $reflection->getFileName());
+        $this->dataFolder = 'data/';
+        try {
+            $reflection       = new ReflectionClass($this);
+            $this->dataFolder .= str_replace('.php', '', $reflection->getFileName());
+        } catch (Exception $exception) {
+            // do nothing
+        }
     }
 
     public function getSystemSettingsMigrationHelper(): SystemSettingsMigrationHelper
@@ -118,5 +128,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->userRolesMigrationHelper;
+    }
+
+    public function getDocTypesMigrationHelper(): DocTypesMigrationHelper
+    {
+        if ($this->docTypesMigrationHelper === null) {
+            $this->docTypesMigrationHelper = new DocTypesMigrationHelper();
+            $this->docTypesMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->docTypesMigrationHelper;
     }
 }

@@ -8,15 +8,22 @@ This plugin provides you with the migration helpers and further tools.
 ## Versioning
 | **Version** | **Function**  | **Pimcore Version** | **Implemented** |
 | ----------- |:--------------|:--------------| ---------------:|
-| 0.0.0 | initial Setup             |  | yes |
-| 0.1.0 | System Settings Migration | `> 6.6.x` | yes |
-| 0.2.0 | Language Settings Migration | `> 6.6.x` | yes |
-| 0.3.0 | Website Settings Migration  | `> 6.6.x` | yes |
-| 0.4.0 | User Role Migration         | `> 6.6.x` | yes |
-| 0.x.0 | Class Migration           | `> 6.6.x` | no |
-| 0.x.0 | Doktype Migration         | `> 6.6.x` | no |
-| 0.x.0 | static routes             | `> 6.6.x` | no |
-| 0.x.0 | ...fill list...           | `> 6.6.x` | no |
+| 0.0.0 | initial Setup                |           | yes |
+| 0.1.0 | System Settings Migration    | `> 6.6.x` | yes |
+| 0.2.0 | Language Settings Migration  | `> 6.6.x` | yes |
+| 0.3.0 | Website Settings Migration   | `> 6.6.x` | yes |
+| 0.4.0 | User Role Migration          | `> 6.6.x` | yes |
+| 0.5.0 | Document Types Migration     | `> 6.6.x` | yes |
+| 0.x.0 | Bundle/Extension Migration   | `> 6.6.x` | no |
+| 0.x.0 | Object Class Migration       | `> 6.6.x` | no |
+| 0.x.0 | Fieldcollection Migration    | `> 6.6.x` | no |
+| 0.x.0 | Object Brick Migration       | `> 6.6.x` | no |
+| 0.x.0 | Custom Layouts Migration     | `> 6.6.x` | no |
+| 0.x.0 | QuantityValue Unit Migration | `> 6.6.x` | no |
+| 0.x.0 | Object (Folder) Migration    | `> 6.6.x` | no |
+| 0.x.0 | Thumbnail Migration          | `> 6.6.x` | no |
+| 0.x.0 | Document (Folder) Migration  | `> 6.6.x` | no |
+| 0.x.0 | Asset (Folder) Migration     | `> 6.6.x` | no |
 
 ## Usage Migration Helpers (WIP)
 
@@ -43,17 +50,17 @@ $systemSettingsMigrationHelper->removeHideEditImageTab();
 ### Language Settings
 Example: Up
 ``` 
-$languageSystemSettingsMigrationHelper = $this->getLanguageSystemSettingsMigrationHelper();
-$languageSystemSettingsMigrationHelper->setDefaultLanguageInAdminInterface('de');
-$languageSystemSettingsMigrationHelper->addLanguageWithFallback('de', 'en');
-$languageSystemSettingsMigrationHelper->setDefaultLanguage('de');
+$languageSettingsMigrationHelper = $this->getLanguageSettingsMigrationHelper();
+$languageSettingsMigrationHelper->setDefaultLanguageInAdminInterface('de');
+$languageSettingsMigrationHelper->addLanguageWithFallback('de', 'en');
+$languageSettingsMigrationHelper->setDefaultLanguage('de');
 ```
 Example: Down
 ```
-$languageSystemSettingsMigrationHelper = $this->getLanguageSystemSettingsMigrationHelper();
-$languageSystemSettingsMigrationHelper->setDefaultLanguageInAdminInterface('en');
-$languageSystemSettingsMigrationHelper->removeLanguage('de');
-$languageSystemSettingsMigrationHelper->setDefaultLanguage('en');
+$languageSettingsMigrationHelper = $this->getLanguageSettingsMigrationHelper();
+$languageSettingsMigrationHelper->setDefaultLanguageInAdminInterface('en');
+$languageSettingsMigrationHelper->removeLanguage('de');
+$languageSettingsMigrationHelper->setDefaultLanguage('en');
 ```
 
 ### Website Settings
@@ -93,6 +100,19 @@ Example: Down
 ```
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
 $userRolesMigrationHelper->delete('migrationRole');
+```
+
+### DocTypes
+Example: Up
+``` 
+$docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
+$docTypesMigrationHelper->create('doktype', 'controller');
+$docTypesMigrationHelper->update('doktype', 'newDoctype', 'newcontroller');
+```
+Example: Down
+```
+$docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
+$docTypesMigrationHelper->delete('newDoctype');
 ```
 
 ### Migration Data
