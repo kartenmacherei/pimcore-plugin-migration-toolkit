@@ -1,8 +1,8 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
-use PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Pimcore\Config;
 use Pimcore\File;
 use Symfony\Component\Yaml\Yaml;

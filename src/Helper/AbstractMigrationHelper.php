@@ -1,10 +1,10 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore\Config;
-use PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
-use PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
+use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
+use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
 
 abstract class AbstractMigrationHelper
 {

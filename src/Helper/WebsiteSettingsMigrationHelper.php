@@ -1,12 +1,12 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore\Config;
 use Pimcore\Model\Document;
 use Pimcore\Model\Site;
 use Pimcore\Model\WebsiteSetting;
-use PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
 {
