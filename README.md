@@ -19,8 +19,8 @@ This plugin provides you with the migration helpers and further tools.
 | 1.1.0 | Command: Migrate in separate process   | `> 6.6.x` | yes |
 | 1.2.0 | Bundle Migration                       | `> 6.6.x` | yes |
 | 1.3.0 | Class Definition Migration             | `> 6.6.x` | yes |
+| 1.4.0 | Object Brick Migration                 | `> 6.6.x` | yes |
 | x.x.0 | Fieldcollection Migration              | `> 6.6.x` | no |
-| x.x.0 | Object Brick Migration                 | `> 6.6.x` | no |
 | x.x.0 | Custom Layouts Migration               | `> 6.6.x` | no |
 | x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
 | x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
@@ -188,6 +188,21 @@ $classDefinitionMigrationHelper->delete($className);
 $classDefinitionMigrationHelper->createOrUpdate($className, $this->dataFolder . '/down/class_' . $className . '_export.json');
 ```
 
+### Objectbricks
+Example: Up
+``` 
+$objectbrickName = 'brick';
+$objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
+$objectbrickMigrationHelper->createOrUpdate($objectbrickName, $this->dataFolder . '/objectbrick_' . $objectbrickName . '_export.json');
+```
+Example: Down
+```
+$objectbrickName = 'brick';
+$objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
+$objectbrickMigrationHelper->delete($objectbrickName);
+// OR
+$objectbrickMigrationHelper->createOrUpdate($objectbrickName, $this->dataFolder . '/down/objectbrick_' . $objectbrickName . '_export.json');
+```
 
 ### Migration Data
 If a migration needs data it needs to be located in the following folder:

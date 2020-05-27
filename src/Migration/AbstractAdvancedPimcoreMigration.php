@@ -6,6 +6,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
@@ -44,6 +45,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var ClassDefinitionMigrationHelper */
     private $classDefinitionMigrationHelper;
+
+    /** @var ObjectbrickMigrationHelper */
+    private $objectbrickMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -184,5 +188,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->classDefinitionMigrationHelper;
+    }
+
+    public function getObjectbrickMigrationHelper(): ObjectbrickMigrationHelper
+    {
+        if ($this->objectbrickMigrationHelper === null) {
+            $this->objectbrickMigrationHelper = new ObjectbrickMigrationHelper();
+            $this->objectbrickMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->objectbrickMigrationHelper;
     }
 }
