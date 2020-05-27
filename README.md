@@ -21,7 +21,7 @@ This plugin provides you with the migration helpers and further tools.
 | 1.3.0 | Class Definition Migration             | `> 6.6.x` | yes |
 | 1.4.0 | Object Brick Migration                 | `> 6.6.x` | yes |
 | 1.5.0 | Fieldcollection Migration              | `> 6.6.x` | yes |
-| x.x.0 | Custom Layouts Migration               | `> 6.6.x` | no |
+| 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
 | x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
 | x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
 | x.x.0 | Object (Folder) Migration              | `> 6.6.x` | no |
@@ -218,6 +218,37 @@ $fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
 $fieldcollectionMigrationHelper->delete($key);
 // OR
 $fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/down/fieldcollection_' . $key . '_export.json');
+```
+
+### Custom Layouts
+``` 
+const CUSTOM_LAYOUT = [
+    'classId' => 'EF_OTCP',
+    'name' => 'test'
+];
+``` 
+Example: Up
+``` 
+$customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
+$customLayoutMigrationHelper->createOrUpdate(
+    self::CUSTOM_LAYOUT['name'],
+    self::CUSTOM_LAYOUT['classId'],
+    $this->dataFolder . '/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+);
+```
+Example: Down
+```
+$customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
+$customLayoutMigrationHelper->delete(
+    self::CUSTOM_LAYOUT['name'],
+    self::CUSTOM_LAYOUT['classId']
+);
+// OR
+$customLayoutMigrationHelper->createOrUpdate(
+    self::CUSTOM_LAYOUT['name'],
+    self::CUSTOM_LAYOUT['classId'],
+    $this->dataFolder . '/down/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+);
 ```
 
 ### Migration Data
