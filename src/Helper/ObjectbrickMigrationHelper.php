@@ -4,7 +4,6 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Exception;
-use Pimcore\Cache;
 use Pimcore\Model\DataObject\ClassDefinition\Service;
 use Pimcore\Model\DataObject\Objectbrick\Definition as ObjectbrickDefinition;
 
@@ -35,9 +34,7 @@ class ObjectbrickMigrationHelper extends AbstractMigrationHelper
         $configJson = file_get_contents($pathToJsonConfig);
         Service::importObjectBrickFromJson($objectbrick, $configJson);
 
-        // Cache must be cleared since the schema of db tables is still cached
-        Cache::clearAll();
-        Cache\Runtime::clear();
+        $this->clearCache();
     }
 
     /**

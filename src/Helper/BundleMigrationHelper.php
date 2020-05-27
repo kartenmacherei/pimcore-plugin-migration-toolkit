@@ -4,7 +4,6 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Pimcore;
-use Pimcore\Cache;
 use Pimcore\Extension\Bundle\PimcoreBundleManager;
 use Pimcore\Tool\AssetsInstaller;
 
@@ -80,7 +79,8 @@ class BundleMigrationHelper extends AbstractMigrationHelper
         }
 
         $this->assetsInstaller->install();
-        Cache::clearAll();
+
+        $this->clearCache();
     }
 
     private function setInstallState(string $pluginId, bool $installed): void

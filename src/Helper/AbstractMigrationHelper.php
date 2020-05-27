@@ -2,6 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Pimcore\Cache;
 use Pimcore\Config;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
@@ -38,5 +39,11 @@ abstract class AbstractMigrationHelper
         }
 
         return false;
+    }
+
+    protected function clearCache(): void
+    {
+        Cache::clearAll();
+        Cache\Runtime::clear();
     }
 }
