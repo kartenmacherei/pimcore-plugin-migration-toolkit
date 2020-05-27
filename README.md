@@ -20,7 +20,7 @@ This plugin provides you with the migration helpers and further tools.
 | 1.2.0 | Bundle Migration                       | `> 6.6.x` | yes |
 | 1.3.0 | Class Definition Migration             | `> 6.6.x` | yes |
 | 1.4.0 | Object Brick Migration                 | `> 6.6.x` | yes |
-| x.x.0 | Fieldcollection Migration              | `> 6.6.x` | no |
+| 1.5.0 | Fieldcollection Migration              | `> 6.6.x` | yes |
 | x.x.0 | Custom Layouts Migration               | `> 6.6.x` | no |
 | x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
 | x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
@@ -202,6 +202,22 @@ $objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
 $objectbrickMigrationHelper->delete($objectbrickName);
 // OR
 $objectbrickMigrationHelper->createOrUpdate($objectbrickName, $this->dataFolder . '/down/objectbrick_' . $objectbrickName . '_export.json');
+```
+
+### Fieldcollection
+Example: Up
+``` 
+$key = 'test';
+$fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
+$fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/fieldcollection_' . $key . '_export.json');
+```
+Example: Down
+```
+$key = 'test';
+$fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
+$fieldcollectionMigrationHelper->delete($key);
+// OR
+$fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/down/fieldcollection_' . $key . '_export.json');
 ```
 
 ### Migration Data

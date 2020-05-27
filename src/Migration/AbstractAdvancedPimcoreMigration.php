@@ -5,6 +5,7 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Migration;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
@@ -48,6 +49,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var ObjectbrickMigrationHelper */
     private $objectbrickMigrationHelper;
+
+    /** @var FieldcollectionMigrationHelper */
+    private $fieldcollectionMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -204,5 +208,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->objectbrickMigrationHelper;
+    }
+
+    public function getFieldcollectionMigrationHelper(): FieldcollectionMigrationHelper
+    {
+        if ($this->fieldcollectionMigrationHelper === null) {
+            $this->fieldcollectionMigrationHelper = new FieldcollectionMigrationHelper();
+            $this->fieldcollectionMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->fieldcollectionMigrationHelper;
     }
 }
