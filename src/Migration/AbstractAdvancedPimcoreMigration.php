@@ -13,6 +13,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelpe
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ImageThumbnailMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\QuantityValueUnitMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
@@ -72,6 +73,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var ImageThumbnailMigrationHelper */
     private $imageThumbnailMigrationHelper;
+
+    /** @var QuantityValueUnitMigrationHelper */
+    private $quantityValueUnitMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -324,5 +328,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->imageThumbnailMigrationHelper;
+    }
+
+    public function getQuantityValueUnitMigrationHelper(): QuantityValueUnitMigrationHelper
+    {
+        if ($this->quantityValueUnitMigrationHelper === null) {
+            $this->quantityValueUnitMigrationHelper = new QuantityValueUnitMigrationHelper();
+            $this->quantityValueUnitMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->quantityValueUnitMigrationHelper;
     }
 }
