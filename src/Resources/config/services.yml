@@ -1,0 +1,5 @@
+services:
+    Basilicom\PimcorePluginMigrationToolkit\Command\:
+        resource: '../../Command'
+        public: true
+        tags: ['console.command']

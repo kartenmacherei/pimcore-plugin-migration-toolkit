@@ -1,9 +1,11 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
-use PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
-use PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
+use Pimcore\Cache;
+use Pimcore\Config;
+use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
+use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
 
 abstract class AbstractMigrationHelper
 {
@@ -27,5 +29,21 @@ abstract class AbstractMigrationHelper
         }
 
         return $this->output;
+    }
+
+    protected function isLanguageValid(string $language): bool
+    {
+        $config = Config::getSystemConfiguration();
+        if (in_array($language, explode(',', $config['general']['valid_languages']))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function clearCache(): void
+    {
+        Cache::clearAll();
+        Cache\Runtime::clear();
     }
 }

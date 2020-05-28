@@ -1,12 +1,12 @@
 <?php
 
-namespace PimcorePluginMigrationToolkit\Helper;
+namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore;
 use Pimcore\Config;
 use Pimcore\File;
-use PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
-use PimcorePluginMigrationToolkit\Exceptions\SettingsNotFoundException;
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\SettingsNotFoundException;
 use Symfony\Component\Yaml\Yaml;
 
 class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
@@ -51,7 +51,14 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
             $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL] = [];
         }
 
-        $this->assertLanguageIsValid($language);
+        if (!$this->isLanguageValid($language)) {
+            $message = sprintf(
+                'The language "%s" is not in the valid languages.',
+                $language
+            );
+            throw new InvalidSettingException($message);
+        }
+
         $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL]['default_language'] = $language;
         $this->saveSystemSettings();
     }
@@ -95,9 +102,8 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
 
     private function removeFromValidLanguages(string $language): void
     {
-        $validLanguages = $this->getValidLanguages();
-
-        if (in_array($language, $validLanguages, true)) {
+        if ($this->isLanguageValid($language)) {
+            $validLanguages = $this->getValidLanguages();
             $newValidLanguages = array_diff($validLanguages, [$language]);
 
             $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL][self::SETTING_VALID_LANGUAGES] = implode(',', $newValidLanguages);
@@ -116,8 +122,12 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
     {
         $fallbackLanguages = $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL][self::SETTING_FALLBACK_LANGUAGES];
 
-        if (!in_array($fallback, $this->getValidLanguages())) {
-            throw new InvalidSettingException($fallback . ' is not a valid language and cannot be used as fallback.');
+        if (!$this->isLanguageValid($fallback)) {
+            $message = sprintf(
+                '"%s" is not a valid language and cannot be used as fallback.',
+                $fallback
+            );
+            throw new InvalidSettingException($message);
         }
 
         $fallbackLanguages[$language] = $fallback;
@@ -148,7 +158,7 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
         $isLanguageValid = Pimcore::getKernel()->getContainer()->get('pimcore.locale')->isLocale($language);
         if ($isLanguageValid === false) {
             $exceptionMessage = sprintf(
-                'The language \'%s\' is not valid.',
+                'The language "%s" is not a pimcore locale.',
                 $language
             );
             throw new InvalidSettingException($exceptionMessage);
@@ -157,31 +167,20 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
 
     private function addToValidLanguages(string $language): void
     {
-        $validLanguages = $this->getValidLanguages();
-        if (in_array($language, $validLanguages, true)) {
+        if ($this->isLanguageValid($language)) {
+            $message = sprintf(
+                '"%s" is already a valid language.',
+                $language
+            );
+            $this->getOutput()->writeMessage($message);
             return;
         }
+
+        $validLanguages = $this->getValidLanguages();
         $validLanguages[] = $language;
 
         $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL][self::SETTING_VALID_LANGUAGES] = implode(',', $validLanguages);
-    }
 
-    /**
-     * @param string $language
-     *
-     * @return void
-     *
-     * @throws InvalidSettingException
-     */
-    private function assertLanguageIsValid(string $language): void
-    {
-        $separatedCurrentValidLanguages = $this->getValidLanguages();
-        if (!in_array($language, $separatedCurrentValidLanguages, true)) {
-            $exceptionMessage = sprintf(
-                'The language "%s" is not in the valid languages.',
-                $language
-            );
-            throw new InvalidSettingException($exceptionMessage);
-        }
+        $this->saveSystemSettings();
     }
 }
