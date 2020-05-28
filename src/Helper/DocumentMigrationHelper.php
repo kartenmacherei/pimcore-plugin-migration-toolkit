@@ -87,7 +87,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
 
     public function deleteById(int $id): void
     {
-        if ($id === 0) {
+        if ($id === 1) {
             throw new InvalidSettingException('You cannot delete the root document.');
         }
 
