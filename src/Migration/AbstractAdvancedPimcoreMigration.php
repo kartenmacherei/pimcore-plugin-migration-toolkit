@@ -24,7 +24,7 @@ use ReflectionClass;
 abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 {
     /** @var string */
-    protected $dataFolder;
+    private $dataFolder;
 
     /** @var SystemSettingsMigrationHelper */
     private $systemSettingsMigrationHelper;
@@ -194,6 +194,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->classDefinitionMigrationHelper === null) {
             $this->classDefinitionMigrationHelper = new ClassDefinitionMigrationHelper();
+            $this->classDefinitionMigrationHelper->setDataFolder($this->dataFolder);
             $this->classDefinitionMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {

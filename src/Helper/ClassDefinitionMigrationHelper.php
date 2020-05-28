@@ -82,4 +82,27 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
 
         $classDefinition->delete();
     }
+
+    public function getJsonFileNameForUp($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::UP);
+    }
+    public function getJsonFileNameForDown($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::DOWN);
+    }
+
+    private function getJsonFileNameFor($className, string $direction): string
+    {
+        $dataFolder = [];
+        $dataFolder[] = $this->dataFolder;
+        if ($direction === self::DOWN) {
+            $dataFolder[] = '/down/';
+        } else {
+            $dataFolder[] = '/';
+        }
+        $dataFolder[] = 'class_' . $className . '_export.json';
+
+        return implode('', $dataFolder);
+    }
 }

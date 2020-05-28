@@ -174,7 +174,8 @@ Example: Up
 ``` 
 $className = 'testing';
 $classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
-$classDefinitionMigrationHelper->createOrUpdate($className, $this->dataFolder . '/class_' . $className . '_export.json');
+$jsonPath = $classDefinitionMigrationHelper->getJsonFileNameForUp($className);
+$classDefinitionMigrationHelper->createOrUpdate($className, $jsonPath);
 ```
 Example: Down
 ```
@@ -182,7 +183,8 @@ $className = 'testing';
 $classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
 $classDefinitionMigrationHelper->delete($className);
 // OR
-$classDefinitionMigrationHelper->createOrUpdate($className, $this->dataFolder . '/down/class_' . $className . '_export.json');
+$jsonPath = $classDefinitionMigrationHelper->getJsonFileNameForDown($className);
+$classDefinitionMigrationHelper->createOrUpdate($className, $jsonPath);
 ```
 
 ### Objectbricks

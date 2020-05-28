@@ -9,14 +9,15 @@ use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
 
 abstract class AbstractMigrationHelper
 {
-    /**
-     * @var OutputWriterInterface
-     */
+    const UP = 'up';
+    const DOWN = 'down';
+
+    /** @var OutputWriterInterface */
     protected $output;
 
-    /**
-     * @param OutputWriterInterface $output
-     */
+    /** @var string */
+    protected $dataFolder;
+
     public function setOutput(OutputWriterInterface $output)
     {
         $this->output = $output;
@@ -45,5 +46,10 @@ abstract class AbstractMigrationHelper
     {
         Cache::clearAll();
         Cache\Runtime::clear();
+    }
+
+    public function setDataFolder(string $dataFolder)
+    {
+        $this->dataFolder = $dataFolder;
     }
 }
