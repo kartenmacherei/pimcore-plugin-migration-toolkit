@@ -339,3 +339,4 @@ bin/console basilicom:migrations:migrate-in-separate-processes
 * Translations, how?
     * use csv file, which will get imported by command -> krombacher
     * use translation migration -> fleurop
+* Video Thumbnail Migration Helper
