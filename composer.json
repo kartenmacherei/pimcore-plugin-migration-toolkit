@@ -2,7 +2,6 @@
     "name": "basilicom/pimcore-plugin-migration-toolkit",
     "description": "Set of Migration Helpers and further Migration Tools for Pimcore Migrations.",
     "type": "pimcore-bundle",
-    "version": "0.0.0",
     "authors": [
         {
             "name": "kerstin.gerull",
