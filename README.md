@@ -24,9 +24,9 @@ This plugin provides you with the migration helpers and further tools.
 | 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
 | 1.7.0 | Document Migration (Page)              | `> 6.6.x` | yes |
 | 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
+| 1.9.0 | Asset Migration (Folder)               | `> 6.6.x` | yes |
 | x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
 | x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
-| x.x.0 | Asset (Folder) Migration               | `> 6.6.x` | no |
 
 ## Usage Migration Helpers
 
@@ -287,6 +287,20 @@ Example: Down
 $dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
 $dataObjectMigrationHelper->deleteById(2);
 $dataObjectMigrationHelper->deleteByPath('/folder2');
+```
+
+### Asset (Folder)
+Example: Up
+``` 
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->createFolderByParentId('name', 1);
+$assetMigrationHelper->createFolderByPath('/asset1/subasset');
+```
+Example: Down
+```
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->deleteById(2);
+$assetMigrationHelper->deleteByPath('/asset1');
 ```
 
 ## Commands

@@ -2,6 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Migration;
 
+use Basilicom\PimcorePluginMigrationToolkit\Helper\AssetMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\CustomLayoutMigrationHelper;
@@ -64,6 +65,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var DataObjectMigrationHelper */
     private $dataObjectMigrationHelper;
+
+    /** @var AssetMigrationHelper */
+    private $assetMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -284,5 +288,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->dataObjectMigrationHelper;
+    }
+
+    public function getAssetMigrationHelper(): AssetMigrationHelper
+    {
+        if ($this->assetMigrationHelper === null) {
+            $this->assetMigrationHelper = new AssetMigrationHelper();
+            $this->assetMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->assetMigrationHelper;
     }
 }
