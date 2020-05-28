@@ -41,7 +41,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
         }
     }
 
-    public function deleteById(int $id)
+    public function deleteById(int $id): void
     {
         if ($id === 1) {
             throw new InvalidSettingException('You cannot delete the root object.');
@@ -58,7 +58,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
         $object->delete();
     }
 
-    public function deleteByPath(string $path)
+    public function deleteByPath(string $path): void
     {
         if (empty($path)) {
             throw new InvalidSettingException('Object can not be deleted, because path needs to be defined');
