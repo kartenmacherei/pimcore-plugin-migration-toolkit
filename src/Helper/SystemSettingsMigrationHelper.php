@@ -108,7 +108,7 @@ class SystemSettingsMigrationHelper extends AbstractMigrationHelper
         $isColorValid = boolval(preg_match('/#([a-f0-9]{3}){1,2}\b/i', $color));
         if ($isColorValid === false) {
             $exceptionMessage = sprintf(
-                'The color \'%s\' is not valid.',
+                'The color "%s" is not valid.',
                 $color
             );
             throw new InvalidSettingException($exceptionMessage);
@@ -128,5 +128,24 @@ class SystemSettingsMigrationHelper extends AbstractMigrationHelper
     public function removeInvertColorsForLoginScreen(): void
     {
         $this->setInvertColorsForLoginScreen();
+    }
+
+    public function setLoginScreenCustomImage(string $path): void
+    {
+        if (empty($path)) {
+            $exceptionMessage = 'The login screen custom image cannot be set, because the path is empty.';
+            throw new InvalidSettingException($exceptionMessage);
+        }
+
+        $this->systemConfig[self::SETTINGS_PIMCORE_ADMIN][self::SETTING_BRANDING]['login_screen_custom_image'] = $path;
+        $this->saveSystemSettings();
+
+    }
+
+    public function removeLoginScreenCustomImage(): void
+    {
+        $this->systemConfig[self::SETTINGS_PIMCORE_ADMIN][self::SETTING_BRANDING]['login_screen_custom_image'] = '';
+        $this->saveSystemSettings();
+
     }
 }
