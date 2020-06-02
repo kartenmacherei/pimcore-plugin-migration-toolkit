@@ -3,31 +3,8 @@
 ## Why?
 In every project we have migrations for the same things.
 Like System Settings, Classes, etc.
-This plugin provides you with the migration helpers and further tools.
 
-## Versioning
-| **Version** | **Function**  | **Pimcore Version** | **Implemented** |
-| ----------- |:--------------|:--------------| ---------------:|
-| 0.0.0 | initial Setup                          |           | yes |
-| 0.1.0 | System Settings Migration              | `> 6.6.x` | yes |
-| 0.2.0 | Language Settings Migration            | `> 6.6.x` | yes |
-| 0.3.0 | Website Settings Migration             | `> 6.6.x` | yes |
-| 0.4.0 | Static Routes Migration                | `> 6.6.x` | yes |
-| 0.5.0 | User Role Migration                    | `> 6.6.x` | yes |
-| 0.6.0 | Document Types Migration               | `> 6.6.x` | yes |
-| 1.0.0 | Refactor Naming                        | `> 6.6.x` | yes |
-| 1.1.0 | Command: Migrate in separate process   | `> 6.6.x` | yes |
-| 1.2.0 | Bundle Migration                       | `> 6.6.x` | yes |
-| 1.3.0 | Class Definition Migration             | `> 6.6.x` | yes |
-| 1.4.0 | Object Brick Migration                 | `> 6.6.x` | yes |
-| 1.5.0 | Fieldcollection Migration              | `> 6.6.x` | yes |
-| 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
-| 1.7.0 | Document Migration (Page)              | `> 6.6.x` | yes |
-| 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
-| 1.9.0 | Asset Migration (Folder)               | `> 6.6.x` | yes |
-| 1.10.0 | Image Thumbnail Migration             | `> 6.6.x` | yes |
-| 1.11.0 | QuantityValue Unit Migration          | `> 6.6.x` | yes |
-| 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
+This plugin provides you with the migration helpers and further tools.
 
 ## Usage Migration Helpers
 
@@ -121,7 +98,7 @@ $staticRoutesMigrationHelper->delete('route');
 $staticRoutesMigrationHelper->delete('route1');
 ```
 
-### UserRoles
+### User Roles
 There is no way to remove the workspaces (dataobjects, documents or assets).
 
 Even when deleting a user role in the pimcore backend the workspace data stays in the database.
@@ -147,7 +124,7 @@ $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
 $userRolesMigrationHelper->delete('migrationRole');
 ```
 
-### DocTypes
+### Document Types
 Example: Up
 ``` 
 $docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
@@ -160,7 +137,7 @@ $docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
 $docTypesMigrationHelper->delete('newDoctype');
 ```
 
-### Bundle
+### Bundle / Extension
 It is not possible to enable and install one bundle in one migration!
 
 You need to make two migrations one with enable (disable) and one with install (uninstall) and then run it with the command 
@@ -329,7 +306,6 @@ $name = 'thumbnail';
 $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
 $imageThumbnailMigrationHelper->delete($name);
 ```
-
 
 ### QuantityValue Unit
 Example: Up
