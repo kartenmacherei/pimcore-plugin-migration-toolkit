@@ -5,6 +5,7 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Migration;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\CustomLayoutMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\DataObjectMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocumentMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelper;
@@ -60,6 +61,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var DocumentMigrationHelper */
     private $documentMigrationHelper;
+
+    /** @var DataObjectMigrationHelper */
+    private $dataObjectMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -264,5 +268,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->documentMigrationHelper;
+    }
+
+    public function getDataObjectMigrationHelper(): DataObjectMigrationHelper
+    {
+        if ($this->dataObjectMigrationHelper === null) {
+            $this->dataObjectMigrationHelper = new DataObjectMigrationHelper();
+            $this->dataObjectMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->dataObjectMigrationHelper;
     }
 }

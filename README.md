@@ -23,23 +23,20 @@ This plugin provides you with the migration helpers and further tools.
 | 1.5.0 | Fieldcollection Migration              | `> 6.6.x` | yes |
 | 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
 | 1.7.0 | Document Migration (Page)              | `> 6.6.x` | yes |
+| 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
 | x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
 | x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
-| x.x.0 | Object (Folder) Migration              | `> 6.6.x` | no |
 | x.x.0 | Asset (Folder) Migration               | `> 6.6.x` | no |
 | 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
 
-## Commands
-### Migrate in separate process
-Executes the same migrations as the ```pimcore:migrations:migrate``` command,
-but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.
-``` 
-bin/console basilicom:migrations:migrate-in-separate-processes
-```
-
-## Usage Migration Helpers (WIP)
+## Usage Migration Helpers
 
 For all migrations extend them from the class ```AbstractAdvancedPimcoreMigration```.
+
+### Migration Data
+If a migration needs data it needs to be located in the following folder:
+```/project/app/Migrations/data/<classname-of-the-migration>```
+
 
 ### System Settings
 Example: Up
@@ -260,7 +257,6 @@ $customLayoutMigrationHelper->createOrUpdate(
 ```
 
 ### Document (Page)
-Can be extended by other document types.
 ``` 
 const PAGE = [
     'key' => 'diga',
@@ -287,9 +283,27 @@ $documentMigrationHelper->deleteByPath(
 );
 ```
 
-### Migration Data
-If a migration needs data it needs to be located in the following folder:
-```/project/app/Migrations/data/<classname-of-the-migration>```
+### Object (Folder)
+Example: Up
+``` 
+$dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
+$dataObjectMigrationHelper->createFolderByParentId('folder1', 1);
+$dataObjectMigrationHelper->createFolderByPath('/folder2/subfolder');
+```
+Example: Down
+```
+$dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
+$dataObjectMigrationHelper->deleteById(2);
+$dataObjectMigrationHelper->deleteByPath('/folder2');
+```
+
+## Commands
+### Migrate in separate process
+Executes the same migrations as the ```pimcore:migrations:migrate``` command,
+but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.
+``` 
+bin/console basilicom:migrations:migrate-in-separate-processes
+```
 
 ## Ideas
 * command: ```basilicom:migrations:generate <which type of migration>```
