@@ -26,7 +26,8 @@ This plugin provides you with the migration helpers and further tools.
 | 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
 | 1.9.0 | Asset Migration (Folder)               | `> 6.6.x` | yes |
 | 1.10.0 | Image Thumbnail Migration             | `> 6.6.x` | yes |
-| x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
+| x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |             | `> 6.6.x` | no |            | `> 6.6.x` | no |
+| 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
 
 ## Usage Migration Helpers
 
@@ -121,6 +122,10 @@ $staticRoutesMigrationHelper->delete('route1');
 ```
 
 ### UserRoles
+There is no way to remove the workspaces (dataobjects, documents or assets).
+
+Even when deleting a user role in the pimcore backend the workspace data stays in the database.
+
 Example: Up
 ``` 
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
@@ -132,6 +137,9 @@ $userRolesMigrationHelper->create(
     ['de', 'en'],
     ['de']
 );
+$userRolesMigrationHelper->addWorkspaceDataObject($role,$path,true,true,false,true,false,true,true,true,true,true,true);
+$userRolesMigrationHelper->addWorkspaceDocument($role,$path,true,true,false,true,false,true,true,true,true,true,true);
+$userRolesMigrationHelper->addWorkspaceAsset($role,$path,true,true,false,true,false,true,true,true,true);
 ```
 Example: Down
 ```

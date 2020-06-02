@@ -120,6 +120,10 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
      */
     private function addFallbackLanguages(string $language, string $fallback = ''): void
     {
+        if (empty($fallback)) {
+            return;
+        }
+        
         $fallbackLanguages = $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL][self::SETTING_FALLBACK_LANGUAGES];
 
         if (!$this->isLanguageValid($fallback)) {
