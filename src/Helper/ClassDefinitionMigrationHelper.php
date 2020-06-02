@@ -15,7 +15,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
      *
      * @throws InvalidSettingException
      */
-    public function createOrUpdate(string $className,  string $pathToJsonConfig)
+    public function createOrUpdate(string $className, string $pathToJsonConfig)
     {
         if (!file_exists($pathToJsonConfig)) {
             $message = sprintf(

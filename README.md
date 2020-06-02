@@ -20,25 +20,23 @@ This plugin provides you with the migration helpers and further tools.
 | 1.2.0 | Bundle Migration                       | `> 6.6.x` | yes |
 | 1.3.0 | Class Definition Migration             | `> 6.6.x` | yes |
 | 1.4.0 | Object Brick Migration                 | `> 6.6.x` | yes |
-| x.x.0 | Fieldcollection Migration              | `> 6.6.x` | no |
-| x.x.0 | Custom Layouts Migration               | `> 6.6.x` | no |
-| x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
-| x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
-| x.x.0 | Object (Folder) Migration              | `> 6.6.x` | no |
-| x.x.0 | Document (Folder) Migration            | `> 6.6.x` | no |
-| x.x.0 | Asset (Folder) Migration               | `> 6.6.x` | no |
+| 1.5.0 | Fieldcollection Migration              | `> 6.6.x` | yes |
+| 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
+| 1.7.0 | Document Migration (Page)              | `> 6.6.x` | yes |
+| 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
+| 1.9.0 | Asset Migration (Folder)               | `> 6.6.x` | yes |
+| 1.10.0 | Image Thumbnail Migration             | `> 6.6.x` | yes |
+| 1.11.0 | QuantityValue Unit Migration          | `> 6.6.x` | yes |
+| 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
 
-## Commands
-### Migrate in separate process
-Executes the same migrations as the ```pimcore:migrations:migrate``` command,
-but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.
-``` 
-bin/console basilicom:migrations:migrate-in-separate-processes
-```
-
-## Usage Migration Helpers (WIP)
+## Usage Migration Helpers
 
 For all migrations extend them from the class ```AbstractAdvancedPimcoreMigration```.
+
+### Migration Data
+If a migration needs data it needs to be located in the following folder:
+```/project/app/Migrations/data/<classname-of-the-migration>```
+
 
 ### System Settings
 Example: Up
@@ -124,6 +122,10 @@ $staticRoutesMigrationHelper->delete('route1');
 ```
 
 ### UserRoles
+There is no way to remove the workspaces (dataobjects, documents or assets).
+
+Even when deleting a user role in the pimcore backend the workspace data stays in the database.
+
 Example: Up
 ``` 
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
@@ -135,6 +137,9 @@ $userRolesMigrationHelper->create(
     ['de', 'en'],
     ['de']
 );
+$userRolesMigrationHelper->addWorkspaceDataObject($role,$path,true,true,false,true,false,true,true,true,true,true,true);
+$userRolesMigrationHelper->addWorkspaceDocument($role,$path,true,true,false,true,false,true,true,true,true,true,true);
+$userRolesMigrationHelper->addWorkspaceAsset($role,$path,true,true,false,true,false,true,true,true,true);
 ```
 Example: Down
 ```
@@ -204,9 +209,145 @@ $objectbrickMigrationHelper->delete($objectbrickName);
 $objectbrickMigrationHelper->createOrUpdate($objectbrickName, $this->dataFolder . '/down/objectbrick_' . $objectbrickName . '_export.json');
 ```
 
-### Migration Data
-If a migration needs data it needs to be located in the following folder:
-```/project/app/Migrations/data/<classname-of-the-migration>```
+### Fieldcollection
+Example: Up
+``` 
+$key = 'test';
+$fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
+$fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/fieldcollection_' . $key . '_export.json');
+```
+Example: Down
+```
+$key = 'test';
+$fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
+$fieldcollectionMigrationHelper->delete($key);
+// OR
+$fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/down/fieldcollection_' . $key . '_export.json');
+```
+
+### Custom Layouts
+``` 
+const CUSTOM_LAYOUT = [
+    'classId' => 'EF_OTCP',
+    'name' => 'test'
+];
+``` 
+Example: Up
+``` 
+$customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
+$customLayoutMigrationHelper->createOrUpdate(
+    self::CUSTOM_LAYOUT['name'],
+    self::CUSTOM_LAYOUT['classId'],
+    $this->dataFolder . '/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+);
+```
+Example: Down
+```
+$customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
+$customLayoutMigrationHelper->delete(
+    self::CUSTOM_LAYOUT['name'],
+    self::CUSTOM_LAYOUT['classId']
+);
+// OR
+$customLayoutMigrationHelper->createOrUpdate(
+    self::CUSTOM_LAYOUT['name'],
+    self::CUSTOM_LAYOUT['classId'],
+    $this->dataFolder . '/down/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+);
+```
+
+### Document (Page)
+``` 
+const PAGE = [
+    'key' => 'diga',
+    'name' => 'DiGA',
+    'controller' => 'Search',
+    'parentPath' => '/',
+];
+``` 
+Example: Up
+``` 
+$documentMigrationHelper = $this->getDocumentMigrationHelper();
+$documentMigrationHelper->createPageByParentPath(
+    self::PAGE['key'],
+    self::PAGE['name'],
+    self::PAGE['controller'],
+    self::PAGE['parentPath']
+);
+```
+Example: Down
+```
+$documentMigrationHelper = $this->getDocumentMigrationHelper();
+$documentMigrationHelper->deleteByPath(
+    self::PAGE['parentPath'].self::PAGE['key']
+);
+```
+
+### Object (Folder)
+Example: Up
+``` 
+$dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
+$dataObjectMigrationHelper->createFolderByParentId('folder1', 1);
+$dataObjectMigrationHelper->createFolderByPath('/folder2/subfolder');
+```
+Example: Down
+```
+$dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
+$dataObjectMigrationHelper->deleteById(2);
+$dataObjectMigrationHelper->deleteByPath('/folder2');
+```
+
+### Asset (Folder)
+Example: Up
+``` 
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->createFolderByParentId('name', 1);
+$assetMigrationHelper->createFolderByPath('/asset1/subasset');
+```
+Example: Down
+```
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->deleteById(2);
+$assetMigrationHelper->deleteByPath('/asset1');
+```
+
+### Image Thumbnail
+Example: Up
+``` 
+$name = 'thumbnail';
+$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
+$imageThumbnailMigrationHelper->create($name, 'description');
+$imageThumbnailMigrationHelper->addTransformationFrame($name, 40, 50, true);
+$imageThumbnailMigrationHelper->removeTransformation($name, ImageThumbnailMigrationHelper::TRANSFORMATION_SET_BACKGROUND_COLOR);
+$imageThumbnailMigrationHelper->addTransformationSetBackgroundColor($name, '#888888');
+```
+Example: Down
+```
+$name = 'thumbnail';
+$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
+$imageThumbnailMigrationHelper->delete($name);
+```
+
+
+### QuantityValue Unit
+Example: Up
+``` 
+$quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
+$quantityValueUnitMigrationHelper->createOrUpdate('abr', 'Long Abbreviation');
+```
+Example: Down
+```
+$quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
+$quantityValueUnitMigrationHelper->delete('abr');
+```
+
+## Commands
+### Migrate in separate process
+Executes the same migrations as the ```pimcore:migrations:migrate``` command,
+but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.
+``` 
+bin/console basilicom:migrations:migrate-in-separate-processes
+```
 
 ## Ideas
 * command: ```basilicom:migrations:generate <which type of migration>```
@@ -219,3 +360,4 @@ If a migration needs data it needs to be located in the following folder:
 * Translations, how?
     * use csv file, which will get imported by command -> krombacher
     * use translation migration -> fleurop
+* Video Thumbnail Migration Helper
