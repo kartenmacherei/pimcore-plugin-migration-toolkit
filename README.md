@@ -22,10 +22,10 @@ This plugin provides you with the migration helpers and further tools.
 | 1.4.0 | Object Brick Migration                 | `> 6.6.x` | yes |
 | 1.5.0 | Fieldcollection Migration              | `> 6.6.x` | yes |
 | 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
+| 1.7.0 | Document Migration (Page)              | `> 6.6.x` | yes |
 | x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
 | x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
 | x.x.0 | Object (Folder) Migration              | `> 6.6.x` | no |
-| x.x.0 | Document (Folder) Migration            | `> 6.6.x` | no |
 | x.x.0 | Asset (Folder) Migration               | `> 6.6.x` | no |
 | 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
 
@@ -256,6 +256,34 @@ $customLayoutMigrationHelper->createOrUpdate(
     self::CUSTOM_LAYOUT['name'],
     self::CUSTOM_LAYOUT['classId'],
     $this->dataFolder . '/down/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+);
+```
+
+### Document (Page)
+Can be extended by other document types.
+``` 
+const PAGE = [
+    'key' => 'diga',
+    'name' => 'DiGA',
+    'controller' => 'Search',
+    'parentPath' => '/',
+];
+``` 
+Example: Up
+``` 
+$documentMigrationHelper = $this->getDocumentMigrationHelper();
+$documentMigrationHelper->createPageByParentPath(
+    self::PAGE['key'],
+    self::PAGE['name'],
+    self::PAGE['controller'],
+    self::PAGE['parentPath']
+);
+```
+Example: Down
+```
+$documentMigrationHelper = $this->getDocumentMigrationHelper();
+$documentMigrationHelper->deleteByPath(
+    self::PAGE['parentPath'].self::PAGE['key']
 );
 ```
 
