@@ -26,7 +26,7 @@ This plugin provides you with the migration helpers and further tools.
 | 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
 | 1.9.0 | Asset Migration (Folder)               | `> 6.6.x` | yes |
 | 1.10.0 | Image Thumbnail Migration             | `> 6.6.x` | yes |
-| x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |             | `> 6.6.x` | no |            | `> 6.6.x` | no |
+| 1.11.0 | QuantityValue Unit Migration          | `> 6.6.x` | yes |
 | 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
 
 ## Usage Migration Helpers
@@ -326,6 +326,19 @@ Example: Down
 $name = 'thumbnail';
 $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
 $imageThumbnailMigrationHelper->delete($name);
+```
+
+
+### QuantityValue Unit
+Example: Up
+``` 
+$quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
+$quantityValueUnitMigrationHelper->createOrUpdate('abr', 'Long Abbreviation');
+```
+Example: Down
+```
+$quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
+$quantityValueUnitMigrationHelper->delete('abr');
 ```
 
 ## Commands
