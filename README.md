@@ -24,9 +24,10 @@ This plugin provides you with the migration helpers and further tools.
 | 1.6.0 | Custom Layouts Migration               | `> 6.6.x` | yes |
 | 1.7.0 | Document Migration (Page)              | `> 6.6.x` | yes |
 | 1.8.0 | Object Migration (Folder)              | `> 6.6.x` | yes |
-| x.x.0 | QuantityValue Unit Migration           | `> 6.6.x` | no |
-| x.x.0 | Thumbnail Migration                    | `> 6.6.x` | no |
-| x.x.0 | Asset (Folder) Migration               | `> 6.6.x` | no |
+| 1.9.0 | Asset Migration (Folder)               | `> 6.6.x` | yes |
+| 1.10.0 | Image Thumbnail Migration             | `> 6.6.x` | yes |
+| 1.11.0 | QuantityValue Unit Migration          | `> 6.6.x` | yes |
+| 1.?.0 | User Role Workspaces Migration         | `> 6.6.x` | yes |
 
 ## Usage Migration Helpers
 
@@ -121,6 +122,10 @@ $staticRoutesMigrationHelper->delete('route1');
 ```
 
 ### UserRoles
+There is no way to remove the workspaces (dataobjects, documents or assets).
+
+Even when deleting a user role in the pimcore backend the workspace data stays in the database.
+
 Example: Up
 ``` 
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
@@ -132,6 +137,9 @@ $userRolesMigrationHelper->create(
     ['de', 'en'],
     ['de']
 );
+$userRolesMigrationHelper->addWorkspaceDataObject($role,$path,true,true,false,true,false,true,true,true,true,true,true);
+$userRolesMigrationHelper->addWorkspaceDocument($role,$path,true,true,false,true,false,true,true,true,true,true,true);
+$userRolesMigrationHelper->addWorkspaceAsset($role,$path,true,true,false,true,false,true,true,true,true);
 ```
 Example: Down
 ```
@@ -291,6 +299,50 @@ $dataObjectMigrationHelper->deleteById(2);
 $dataObjectMigrationHelper->deleteByPath('/folder2');
 ```
 
+### Asset (Folder)
+Example: Up
+``` 
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->createFolderByParentId('name', 1);
+$assetMigrationHelper->createFolderByPath('/asset1/subasset');
+```
+Example: Down
+```
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->deleteById(2);
+$assetMigrationHelper->deleteByPath('/asset1');
+```
+
+### Image Thumbnail
+Example: Up
+``` 
+$name = 'thumbnail';
+$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
+$imageThumbnailMigrationHelper->create($name, 'description');
+$imageThumbnailMigrationHelper->addTransformationFrame($name, 40, 50, true);
+$imageThumbnailMigrationHelper->removeTransformation($name, ImageThumbnailMigrationHelper::TRANSFORMATION_SET_BACKGROUND_COLOR);
+$imageThumbnailMigrationHelper->addTransformationSetBackgroundColor($name, '#888888');
+```
+Example: Down
+```
+$name = 'thumbnail';
+$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
+$imageThumbnailMigrationHelper->delete($name);
+```
+
+
+### QuantityValue Unit
+Example: Up
+``` 
+$quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
+$quantityValueUnitMigrationHelper->createOrUpdate('abr', 'Long Abbreviation');
+```
+Example: Down
+```
+$quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
+$quantityValueUnitMigrationHelper->delete('abr');
+```
+
 ## Commands
 ### Migrate in separate process
 Executes the same migrations as the ```pimcore:migrations:migrate``` command,
@@ -310,3 +362,4 @@ bin/console basilicom:migrations:migrate-in-separate-processes
 * Translations, how?
     * use csv file, which will get imported by command -> krombacher
     * use translation migration -> fleurop
+* Video Thumbnail Migration Helper
