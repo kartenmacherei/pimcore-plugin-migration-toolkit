@@ -15,9 +15,6 @@ abstract class AbstractMigrationHelper
     /** @var OutputWriterInterface */
     protected $output;
 
-    /** @var string */
-    protected $dataFolder;
-
     public function setOutput(OutputWriterInterface $output)
     {
         $this->output = $output;
@@ -46,10 +43,5 @@ abstract class AbstractMigrationHelper
     {
         Cache::clearAll();
         Cache\Runtime::clear();
-    }
-
-    public function setDataFolder(string $dataFolder)
-    {
-        $this->dataFolder = $dataFolder;
     }
 }

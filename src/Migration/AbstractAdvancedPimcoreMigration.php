@@ -205,8 +205,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     public function getClassDefinitionMigrationHelper(): ClassDefinitionMigrationHelper
     {
         if ($this->classDefinitionMigrationHelper === null) {
-            $this->classDefinitionMigrationHelper = new ClassDefinitionMigrationHelper();
-            $this->classDefinitionMigrationHelper->setDataFolder($this->dataFolder);
+            $this->classDefinitionMigrationHelper = new ClassDefinitionMigrationHelper($this->dataFolder);
             $this->classDefinitionMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {

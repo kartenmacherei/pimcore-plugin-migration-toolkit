@@ -159,7 +159,7 @@ Example: Up
 ``` 
 $className = 'testing';
 $classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
-$jsonPath = $classDefinitionMigrationHelper->getJsonFileNameForUp($className);
+$jsonPath = $classDefinitionMigrationHelper->getJsonDefinitionPathForUpMigration($className);
 $classDefinitionMigrationHelper->createOrUpdate($className, $jsonPath);
 ```
 Example: Down
@@ -168,7 +168,7 @@ $className = 'testing';
 $classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
 $classDefinitionMigrationHelper->delete($className);
 // OR
-$jsonPath = $classDefinitionMigrationHelper->getJsonFileNameForDown($className);
+$jsonPath = $classDefinitionMigrationHelper->getJsonDefinitionPathForDownMigration($className);
 $classDefinitionMigrationHelper->createOrUpdate($className, $jsonPath);
 ```
 
