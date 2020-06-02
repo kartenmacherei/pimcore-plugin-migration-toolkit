@@ -4,16 +4,17 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Exception;
-use Pimcore\Model\DataObject;
-use Pimcore\Model\DataObject\Service as ObjectService;
+use Pimcore\Model\Asset;
+use Pimcore\Model\Asset\Folder;
+use Pimcore\Model\Asset\Service as AssetService;
 
-class DataObjectMigrationHelper extends AbstractMigrationHelper
+class AssetMigrationHelper extends AbstractMigrationHelper
 {
-    // bastodo: add support for class objects
+    // bastodo: add support for asset files
 
     public function createFolderByParentId(string $name, int $parentId): void
     {
-        $parent = DataObject::getById($parentId);
+        $parent = Folder::getById($parentId);
 
         if (empty($parent)) {
             $message = sprintf(
@@ -31,7 +32,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
     public function createFolderByPath(string $path): void
     {
         try {
-            ObjectService::createFolderByPath($path);
+            AssetService::createFolderByPath($path);
         } catch (Exception $exception) {
             $message = sprintf(
                 'The Folder "%s" could not be created.',
@@ -44,34 +45,34 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
     public function deleteById(int $id): void
     {
         if ($id === 1) {
-            throw new InvalidSettingException('You cannot delete the root object.');
+            throw new InvalidSettingException('You cannot delete the root asset.');
         }
 
-        $object = DataObject::getById($id);
+        $asset = Asset::getById($id);
 
-        if (empty($object)) {
-            $message = sprintf('Object with id "%s" can not be deleted, because it does not exist.', $id);
+        if (empty($asset)) {
+            $message = sprintf('Asset with id "%s" can not be deleted, because it does not exist.', $id);
             $this->getOutput()->writeMessage($message);
             return;
         }
 
-        $object->delete();
+        $asset->delete();
     }
 
     public function deleteByPath(string $path): void
     {
         if (empty($path)) {
-            throw new InvalidSettingException('Object can not be deleted, because path needs to be defined');
+            throw new InvalidSettingException('Asset can not be deleted, because path needs to be defined');
         }
 
-        $object = DataObject::getByPath($path);
+        $asset = Asset::getByPath($path);
 
-        if (empty($object)) {
-            $message = sprintf('Object with path "%s" can not be deleted, because it does not exist.', $path);
+        if (empty($asset)) {
+            $message = sprintf('Asset with path "%s" can not be deleted, because it does not exist.', $path);
             $this->getOutput()->writeMessage($message);
             return;
         }
 
-        $object->delete();
+        $asset->delete();
     }
 }
