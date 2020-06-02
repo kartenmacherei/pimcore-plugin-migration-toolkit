@@ -10,6 +10,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\DataObjectMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocumentMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\ImageThumbnailMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
@@ -68,6 +69,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var AssetMigrationHelper */
     private $assetMigrationHelper;
+
+    /** @var ImageThumbnailMigrationHelper */
+    private $imageThumbnailMigrationHelper;
 
     public function __construct(Version $version)
     {
@@ -304,5 +308,21 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->assetMigrationHelper;
+    }
+
+    public function getImageThumbnailMigrationHelper(): ImageThumbnailMigrationHelper
+    {
+        if ($this->imageThumbnailMigrationHelper === null) {
+            $this->imageThumbnailMigrationHelper = new ImageThumbnailMigrationHelper();
+            $this->imageThumbnailMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->imageThumbnailMigrationHelper;
     }
 }
