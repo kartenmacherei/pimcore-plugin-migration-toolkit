@@ -120,18 +120,16 @@ class LanguageSettingsMigrationHelper extends AbstractMigrationHelper
      */
     private function addFallbackLanguages(string $language, string $fallback = ''): void
     {
-        if (empty($fallback)) {
-            return;
-        }
-        
         $fallbackLanguages = $this->systemConfig[self::SETTINGS_PIMCORE][self::SETTINGS_GENERAL][self::SETTING_FALLBACK_LANGUAGES];
 
-        if (!$this->isLanguageValid($fallback)) {
-            $message = sprintf(
-                '"%s" is not a valid language and cannot be used as fallback.',
-                $fallback
-            );
-            throw new InvalidSettingException($message);
+        if (!empty($fallback)) {
+            if (!$this->isLanguageValid($fallback)) {
+                $message = sprintf(
+                    '"%s" is not a valid language and cannot be used as fallback.',
+                    $fallback
+                );
+                throw new InvalidSettingException($message);
+            }
         }
 
         $fallbackLanguages[$language] = $fallback;
