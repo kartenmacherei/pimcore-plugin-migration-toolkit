@@ -9,14 +9,12 @@ use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
 
 abstract class AbstractMigrationHelper
 {
-    /**
-     * @var OutputWriterInterface
-     */
+    const UP = 'up';
+    const DOWN = 'down';
+
+    /** @var OutputWriterInterface */
     protected $output;
 
-    /**
-     * @param OutputWriterInterface $output
-     */
     public function setOutput(OutputWriterInterface $output)
     {
         $this->output = $output;

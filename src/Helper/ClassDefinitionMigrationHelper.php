@@ -9,6 +9,14 @@ use Pimcore\Model\DataObject\ClassDefinition\Service;
 
 class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
 {
+    /** @var string */
+    protected $dataFolder;
+
+    public function __construct(string $dataFolder)
+    {
+        $this->dataFolder = $dataFolder;
+    }
+
     /**
      * @param string $className
      * @param string $pathToJsonConfig
@@ -81,5 +89,27 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
         }
 
         $classDefinition->delete();
+    }
+
+    public function getJsonDefinitionPathForUpMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::UP);
+    }
+    public function getJsonDefinitionPathForDownMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::DOWN);
+    }
+
+    private function getJsonFileNameFor($className, string $direction): string
+    {
+        $dataFolder = $this->dataFolder;
+        if ($direction === self::DOWN) {
+            $dataFolder .= '/down/';
+        } else {
+            $dataFolder .= '/';
+        }
+        $dataFolder .= 'class_' . $className . '_export.json';
+
+        return $dataFolder;
     }
 }
