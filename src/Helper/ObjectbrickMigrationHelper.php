@@ -9,6 +9,14 @@ use Pimcore\Model\DataObject\Objectbrick\Definition as ObjectbrickDefinition;
 
 class ObjectbrickMigrationHelper extends AbstractMigrationHelper
 {
+    /** @var string */
+    protected $dataFolder;
+
+    public function __construct(string $dataFolder)
+    {
+        $this->dataFolder = $dataFolder;
+    }
+
     /**
      * @param string $key
      * @param string $pathToJsonConfig
@@ -76,5 +84,27 @@ class ObjectbrickMigrationHelper extends AbstractMigrationHelper
         }
 
         $objectbricks->delete();
+    }
+
+    public function getJsonDefinitionPathForUpMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::UP);
+    }
+    public function getJsonDefinitionPathForDownMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::DOWN);
+    }
+
+    private function getJsonFileNameFor($className, string $direction): string
+    {
+        $dataFolder = $this->dataFolder;
+        if ($direction === self::DOWN) {
+            $dataFolder .= '/down/';
+        } else {
+            $dataFolder .= '/';
+        }
+        $dataFolder .= 'objectbrick_' . $className . '_export.json';
+
+        return $dataFolder;
     }
 }

@@ -177,7 +177,8 @@ Example: Up
 ``` 
 $objectbrickName = 'brick';
 $objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
-$objectbrickMigrationHelper->createOrUpdate($objectbrickName, $this->dataFolder . '/objectbrick_' . $objectbrickName . '_export.json');
+$jsonPath = $objectbrickMigrationHelper->getJsonDefinitionPathForUpMigration($className);
+$objectbrickMigrationHelper->createOrUpdate($objectbrickName, $jsonPath);
 ```
 Example: Down
 ```
@@ -185,7 +186,8 @@ $objectbrickName = 'brick';
 $objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
 $objectbrickMigrationHelper->delete($objectbrickName);
 // OR
-$objectbrickMigrationHelper->createOrUpdate($objectbrickName, $this->dataFolder . '/down/objectbrick_' . $objectbrickName . '_export.json');
+$jsonPath = $objectbrickMigrationHelper->getJsonDefinitionPathForDownMigration($className);
+$objectbrickMigrationHelper->createOrUpdate($objectbrickName, $jsonPath);
 ```
 
 ### Fieldcollection
@@ -193,7 +195,8 @@ Example: Up
 ``` 
 $key = 'test';
 $fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
-$fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/fieldcollection_' . $key . '_export.json');
+$jsonPath = $fieldcollectionMigrationHelper->getJsonDefinitionPathForUpMigration($className);
+$fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 ```
 Example: Down
 ```
@@ -201,23 +204,26 @@ $key = 'test';
 $fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
 $fieldcollectionMigrationHelper->delete($key);
 // OR
-$fieldcollectionMigrationHelper->createOrUpdate($key, $this->dataFolder . '/down/fieldcollection_' . $key . '_export.json');
+$jsonPath = $fieldcollectionMigrationHelper->getJsonDefinitionPathForDownMigration($className);
+$fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 ```
 
 ### Custom Layouts
+Custom Layouts will get the id like "lower(<classId>_<name>)".
 ``` 
 const CUSTOM_LAYOUT = [
     'classId' => 'EF_OTCP',
-    'name' => 'test'
+    'name' => 'TestLayout'
 ];
 ``` 
 Example: Up
 ``` 
 $customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
+$jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForUpMigration($className);
 $customLayoutMigrationHelper->createOrUpdate(
     self::CUSTOM_LAYOUT['name'],
     self::CUSTOM_LAYOUT['classId'],
-    $this->dataFolder . '/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+    $jsonPath
 );
 ```
 Example: Down
@@ -228,10 +234,11 @@ $customLayoutMigrationHelper->delete(
     self::CUSTOM_LAYOUT['classId']
 );
 // OR
+$jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForDownMigration($className);
 $customLayoutMigrationHelper->createOrUpdate(
     self::CUSTOM_LAYOUT['name'],
     self::CUSTOM_LAYOUT['classId'],
-    $this->dataFolder . '/down/custom_definition_' . self::CUSTOM_LAYOUT['name'] . '_export.json'
+    $jsonPath
 );
 ```
 

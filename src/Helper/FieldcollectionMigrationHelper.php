@@ -9,6 +9,14 @@ use Pimcore\Model\DataObject\Fieldcollection\Definition as FieldcollectionDefini
 
 class FieldcollectionMigrationHelper extends AbstractMigrationHelper
 {
+    /** @var string */
+    protected $dataFolder;
+
+    public function __construct(string $dataFolder)
+    {
+        $this->dataFolder = $dataFolder;
+    }
+
     /**
      * @param string $key
      *
@@ -70,5 +78,27 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
         }
 
         $fieldcollection->delete();
+    }
+
+    public function getJsonDefinitionPathForUpMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::UP);
+    }
+    public function getJsonDefinitionPathForDownMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::DOWN);
+    }
+
+    private function getJsonFileNameFor($className, string $direction): string
+    {
+        $dataFolder = $this->dataFolder;
+        if ($direction === self::DOWN) {
+            $dataFolder .= '/down/';
+        } else {
+            $dataFolder .= '/';
+        }
+        $dataFolder .= 'fieldcollection_' . $className . '_export.json';
+
+        return $dataFolder;
     }
 }
