@@ -12,6 +12,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class CustomLayoutMigrationHelper extends AbstractMigrationHelper
 {
+    /** @var string */
+    protected $dataFolder;
+
+    public function __construct(string $dataFolder)
+    {
+        $this->dataFolder = $dataFolder;
+    }
+
     /**
      * @param string $layoutName
      * @param string $classId
@@ -143,5 +151,27 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         }
 
         return $serializer->decode($json, 'json', $context);
+    }
+
+    public function getJsonDefinitionPathForUpMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::UP);
+    }
+    public function getJsonDefinitionPathForDownMigration($className): string
+    {
+        return $this->getJsonFileNameFor($className, self::DOWN);
+    }
+
+    private function getJsonFileNameFor($className, string $direction): string
+    {
+        $dataFolder = $this->dataFolder;
+        if ($direction === self::DOWN) {
+            $dataFolder .= '/down/';
+        } else {
+            $dataFolder .= '/';
+        }
+        $dataFolder .= 'custom_definition_' . $className . '_export.json';
+
+        return $dataFolder;
     }
 }

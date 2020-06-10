@@ -221,7 +221,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     public function getObjectbrickMigrationHelper(): ObjectbrickMigrationHelper
     {
         if ($this->objectbrickMigrationHelper === null) {
-            $this->objectbrickMigrationHelper = new ObjectbrickMigrationHelper();
+            $this->objectbrickMigrationHelper = new ObjectbrickMigrationHelper($this->dataFolder);
             $this->objectbrickMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {
@@ -237,7 +237,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     public function getFieldcollectionMigrationHelper(): FieldcollectionMigrationHelper
     {
         if ($this->fieldcollectionMigrationHelper === null) {
-            $this->fieldcollectionMigrationHelper = new FieldcollectionMigrationHelper();
+            $this->fieldcollectionMigrationHelper = new FieldcollectionMigrationHelper($this->dataFolder);
             $this->fieldcollectionMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {
@@ -253,7 +253,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     public function getCustomLayoutMigrationHelper(): CustomLayoutMigrationHelper
     {
         if ($this->customLayoutMigrationHelper === null) {
-            $this->customLayoutMigrationHelper = new CustomLayoutMigrationHelper();
+            $this->customLayoutMigrationHelper = new CustomLayoutMigrationHelper($this->dataFolder);
             $this->customLayoutMigrationHelper->setOutput(
                 new CallbackOutputWriter(
                     function ($message) {
