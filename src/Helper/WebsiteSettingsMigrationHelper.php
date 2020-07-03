@@ -3,6 +3,8 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore\Config;
+use Pimcore\Model\Asset;
+use Pimcore\Model\DataObject;
 use Pimcore\Model\Document;
 use Pimcore\Model\Site;
 use Pimcore\Model\WebsiteSetting;
@@ -65,7 +67,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
     public function createOfTypeAsset(string $name, int $assetId = null, string $language = null, int $siteId = null): void
     {
         if ($assetId) {
-            $asset = Document::getById($assetId);
+            $asset = Asset::getById($assetId);
             if (empty($asset)) {
                 $message = sprintf(
                     'Not creating Website Setting with name "%s". Asset "%s" does not exist.',
@@ -90,7 +92,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
     public function createOfTypeObject(string $name, int $objectId = null, string $language = null, int $siteId = null): void
     {
         if ($objectId) {
-            $object = Document::getById($objectId);
+            $object = DataObject::getById($objectId);
             if (empty($object)) {
                 $message = sprintf(
                     'Not creating Website Setting with name "%s". Object "%s" does not exist.',
