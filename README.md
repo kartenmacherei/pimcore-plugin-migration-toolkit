@@ -334,6 +334,17 @@ but each one is run in a separate process, to prevent problems with PHP classes 
 bin/console basilicom:migrations:migrate-in-separate-processes
 ```
 
+### Import Translations
+To import a csv file, like the exported shared translations from pimcore.
+To Pimcore shared translations.
+Or to Pimcore admin translations.
+``` 
+# examples
+bin/console basilicom:import:translations /path/to/shared-translations.csv
+bin/console basilicom:import:translations /path/to/shared-translations.csv --replaceExistingTranslation
+bin/console basilicom:import:translations /path/to/admin-translations.csv --replaceExistingTranslation --admin
+```
+
 ## Ideas
 * command: ```basilicom:migrations:generate <which type of migration>```
     * types e.g:
@@ -342,7 +353,4 @@ bin/console basilicom:migrations:migrate-in-separate-processes
         * ...
 * enhance command: ```basilicom:migrations:migrate-in-separate-processes```
     * to also revert ```prev``` or ```<versionnumber>```
-* Translations, how?
-    * use csv file, which will get imported by command -> krombacher
-    * use translation migration -> fleurop
 * Video Thumbnail Migration Helper
