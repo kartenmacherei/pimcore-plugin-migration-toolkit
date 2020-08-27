@@ -10,8 +10,8 @@ class UserMigrationHelper extends AbstractMigrationHelper
      * @param string $name
      * @param string $surname
      * @param string $email
-     * @param bool   $isActive
      * @param bool   $isAdmin
+     * @param bool   $isActive
      *
      * @return User
      */
@@ -21,7 +21,7 @@ class UserMigrationHelper extends AbstractMigrationHelper
         if ($user) {
             $this->getOutput()->writeMessage('User already exists, skipping ...');
 
-            return;
+            return $user;
         }
 
         $user = User::create(
