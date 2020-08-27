@@ -18,7 +18,7 @@ class UserMigrationHelper extends AbstractMigrationHelper
         $user = User::create(
             [
                 'parentId' => 0,
-                'name' => strtolower($name) . strtolower(str_replace([' '], ['-'], $surname)),
+                'name' => $this->getLoginName($name, $surname),
                 'password' => md5(uniqid()),
                 'email' => trim($email),
                 'firstname' => trim($name),
@@ -28,5 +28,28 @@ class UserMigrationHelper extends AbstractMigrationHelper
         );
         $user->setAdmin($isAdmin);
         $user->save();
+    }
+
+    /**
+     * @param string $name
+     * @param string $surname
+     */
+    public function delete(string $name, string $surname): void
+    {
+        $user = User::getByName($this->getLoginName($name, $surname));
+        if ($user) {
+            $user->delete();
+        }
+    }
+
+    /**
+     * @param string $name
+     * @param string $surname
+     *
+     * @return string
+     */
+    private function getLoginName(string $name, string $surname): string
+    {
+        return strtolower($name) . '.' . strtolower(str_replace([' '], ['-'], $surname));
     }
 }
