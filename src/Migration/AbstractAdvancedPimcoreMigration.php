@@ -16,6 +16,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\QuantityValueUnitMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\UserMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
@@ -43,6 +44,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var UserRolesMigrationHelper */
     private $userRolesMigrationHelper;
+
+    /** @var UserMigrationHelper */
+    private $userMigrationHelper;
 
     /** @var DocTypesMigrationHelper */
     private $docTypesMigrationHelper;
@@ -82,7 +86,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         parent::__construct($version);
 
         try {
-            $reflection       = new ReflectionClass($this);
+            $reflection = new ReflectionClass($this);
             $path = str_replace($reflection->getShortName() . '.php', '', $reflection->getFileName());
             $this->dataFolder = $path . 'data/' . $reflection->getShortName();
         } catch (Exception $exception) {
@@ -168,6 +172,22 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->userRolesMigrationHelper;
+    }
+
+    public function getUserMigrationHelper(): UserMigrationHelper
+    {
+        if ($this->userMigrationHelper === null) {
+            $this->userMigrationHelper = new UserMigrationHelper();
+            $this->userMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->userMigrationHelper;
     }
 
     public function getDocTypesMigrationHelper(): DocTypesMigrationHelper
