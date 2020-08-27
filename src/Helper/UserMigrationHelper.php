@@ -12,8 +12,10 @@ class UserMigrationHelper extends AbstractMigrationHelper
      * @param string $email
      * @param bool   $isActive
      * @param bool   $isAdmin
+     *
+     * @return User
      */
-    public function create(string $name, string $surname, string $email, bool $isAdmin, bool $isActive = true): void
+    public function create(string $name, string $surname, string $email, bool $isAdmin, bool $isActive = true): User
     {
         $user = User::getByName($this->getLoginName($name, $surname));
         if ($user) {
@@ -35,6 +37,8 @@ class UserMigrationHelper extends AbstractMigrationHelper
         );
         $user->setAdmin($isAdmin);
         $user->save();
+
+        return $user;
     }
 
     /**
