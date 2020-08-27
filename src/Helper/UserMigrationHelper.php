@@ -15,6 +15,13 @@ class UserMigrationHelper extends AbstractMigrationHelper
      */
     public function create(string $name, string $surname, string $email, bool $isAdmin, bool $isActive = true): void
     {
+        $user = User::getByName($this->getLoginName($name, $surname));
+        if ($user) {
+            $this->getOutput()->writeMessage('User already exists, skipping ...');
+
+            return;
+        }
+
         $user = User::create(
             [
                 'parentId' => 0,
@@ -37,9 +44,13 @@ class UserMigrationHelper extends AbstractMigrationHelper
     public function delete(string $name, string $surname): void
     {
         $user = User::getByName($this->getLoginName($name, $surname));
-        if ($user) {
-            $user->delete();
+        if (!$user) {
+            $this->getOutput()->writeMessage('User does not exist, skipping ...');
+
+            return;
         }
+
+        $user->delete();
     }
 
     /**
