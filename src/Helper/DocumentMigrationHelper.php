@@ -3,9 +3,11 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Exception;
 use Pimcore\Model\Document;
 use Pimcore\Model\Document\Page;
 use Pimcore\Model\Element\Service;
+use Pimcore\Model\Property\Predefined;
 
 class DocumentMigrationHelper extends AbstractMigrationHelper
 {
@@ -34,13 +36,14 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
 
     /**
      * @param Document|null $parent
-     * @param string $name
-     * @param string $key
-     * @param string $controller
-     *
-     * @see project/vendor/pimcore/pimcore/bundles/AdminBundle/Controller/Admin/Document/DocumentController.php ->addAction()
+     * @param string        $name
+     * @param string        $key
+     * @param string        $controller
      *
      * @throws InvalidSettingException
+     * @see project/vendor/pimcore/pimcore/bundles/AdminBundle/Controller/Admin/Document/DocumentController.php
+     *      ->addAction()
+     *
      */
     private function create(
         ?Document $parent,
@@ -70,11 +73,11 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         }
 
         $createValues = [
-            'userOwner'        => 0,
+            'userOwner' => 0,
             'userModification' => 0,
-            'published'        => false,
-            'key'              => Service::getValidKey($key, 'document'),
-            'controller'       => $controller
+            'published' => false,
+            'key' => Service::getValidKey($key, 'document'),
+            'controller' => $controller,
         ];
 
         if ($type === self::TYPE_PAGE) {
@@ -96,6 +99,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         if (empty($document)) {
             $message = sprintf('Document with id "%s" can not be deleted, because it does not exist.', $id);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
@@ -113,9 +117,50 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         if (empty($document)) {
             $message = sprintf('Document with path "%s" can not be deleted, because it does not exist.', $path);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
         $document->delete();
+    }
+
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @param string $contentType
+     * @param bool   $isInheritable
+     */
+    public function createOrUpdatePredefinedProperty(
+        string $key,
+        string $name,
+        string $type,
+        string $contentType,
+        bool $isInheritable = true
+    ): void {
+        try {
+            $property = Predefined::getByKey($key);
+        } catch (Exception $e) {
+            $property = null;
+        }
+
+        if (!$property) {
+            $property = Predefined::create();
+            $property->setKey($key);
+        }
+
+        $property->setName($name);
+        $property->setType($type);
+        $property->setCtype($contentType);
+        $property->setInheritable($isInheritable);
+        $property->save();
+    }
+
+    public function removePredefinedProperty(string $key): void
+    {
+        $property = Predefined::getByKey($key);
+        if ($property) {
+            $property->delete();
+        }
     }
 }
