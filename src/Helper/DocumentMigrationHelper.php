@@ -8,6 +8,7 @@ use Pimcore\Model\Document;
 use Pimcore\Model\Document\Page;
 use Pimcore\Model\Document\Service as DocumentService;
 use Pimcore\Model\Element\Service;
+use Pimcore\Model\Property\Predefined;
 
 class DocumentMigrationHelper extends AbstractMigrationHelper
 {
@@ -64,9 +65,6 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
      * @param string        $key
      * @param string        $controller
      *
-     * @param string        $type
-     *
-     * @return Page
      * @throws InvalidSettingException
      * @throws Exception
      */
@@ -161,5 +159,45 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         }
 
         $document->delete();
+    }
+
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @param string $contentType
+     * @param bool   $isInheritable
+     */
+    public function createOrUpdatePredefinedProperty(
+        string $key,
+        string $name,
+        string $type,
+        string $contentType,
+        bool $isInheritable = true
+    ): void {
+        try {
+            $property = Predefined::getByKey($key);
+        } catch (Exception $e) {
+            $property = null;
+        }
+
+        if (!$property) {
+            $property = Predefined::create();
+            $property->setKey($key);
+        }
+
+        $property->setName($name);
+        $property->setType($type);
+        $property->setCtype($contentType);
+        $property->setInheritable($isInheritable);
+        $property->save();
+    }
+
+    public function removePredefinedProperty(string $key): void
+    {
+        $property = Predefined::getByKey($key);
+        if ($property) {
+            $property->delete();
+        }
     }
 }
