@@ -65,6 +65,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
      * @param string        $key
      * @param string        $controller
      *
+     * @return Page
      * @throws InvalidSettingException
      * @throws Exception
      */
