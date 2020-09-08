@@ -165,6 +165,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     /**
      * @param string $key
      * @param string $name
+     * @param string $description
      * @param string $type
      * @param string $contentType
      * @param bool   $isInheritable
@@ -174,6 +175,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     public function createOrUpdatePredefinedProperty(
         string $key,
         string $name,
+        string $description,
         string $type,
         string $contentType,
         bool $isInheritable = true
@@ -190,6 +192,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         }
 
         $property->setName($name);
+        $property->setDescription($description);
         $property->setType($type);
         $property->setCtype($contentType);
         $property->setInheritable($isInheritable);
