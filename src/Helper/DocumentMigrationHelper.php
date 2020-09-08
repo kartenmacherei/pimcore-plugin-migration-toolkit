@@ -166,7 +166,6 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
      * @param string $key
      * @param string $name
      * @param string $type
-     * @param string $description
      * @param string $contentType
      * @param bool   $isInheritable
      *
