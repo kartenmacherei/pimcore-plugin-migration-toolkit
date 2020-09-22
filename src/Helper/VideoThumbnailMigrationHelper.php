@@ -15,15 +15,18 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
     public const VIDEO_BEST = 800;
     public const AUDIO_BEST = 196;
 
-    public function create(
+    public function createOrUpdate(
         string $name,
         string $description = '',
         string $group = '',
         int $videoBitrate = self::VIDEO_GOOD,
         int $audioBitrate = self::AUDIO_GOOD
-    ): VideoThumbnailConfig
-    {
-        $videoThumbnail = new VideoThumbnailConfig();
+    ): VideoThumbnailConfig {
+        $videoThumbnail = VideoThumbnailConfig::getByName($name);
+        if (empty($thumbnail)) {
+            $videoThumbnail = new VideoThumbnailConfig();
+        }
+
         $videoThumbnail->setName($name);
         $videoThumbnail->setGroup($group);
         $videoThumbnail->setDescription($description);
@@ -40,6 +43,7 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
         if (empty($videoThumbnail)) {
             $message = sprintf('Thumbnail with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
