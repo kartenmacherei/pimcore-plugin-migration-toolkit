@@ -314,6 +314,21 @@ $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
 $imageThumbnailMigrationHelper->delete($name);
 ```
 
+### Video Thumbnail
+Example: Up
+``` 
+$name = 'thumbnail';
+$videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
+$videoThumbnailMigrationHelper->create($name, 'description');
+
+```
+Example: Down
+```
+$name = 'thumbnail';
+$videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
+$videoThumbnailMigrationHelper->delete($name);
+```
+
 ### QuantityValue Unit
 Example: Up
 ``` 
