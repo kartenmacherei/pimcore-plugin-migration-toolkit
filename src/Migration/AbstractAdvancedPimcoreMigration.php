@@ -18,6 +18,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\VideoThumbnailMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Migrations\Version;
@@ -77,6 +78,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 
     /** @var ImageThumbnailMigrationHelper */
     private $imageThumbnailMigrationHelper;
+
+    /** @var VideoThumbnailMigrationHelper */
+    private $videoThumbnailMigrationHelper;
 
     /** @var QuantityValueUnitMigrationHelper */
     private $quantityValueUnitMigrationHelper;
@@ -348,6 +352,22 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
 
         return $this->imageThumbnailMigrationHelper;
+    }
+
+    public function getVideoThumbnailMigrationHelper(): VideoThumbnailMigrationHelper
+    {
+        if ($this->videoThumbnailMigrationHelper === null) {
+            $this->videoThumbnailMigrationHelper = new VideoThumbnailMigrationHelper();
+            $this->videoThumbnailMigrationHelper->setOutput(
+                new CallbackOutputWriter(
+                    function ($message) {
+                        $this->writeMessage($message);
+                    }
+                )
+            );
+        }
+
+        return $this->videoThumbnailMigrationHelper;
     }
 
     public function getQuantityValueUnitMigrationHelper(): QuantityValueUnitMigrationHelper
