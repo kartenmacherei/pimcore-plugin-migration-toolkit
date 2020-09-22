@@ -319,7 +319,7 @@ Example: Up
 ``` 
 $name = 'thumbnail';
 $videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
-$videoThumbnailMigrationHelper->createOrUpdate($name, 'description');
+$videoThumbnailMigrationHelper->create($name, 'description');
 
 ```
 Example: Down

@@ -2,6 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Pimcore\Model\Asset\Video\Thumbnail\Config as VideoThumbnailConfig;
 
 class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
@@ -15,7 +16,17 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
     public const VIDEO_BEST = 800;
     public const AUDIO_BEST = 196;
 
-    public function createOrUpdate(
+    /**
+     * @param string $name
+     * @param string $description
+     * @param string $group
+     * @param int    $videoBitrate
+     * @param int    $audioBitrate
+     *
+     * @return VideoThumbnailConfig
+     * @throws InvalidSettingException
+     */
+    public function create(
         string $name,
         string $description = '',
         string $group = '',
@@ -23,10 +34,16 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
         int $audioBitrate = self::AUDIO_GOOD
     ): VideoThumbnailConfig {
         $videoThumbnail = VideoThumbnailConfig::getByName($name);
-        if (empty($thumbnail)) {
-            $videoThumbnail = new VideoThumbnailConfig();
+        if (!empty($videoThumbnail)) {
+            $message = sprintf(
+                'Not creating Thumbnail with name "%s". Thumbnail with this name already exists.',
+                $name
+            );
+
+            throw new InvalidSettingException($message);
         }
 
+        $videoThumbnail = new VideoThumbnailConfig();
         $videoThumbnail->setName($name);
         $videoThumbnail->setGroup($group);
         $videoThumbnail->setDescription($description);
@@ -37,6 +54,9 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
         return $videoThumbnail;
     }
 
+    /**
+     * @param string $name
+     */
     public function delete(string $name): void
     {
         $videoThumbnail = VideoThumbnailConfig::getByName($name);
