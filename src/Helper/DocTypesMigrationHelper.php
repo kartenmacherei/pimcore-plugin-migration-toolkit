@@ -18,13 +18,10 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
         string $group = ''
     ): void {
         $docType = $this->getDocTypeByName($name);
-
         if (!empty($docType)) {
-            $message = sprintf(
-                'Not creating DocType with name "%s". DocType with this name already exists.',
-                $name
-            );
+            $message = sprintf('Not creating DocType with name "%s". DocType with this name already exists.', $name);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
@@ -43,16 +40,15 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
     public function delete(string $name): void
     {
         $docType = $this->getDocTypeByName($name);
-
         if (empty($docType)) {
             $message = sprintf('DocType with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
         $docType->delete();
     }
-
 
     public function update(
         string $name,
@@ -66,6 +62,12 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
         string $group = null
     ): void {
         $docType = $this->getDocTypeByName($name);
+        if (empty($docType)) {
+            $message = sprintf('DocType with name "%s" can not be updated, because it does not exist.', $name);
+            $this->getOutput()->writeMessage($message);
+
+            return;
+        }
 
         if ($newName !== null) {
             $docType->setName($newName);
@@ -95,6 +97,13 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
         $docType->save();
     }
 
+    public function getDocTypeByName(string $name): ?DocType
+    {
+        $docTypes = $this->loadDocTypes();
+
+        return isset($docTypes[$name]) ? $docTypes[$name] : null;
+    }
+
     /**
      * @return DocType[]
      */
@@ -111,11 +120,5 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
         }
 
         return $docTypes;
-    }
-
-    private function getDocTypeByName(string $name): ?DocType
-    {
-        $docTypes = $this->loadDocTypes();
-        return isset($docTypes[$name]) ? $docTypes[$name] : null;
     }
 }
