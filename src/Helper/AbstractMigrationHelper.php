@@ -3,6 +3,7 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Pimcore\Cache;
+use Pimcore\Cache\Runtime as RuntimeCache;
 use Pimcore\Config;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
@@ -20,7 +21,7 @@ abstract class AbstractMigrationHelper
         $this->output = $output;
     }
 
-    public function getOutput(): OutputWriterInterface
+    protected function getOutput(): OutputWriterInterface
     {
         if (!$this->output instanceof OutputWriterInterface) {
             return new NullOutputWriter();
@@ -32,16 +33,13 @@ abstract class AbstractMigrationHelper
     protected function isLanguageValid(string $language): bool
     {
         $config = Config::getSystemConfiguration();
-        if (in_array($language, explode(',', $config['general']['valid_languages']))) {
-            return true;
-        }
 
-        return false;
+        return in_array($language, explode(',', $config['general']['valid_languages']));
     }
 
     protected function clearCache(): void
     {
         Cache::clearAll();
-        Cache\Runtime::clear();
+        RuntimeCache::clear();
     }
 }

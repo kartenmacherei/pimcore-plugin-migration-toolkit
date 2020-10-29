@@ -98,17 +98,20 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         }
     }
 
+    public function getOutputWriter(): CallbackOutputWriter
+    {
+        return new CallbackOutputWriter(
+            function ($message) {
+                $this->writeMessage($message);
+            }
+        );
+    }
+
     public function getSystemSettingsMigrationHelper(): SystemSettingsMigrationHelper
     {
         if ($this->systemSettingsMigrationHelper === null) {
             $this->systemSettingsMigrationHelper = new SystemSettingsMigrationHelper();
-            $this->systemSettingsMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->systemSettingsMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->systemSettingsMigrationHelper;
@@ -118,13 +121,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->languageSettingsMigrationHelper === null) {
             $this->languageSettingsMigrationHelper = new LanguageSettingsMigrationHelper();
-            $this->languageSettingsMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->languageSettingsMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->languageSettingsMigrationHelper;
@@ -134,13 +131,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->websiteSettingsMigrationHelper === null) {
             $this->websiteSettingsMigrationHelper = new WebsiteSettingsMigrationHelper();
-            $this->websiteSettingsMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->websiteSettingsMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->websiteSettingsMigrationHelper;
@@ -150,13 +141,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->staticRoutesMigrationHelper === null) {
             $this->staticRoutesMigrationHelper = new StaticRoutesMigrationHelper();
-            $this->staticRoutesMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->staticRoutesMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->staticRoutesMigrationHelper;
@@ -166,13 +151,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->userRolesMigrationHelper === null) {
             $this->userRolesMigrationHelper = new UserRolesMigrationHelper();
-            $this->userRolesMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->userRolesMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->userRolesMigrationHelper;
@@ -182,13 +161,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->userMigrationHelper === null) {
             $this->userMigrationHelper = new UserMigrationHelper();
-            $this->userMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->userMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->userMigrationHelper;
@@ -198,13 +171,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->docTypesMigrationHelper === null) {
             $this->docTypesMigrationHelper = new DocTypesMigrationHelper();
-            $this->docTypesMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->docTypesMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->docTypesMigrationHelper;
@@ -214,13 +181,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->bundleMigrationHelper === null) {
             $this->bundleMigrationHelper = new BundleMigrationHelper();
-            $this->bundleMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->bundleMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->bundleMigrationHelper;
@@ -230,13 +191,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->classDefinitionMigrationHelper === null) {
             $this->classDefinitionMigrationHelper = new ClassDefinitionMigrationHelper($this->dataFolder);
-            $this->classDefinitionMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->classDefinitionMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->classDefinitionMigrationHelper;
@@ -246,13 +201,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->objectbrickMigrationHelper === null) {
             $this->objectbrickMigrationHelper = new ObjectbrickMigrationHelper($this->dataFolder);
-            $this->objectbrickMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->objectbrickMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->objectbrickMigrationHelper;
@@ -262,13 +211,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->fieldcollectionMigrationHelper === null) {
             $this->fieldcollectionMigrationHelper = new FieldcollectionMigrationHelper($this->dataFolder);
-            $this->fieldcollectionMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->fieldcollectionMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->fieldcollectionMigrationHelper;
@@ -278,13 +221,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->customLayoutMigrationHelper === null) {
             $this->customLayoutMigrationHelper = new CustomLayoutMigrationHelper($this->dataFolder);
-            $this->customLayoutMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->customLayoutMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->customLayoutMigrationHelper;
@@ -294,13 +231,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->documentMigrationHelper === null) {
             $this->documentMigrationHelper = new DocumentMigrationHelper();
-            $this->documentMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->documentMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->documentMigrationHelper;
@@ -310,13 +241,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->dataObjectMigrationHelper === null) {
             $this->dataObjectMigrationHelper = new DataObjectMigrationHelper();
-            $this->dataObjectMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->dataObjectMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->dataObjectMigrationHelper;
@@ -326,13 +251,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->assetMigrationHelper === null) {
             $this->assetMigrationHelper = new AssetMigrationHelper();
-            $this->assetMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->assetMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->assetMigrationHelper;
@@ -342,13 +261,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->imageThumbnailMigrationHelper === null) {
             $this->imageThumbnailMigrationHelper = new ImageThumbnailMigrationHelper();
-            $this->imageThumbnailMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->imageThumbnailMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->imageThumbnailMigrationHelper;
@@ -358,13 +271,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->videoThumbnailMigrationHelper === null) {
             $this->videoThumbnailMigrationHelper = new VideoThumbnailMigrationHelper();
-            $this->videoThumbnailMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->videoThumbnailMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->videoThumbnailMigrationHelper;
@@ -374,13 +281,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         if ($this->quantityValueUnitMigrationHelper === null) {
             $this->quantityValueUnitMigrationHelper = new QuantityValueUnitMigrationHelper();
-            $this->quantityValueUnitMigrationHelper->setOutput(
-                new CallbackOutputWriter(
-                    function ($message) {
-                        $this->writeMessage($message);
-                    }
-                )
-            );
+            $this->quantityValueUnitMigrationHelper->setOutput($this->getOutputWriter());
         }
 
         return $this->quantityValueUnitMigrationHelper;
