@@ -62,10 +62,28 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         return $thumbnail;
     }
 
+    public function resetTransformations(string $name): void
+    {
+        $thumbnail = ThumbnailConfig::getByName($name);
+        if (empty($thumbnail)) {
+            $message = sprintf(
+                'Can not reset transformation for Thumbnail with name "%s", because it does not exist.',
+                $name
+            );
+            throw new InvalidSettingException($message);
+        }
+
+        $thumbnail->resetItems();
+        $thumbnail->save();
+
+        $this->clearCache();
+    }
+
     public function addTransformationResize(
         string $name,
         int $width,
-        int $height
+        int $height,
+        ?string $mediaQuery = null
     ): void {
 
         $thumbnail = ThumbnailConfig::getByName($name);
@@ -80,7 +98,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         $parameters['width'] = $width;
         $parameters['height'] = $height;
 
-        $thumbnail->addItem(self::TRANSFORMATION_RESIZE, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_RESIZE, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
@@ -89,7 +107,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
     public function addTransformationScaleByHeight(
         string $name,
         int $height,
-        bool $forceResize = false
+        bool $forceResize = false,
+        ?string $mediaQuery = null
     ): void {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
@@ -103,7 +122,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         $parameters['height'] = $height;
         $parameters['forceResize'] = $forceResize;
 
-        $thumbnail->addItem(self::TRANSFORMATION_SCALE_BY_HEIGHT, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_SCALE_BY_HEIGHT, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
@@ -112,7 +131,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
     public function addTransformationScaleByWidth(
         string $name,
         int $width,
-        bool $forceResize = false
+        bool $forceResize = false,
+        ?string $mediaQuery = null
     ): void {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
@@ -126,7 +146,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         $parameters['width'] = $width;
         $parameters['forceResize'] = $forceResize;
 
-        $thumbnail->addItem(self::TRANSFORMATION_SCALE_BY_WIDTH, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_SCALE_BY_WIDTH, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
@@ -137,7 +157,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         int $width,
         int $height,
         bool $forceResize = false,
-        string $positioning = 'center'
+        string $positioning = 'center',
+        ?string $mediaQuery = null
     ): void {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
@@ -153,7 +174,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         $parameters['forceResize'] = $forceResize;
         $parameters['positioning'] = $positioning;
 
-        $thumbnail->addItem(self::TRANSFORMATION_COVER, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_COVER, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
@@ -163,7 +184,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         string $name,
         int $width,
         int $height,
-        bool $forceResize = false
+        bool $forceResize = false,
+        ?string $mediaQuery = null
     ): void {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
@@ -178,7 +200,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         $parameters['height'] = $height;
         $parameters['forceResize'] = $forceResize;
 
-        $thumbnail->addItem(self::TRANSFORMATION_CONTAIN, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_CONTAIN, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
@@ -188,7 +210,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         string $name,
         int $width,
         int $height,
-        bool $forceResize = false
+        bool $forceResize = false,
+        ?string $mediaQuery = null
     ): void {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
@@ -203,7 +226,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         $parameters['height'] = $height;
         $parameters['forceResize'] = $forceResize;
 
-        $thumbnail->addItem(self::TRANSFORMATION_FRAME, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_FRAME, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
@@ -211,7 +234,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 
     public function addTransformationSetBackgroundColor(
         string $name,
-        string $hexColor
+        string $hexColor,
+        ?string $mediaQuery = null
     ): void {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
@@ -234,12 +258,13 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
             'color' => $hexColor
         ];
 
-        $thumbnail->addItem(self::TRANSFORMATION_SET_BACKGROUND_COLOR, $parameters);
+        $thumbnail->addItem(self::TRANSFORMATION_SET_BACKGROUND_COLOR, $parameters, $mediaQuery);
         $thumbnail->save();
 
         $this->clearCache();
     }
 
+    // bastodo: how to remove transformation with mediaquery?
     public function removeTransformation(string $name, string $transformationKey)
     {
         $thumbnail = ThumbnailConfig::getByName($name);
@@ -274,6 +299,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
                 unset($items[$key]);
             }
         }
+
         $thumbnail->setItems($items);
         $thumbnail->save();
 
