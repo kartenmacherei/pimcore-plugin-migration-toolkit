@@ -4,6 +4,6 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Exceptions;
 
 use Exception;
 
-class MigrationToolkitException extends Exception
+abstract class MigrationToolkitException extends Exception
 {
 }
