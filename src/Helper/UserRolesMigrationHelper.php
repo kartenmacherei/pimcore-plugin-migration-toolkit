@@ -58,6 +58,65 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $this->clearCache();
     }
 
+    /**
+     * @param string $name
+     * @param array $permissions see database table users_permission_definitions
+     * @param array $docTypes
+     * @param array $classes
+     * @param array $viewWebsiteTranslations
+     * @param array $editWebsiteTranslations
+     * @param array $perspectives
+     * @param int $parentId
+     *
+     * @throws InvalidSettingException
+     */
+    public function update(
+        string $name,
+        array $permissions = [],
+        array $docTypes = [],
+        array $classes = [],
+        array $viewWebsiteTranslations = [],
+        array $editWebsiteTranslations = [],
+        array $perspectives = [],
+        int $parentId = 0
+    ): void {
+
+        $role = Role::getByName($name);
+
+        if (empty($role)) {
+            $message = sprintf('Not updating User Role with name "%s". User Role with this name does not exists.', $name);
+            throw new InvalidSettingException($message);
+        }
+
+        if (!empty($parentId)) {
+            $role->setParentId($parentId);
+        }
+
+        if (!empty($permissions)) {
+            $role->setPermissions($permissions);
+        }
+
+        if (!empty($docTypes)) {
+            $role->setDocTypes($docTypes);
+        }
+
+        if (!empty($classes)) {
+            $role->setClasses($classes);
+        }
+
+        if (!empty($perspectives)) {
+            $role->setPerspectives($perspectives);
+        }
+
+        if (!empty($viewWebsiteTranslations) || !empty($editWebsiteTranslations)) {
+            $this->addSharedTranslationSettings($role, $viewWebsiteTranslations, $editWebsiteTranslations);
+        }
+
+        $role->save();
+
+        $this->clearCache();
+    }
+
     public function addWorkspaceDataObject(
         string $roleName,
         string $path,
