@@ -82,7 +82,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     {
         try {
             $customLayout = new CustomLayout();
-            $customLayout->setId(mb_strtolower($classId . '_' . $layoutName));
+            $customLayout->setId(mb_strtolower($classId . $layoutName));
             $customLayout->setName($layoutName);
             $customLayout->setClassId($classId);
             $customLayout->save();
