@@ -153,16 +153,16 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         return $serializer->decode($json, 'json', $context);
     }
 
-    public function getJsonDefinitionPathForUpMigration($className): string
+    public function getJsonDefinitionPathForUpMigration(string $layoutName, string $classId): string
     {
-        return $this->getJsonFileNameFor($className, self::UP);
+        return $this->getJsonFileNameFor($layoutName, $classId, self::UP);
     }
-    public function getJsonDefinitionPathForDownMigration($className): string
+    public function getJsonDefinitionPathForDownMigration(string $layoutName, string $classId): string
     {
-        return $this->getJsonFileNameFor($className, self::DOWN);
+        return $this->getJsonFileNameFor($layoutName, $classId, self::DOWN);
     }
 
-    private function getJsonFileNameFor($className, string $direction): string
+    private function getJsonFileNameFor(string $layoutName, string $classId, string $direction): string
     {
         $dataFolder = $this->dataFolder;
         if ($direction === self::DOWN) {
@@ -170,7 +170,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         } else {
             $dataFolder .= '/';
         }
-        $dataFolder .= 'custom_definition_' . $className . '_export.json';
+        $dataFolder .= $classId . '/custom_definition_' . $layoutName . '_export.json';
 
         return $dataFolder;
     }

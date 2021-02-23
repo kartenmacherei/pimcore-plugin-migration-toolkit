@@ -209,17 +209,17 @@ $fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 ```
 
 ### Custom Layouts
-Custom Layouts will get the id like "lower(<classId>_<name>)".
+Custom Layouts will get the id like "lower(<classId><name>)".
 ``` 
 const CUSTOM_LAYOUT = [
-    'classId' => 'EF_OTCP',
-    'name' => 'TestLayout'
+    'classId' => 'reference',
+    'name' => 'readOnly'
 ];
 ``` 
 Example: Up
 ``` 
 $customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
-$jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForUpMigration($className);
+$jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForUpMigration(self::CUSTOM_LAYOUT['name'], self::CUSTOM_LAYOUT['classId']);
 $customLayoutMigrationHelper->createOrUpdate(
     self::CUSTOM_LAYOUT['name'],
     self::CUSTOM_LAYOUT['classId'],
@@ -234,7 +234,7 @@ $customLayoutMigrationHelper->delete(
     self::CUSTOM_LAYOUT['classId']
 );
 // OR
-$jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForDownMigration($className);
+$jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForDownMigration(self::CUSTOM_LAYOUT['name'], self::CUSTOM_LAYOUT['classId']);
 $customLayoutMigrationHelper->createOrUpdate(
     self::CUSTOM_LAYOUT['name'],
     self::CUSTOM_LAYOUT['classId'],
