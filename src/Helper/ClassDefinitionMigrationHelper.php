@@ -9,8 +9,7 @@ use Pimcore\Model\DataObject\ClassDefinition\Service;
 
 class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
 {
-    /** @var string */
-    protected $dataFolder;
+    protected string $dataFolder;
 
     public function __construct(string $dataFolder)
     {
@@ -18,9 +17,6 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $className
-     * @param string $pathToJsonConfig
-     *
      * @throws InvalidSettingException
      */
     public function createOrUpdate(string $className, string $pathToJsonConfig)
@@ -46,10 +42,6 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $className
-     *
-     * @return ClassDefinition
-     *
      * @throws InvalidSettingException
      */
     private function create(string $className): ClassDefinition
@@ -78,6 +70,9 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(string $className): void
     {
         $classDefinition = ClassDefinition::getByName($className);
@@ -95,6 +90,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     {
         return $this->getJsonFileNameFor($className, self::UP);
     }
+
     public function getJsonDefinitionPathForDownMigration($className): string
     {
         return $this->getJsonFileNameFor($className, self::DOWN);
@@ -102,12 +98,8 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
 
     private function getJsonFileNameFor($className, string $direction): string
     {
-        $dataFolder = $this->dataFolder;
-        if ($direction === self::DOWN) {
-            $dataFolder .= '/down/';
-        } else {
-            $dataFolder .= '/';
-        }
+
+        $dataFolder = $direction === self::DOWN ? $this->dataFolder . '/down/' : $this->dataFolder . '/';
         $dataFolder .= 'class_' . $className . '_export.json';
 
         return $dataFolder;

@@ -13,8 +13,7 @@ abstract class AbstractMigrationHelper
     const UP = 'up';
     const DOWN = 'down';
 
-    /** @var OutputWriterInterface */
-    protected $output;
+    protected OutputWriterInterface $output;
 
     public function setOutput(OutputWriterInterface $output)
     {

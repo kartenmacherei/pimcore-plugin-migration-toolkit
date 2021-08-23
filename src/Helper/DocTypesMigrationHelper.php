@@ -52,14 +52,14 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
 
     public function update(
         string $name,
-        string $newName = null,
-        string $controller = null,
-        string $type = null,
-        string $action = null,
-        string $bundle = null,
-        string $template = null,
-        int $priority = null,
-        string $group = null
+        ?string $newName = null,
+        ?string $controller = null,
+        ?string $type = null,
+        ?string $action = null,
+        ?string $bundle = null,
+        ?string $template = null,
+        ?int $priority = null,
+        ?string $group = null
     ): void {
         $docType = $this->getDocTypeByName($name);
         if (empty($docType)) {
@@ -101,7 +101,7 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
     {
         $docTypes = $this->loadDocTypes();
 
-        return isset($docTypes[$name]) ? $docTypes[$name] : null;
+        return $docTypes[$name] ?? null;
     }
 
     /**

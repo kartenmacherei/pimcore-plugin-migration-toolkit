@@ -12,8 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class CustomLayoutMigrationHelper extends AbstractMigrationHelper
 {
-    /** @var string */
-    protected $dataFolder;
+    protected string $dataFolder;
 
     public function __construct(string $dataFolder)
     {
@@ -21,11 +20,8 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $layoutName
-     * @param string $classId
-     * @param string $pathToJsonConfig
-     *
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function createOrUpdate(string $layoutName, string $classId, string $pathToJsonConfig)
     {
@@ -71,11 +67,6 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $layoutName
-     * @param string $classId
-     *
-     * @return CustomLayout
-     *
      * @throws InvalidSettingException
      */
     private function create(string $layoutName, string $classId): CustomLayout
@@ -103,8 +94,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $layoutName
-     * @param string $classId
+     * @throws Exception
      */
     public function delete(string $layoutName, string $classId)
     {
@@ -126,19 +116,20 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     /**
      * Decodes a JSON string into an array/object
      *
-     * @param mixed $json       The data to be decoded
-     * @param bool $associative Whether to decode into associative array or object
-     * @param array $context    Context to pass to serializer when using serializer component
-     * @param bool $useAdminSerializer
+     * @param mixed $json The data to be decoded
+     * @param bool  $associative Whether to decode into associative array or object
+     * @param array $context Context to pass to serializer when using serializer component
+     * @param bool  $useAdminSerializer
      *
-     * @return array|\stdClass
+     * @return array
      */
-    protected function decodeJson($json, $associative = true, array $context = [], bool $useAdminSerializer = true)
-    {
+    protected function decodeJson(
+        $json,
+        $associative = true,
+        array $context = [],
+        bool $useAdminSerializer = true
+    ): array {
         $container = Pimcore::getKernel()->getContainer();
-
-        /** @var SerializerInterface|DecoderInterface $serializer */
-        $serializer = null;
 
         if ($useAdminSerializer) {
             $serializer = $container->get('pimcore_admin.serializer');
@@ -150,6 +141,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
             $context['json_decode_associative'] = true;
         }
 
+        /** @var SerializerInterface|DecoderInterface $serializer */
         return $serializer->decode($json, 'json', $context);
     }
 
@@ -157,6 +149,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     {
         return $this->getJsonFileNameFor($layoutName, $classId, self::UP);
     }
+
     public function getJsonDefinitionPathForDownMigration(string $layoutName, string $classId): string
     {
         return $this->getJsonFileNameFor($layoutName, $classId, self::DOWN);
@@ -164,12 +157,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
 
     private function getJsonFileNameFor(string $layoutName, string $classId, string $direction): string
     {
-        $dataFolder = $this->dataFolder;
-        if ($direction === self::DOWN) {
-            $dataFolder .= '/down/';
-        } else {
-            $dataFolder .= '/';
-        }
+        $dataFolder = $direction === self::DOWN ? $this->dataFolder . '/down/' : $this->dataFolder . '/';
         $dataFolder .= $classId . '/custom_definition_' . $layoutName . '_export.json';
 
         return $dataFolder;

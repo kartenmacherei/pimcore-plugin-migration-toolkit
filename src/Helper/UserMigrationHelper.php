@@ -6,15 +6,6 @@ use Pimcore\Model\User;
 
 class UserMigrationHelper extends AbstractMigrationHelper
 {
-    /**
-     * @param string $name
-     * @param string $surname
-     * @param string $email
-     * @param bool   $isAdmin
-     * @param bool   $isActive
-     *
-     * @return User
-     */
     public function create(string $name, string $surname, string $email, bool $isAdmin, bool $isActive = true): User
     {
         $user = User::getByName($this->getLoginName($name, $surname));
@@ -41,10 +32,6 @@ class UserMigrationHelper extends AbstractMigrationHelper
         return $user;
     }
 
-    /**
-     * @param string $name
-     * @param string $surname
-     */
     public function delete(string $name, string $surname): void
     {
         $user = User::getByName($this->getLoginName($name, $surname));
@@ -57,12 +44,6 @@ class UserMigrationHelper extends AbstractMigrationHelper
         $user->delete();
     }
 
-    /**
-     * @param string $name
-     * @param string $surname
-     *
-     * @return string
-     */
     private function getLoginName(string $name, string $surname): string
     {
         return strtolower($name) . '.' . strtolower(str_replace([' '], ['-'], $surname));

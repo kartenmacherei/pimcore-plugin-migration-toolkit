@@ -2,7 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
-use Pimcore\Config;
+use Exception;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\Document;
@@ -12,35 +12,33 @@ use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
 {
-    const TYPE_TEXT     = 'text';
+    const TYPE_TEXT = 'text';
     const TYPE_DOCUMENT = 'document';
-    const TYPE_ASSET    = 'asset';
-    const TYPE_OBJECT   = 'object';
-    const TYPE_BOOL     = 'bool';
+    const TYPE_ASSET = 'asset';
+    const TYPE_OBJECT = 'object';
+    const TYPE_BOOL = 'bool';
 
     /**
-     * @param string $name
-     * @param string|null $text
-     * @param string|null $language
-     * @param int|null $siteId
-     *
      * @throws InvalidSettingException
      */
-    public function createOfTypeText(string $name, string $text = null, string $language = null, int $siteId = null): void
-    {
+    public function createOfTypeText(
+        string $name,
+        ?string $text = null,
+        ?string $language = null,
+        ?int $siteId = null
+    ): void {
         $this->create($name, self::TYPE_TEXT, $text, $language, $siteId);
     }
 
     /**
-     * @param string $name
-     * @param int|null $documentId
-     * @param string|null $language
-     * @param int|null $siteId
-     *
      * @throws InvalidSettingException
      */
-    public function createOfTypeDocument(string $name, int $documentId = null, string $language = null, int $siteId = null): void
-    {
+    public function createOfTypeDocument(
+        string $name,
+        ?int $documentId = null,
+        ?string $language = null,
+        ?int $siteId = null
+    ): void {
         if ($documentId) {
             $document = Document::getById($documentId);
             if (empty($document)) {
@@ -57,15 +55,14 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $name
-     * @param int|null $assetId
-     * @param string|null $language
-     * @param int|null $siteId
-     *
      * @throws InvalidSettingException
      */
-    public function createOfTypeAsset(string $name, int $assetId = null, string $language = null, int $siteId = null): void
-    {
+    public function createOfTypeAsset(
+        string $name,
+        ?int $assetId = null,
+        ?string $language = null,
+        ?int $siteId = null
+    ): void {
         if ($assetId) {
             $asset = Asset::getById($assetId);
             if (empty($asset)) {
@@ -82,15 +79,14 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $name
-     * @param int|null $objectId
-     * @param string|null $language
-     * @param int|null $siteId
-     *
      * @throws InvalidSettingException
      */
-    public function createOfTypeObject(string $name, int $objectId = null, string $language = null, int $siteId = null): void
-    {
+    public function createOfTypeObject(
+        string $name,
+        ?int $objectId = null,
+        ?string $language = null,
+        ?int $siteId = null
+    ): void {
         if ($objectId) {
             $object = DataObject::getById($objectId);
             if (empty($object)) {
@@ -107,28 +103,21 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $name
-     * @param bool|null $value
-     * @param string|null $language
-     * @param int|null $siteId
-     *
      * @throws InvalidSettingException
      */
-    public function createOfTypeBool(string $name, bool $value = null, string $language = null, int $siteId = null): void
-    {
+    public function createOfTypeBool(
+        string $name,
+        ?bool $value = null,
+        ?string $language = null,
+        ?int $siteId = null
+    ): void {
         $this->create($name, self::TYPE_BOOL, $value, $language, $siteId);
     }
 
     /**
-     * @param string $name
-     * @param string $type
-     * @param mixed|null $data
-     * @param string|null $language
-     * @param int|null $siteId
-     *
      * @throws InvalidSettingException
      */
-    private function create(string $name, string $type, $data = null, string $language = null, int $siteId = null): void
+    private function create(string $name, string $type, $data = null, ?string $language = null, ?int $siteId = null): void
     {
         $websiteSetting = WebsiteSetting::getByName($name);
 
@@ -183,6 +172,9 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
         $websiteSetting->save();
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(string $name): void
     {
         $websiteSetting = WebsiteSetting::getByName($name);

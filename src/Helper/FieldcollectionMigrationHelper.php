@@ -9,8 +9,7 @@ use Pimcore\Model\DataObject\Fieldcollection\Definition as FieldcollectionDefini
 
 class FieldcollectionMigrationHelper extends AbstractMigrationHelper
 {
-    /** @var string */
-    protected $dataFolder;
+    protected string $dataFolder;
 
     public function __construct(string $dataFolder)
     {
@@ -18,11 +17,8 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $key
-     *
-     * @param string $pathToJsonConfig
-     *
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function createOrUpdate(string $key, string $pathToJsonConfig)
     {
@@ -46,6 +42,9 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
         $this->clearCache();
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     private function create(string $key): FieldcollectionDefinition
     {
         try {
@@ -67,6 +66,9 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(string $key): void
     {
         $fieldcollection = FieldcollectionDefinition::getByKey($key);
@@ -84,6 +86,7 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
     {
         return $this->getJsonFileNameFor($className, self::UP);
     }
+
     public function getJsonDefinitionPathForDownMigration($className): string
     {
         return $this->getJsonFileNameFor($className, self::DOWN);
@@ -91,12 +94,7 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
 
     private function getJsonFileNameFor($className, string $direction): string
     {
-        $dataFolder = $this->dataFolder;
-        if ($direction === self::DOWN) {
-            $dataFolder .= '/down/';
-        } else {
-            $dataFolder .= '/';
-        }
+        $dataFolder = $direction === self::DOWN ? $this->dataFolder . '/down/' : $this->dataFolder . '/';
         $dataFolder .= 'fieldcollection_' . $className . '_export.json';
 
         return $dataFolder;

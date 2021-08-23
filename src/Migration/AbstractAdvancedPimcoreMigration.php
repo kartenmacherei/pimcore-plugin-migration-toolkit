@@ -19,67 +19,36 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\VideoThumbnailMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\DBAL\Connection;
+use Doctrine\Migrations\AbstractMigration;
 use Exception;
-use Pimcore\Migrations\Migration\AbstractPimcoreMigration;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
-abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
+abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
 {
-    /** @var string */
-    private $dataFolder;
+    private WebsiteSettingsMigrationHelper $websiteSettingsMigrationHelper;
+    private StaticRoutesMigrationHelper $staticRoutesMigrationHelper;
+    private UserRolesMigrationHelper $userRolesMigrationHelper;
+    private UserMigrationHelper $userMigrationHelper;
+    private DocTypesMigrationHelper $docTypesMigrationHelper;
+    private BundleMigrationHelper $bundleMigrationHelper;
+    private ClassDefinitionMigrationHelper $classDefinitionMigrationHelper;
+    private ObjectbrickMigrationHelper $objectBrickMigrationHelper;
+    private FieldcollectionMigrationHelper $fieldCollectionMigrationHelper;
+    private CustomLayoutMigrationHelper $customLayoutMigrationHelper;
+    private DocumentMigrationHelper $documentMigrationHelper;
+    private DataObjectMigrationHelper $dataObjectMigrationHelper;
+    private AssetMigrationHelper $assetMigrationHelper;
+    private ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper;
+    private VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper;
+    private QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper;
 
-    /** @var WebsiteSettingsMigrationHelper */
-    private $websiteSettingsMigrationHelper;
+    private string $dataFolder;
 
-    /** @var StaticRoutesMigrationHelper */
-    private $staticRoutesMigrationHelper;
-
-    /** @var UserRolesMigrationHelper */
-    private $userRolesMigrationHelper;
-
-    /** @var UserMigrationHelper */
-    private $userMigrationHelper;
-
-    /** @var DocTypesMigrationHelper */
-    private $docTypesMigrationHelper;
-
-    /** @var BundleMigrationHelper */
-    private $bundleMigrationHelper;
-
-    /** @var ClassDefinitionMigrationHelper */
-    private $classDefinitionMigrationHelper;
-
-    /** @var ObjectbrickMigrationHelper */
-    private $objectbrickMigrationHelper;
-
-    /** @var FieldcollectionMigrationHelper */
-    private $fieldcollectionMigrationHelper;
-
-    /** @var CustomLayoutMigrationHelper */
-    private $customLayoutMigrationHelper;
-
-    /** @var DocumentMigrationHelper */
-    private $documentMigrationHelper;
-
-    /** @var DataObjectMigrationHelper */
-    private $dataObjectMigrationHelper;
-
-    /** @var AssetMigrationHelper */
-    private $assetMigrationHelper;
-
-    /** @var ImageThumbnailMigrationHelper */
-    private $imageThumbnailMigrationHelper;
-
-    /** @var VideoThumbnailMigrationHelper */
-    private $videoThumbnailMigrationHelper;
-
-    /** @var QuantityValueUnitMigrationHelper */
-    private $quantityValueUnitMigrationHelper;
-
-    public function __construct(Version $version)
+    public function __construct(Connection $connection, LoggerInterface $logger)
     {
-        parent::__construct($version);
+        parent::__construct($connection, $logger);
 
         try {
             $reflection = new ReflectionClass($this);
@@ -94,7 +63,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
     {
         return new CallbackOutputWriter(
             function ($message) {
-                $this->writeMessage($message);
+                $this->write($message);
             }
         );
     }
@@ -169,24 +138,24 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
         return $this->classDefinitionMigrationHelper;
     }
 
-    public function getObjectbrickMigrationHelper(): ObjectbrickMigrationHelper
+    public function getObjectBrickMigrationHelper(): ObjectbrickMigrationHelper
     {
-        if ($this->objectbrickMigrationHelper === null) {
-            $this->objectbrickMigrationHelper = new ObjectbrickMigrationHelper($this->dataFolder);
-            $this->objectbrickMigrationHelper->setOutput($this->getOutputWriter());
+        if ($this->objectBrickMigrationHelper === null) {
+            $this->objectBrickMigrationHelper = new ObjectbrickMigrationHelper($this->dataFolder);
+            $this->objectBrickMigrationHelper->setOutput($this->getOutputWriter());
         }
 
-        return $this->objectbrickMigrationHelper;
+        return $this->objectBrickMigrationHelper;
     }
 
-    public function getFieldcollectionMigrationHelper(): FieldcollectionMigrationHelper
+    public function getFieldCollectionMigrationHelper(): FieldcollectionMigrationHelper
     {
-        if ($this->fieldcollectionMigrationHelper === null) {
-            $this->fieldcollectionMigrationHelper = new FieldcollectionMigrationHelper($this->dataFolder);
-            $this->fieldcollectionMigrationHelper->setOutput($this->getOutputWriter());
+        if ($this->fieldCollectionMigrationHelper === null) {
+            $this->fieldCollectionMigrationHelper = new FieldcollectionMigrationHelper($this->dataFolder);
+            $this->fieldCollectionMigrationHelper->setOutput($this->getOutputWriter());
         }
 
-        return $this->fieldcollectionMigrationHelper;
+        return $this->fieldCollectionMigrationHelper;
     }
 
     public function getCustomLayoutMigrationHelper(): CustomLayoutMigrationHelper

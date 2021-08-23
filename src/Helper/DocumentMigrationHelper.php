@@ -16,14 +16,8 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     const TYPE_PAGE = 'page';
 
     /**
-     * @param string $key
-     * @param string $name
-     * @param string $controller
-     * @param int    $parentId
-     *
-     * @return Page
-     * @throws Exception
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function createPageByParentId(
         string $key,
@@ -37,14 +31,8 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $key
-     * @param string $name
-     * @param string $controller
-     * @param string $parentPath
-     *
-     * @return Page
-     * @throws Exception
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function createPageByParentPath(
         string $key,
@@ -60,12 +48,6 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     /**
      * @see \Pimcore\Bundle\AdminBundle\Controller\Admin\Document\DocumentController::addAction()
      *
-     * @param Document|null $parent
-     * @param string        $name
-     * @param string        $key
-     * @param string        $controller
-     *
-     * @return Page
      * @throws InvalidSettingException
      * @throws Exception
      */
@@ -118,9 +100,8 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param int $id
-     *
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function deleteById(int $id): void
     {
@@ -140,8 +121,6 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     }
 
     /**
-     * @param string $path
-     *
      * @throws InvalidSettingException
      */
     public function deleteByPath(string $path): void
@@ -162,16 +141,6 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         $document->delete();
     }
 
-    /**
-     * @param string $key
-     * @param string $name
-     * @param string $description
-     * @param string $type
-     * @param string $contentType
-     * @param bool   $isInheritable
-     *
-     * @return PredefinedProperty
-     */
     public function createOrUpdatePredefinedProperty(
         string $key,
         string $name,

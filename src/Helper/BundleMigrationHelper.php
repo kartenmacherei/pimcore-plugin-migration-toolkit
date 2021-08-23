@@ -9,23 +9,31 @@ use Pimcore\Tool\AssetsInstaller;
 
 class BundleMigrationHelper extends AbstractMigrationHelper
 {
-    /** @var PimcoreBundleManager */
-    private $pimcoreBundleManager;
-
-    /** @var AssetsInstaller */
-    private $assetsInstaller;
+    private PimcoreBundleManager $pimcoreBundleManager;
+    private AssetsInstaller $assetsInstaller;
 
     public function __construct()
     {
-        $this->pimcoreBundleManager = Pimcore::getKernel()->getContainer()->get(PimcoreBundleManager::class);
-        $this->assetsInstaller      = Pimcore::getKernel()->getContainer()->get(AssetsInstaller::class);
+        /** @var PimcoreBundleManager $bundleManager */
+        $bundleManager = Pimcore::getKernel()->getContainer()->get(PimcoreBundleManager::class);
+        $this->pimcoreBundleManager = $bundleManager;
+
+        /** @var AssetsInstaller $assetsInstaller */
+        $assetsInstaller = Pimcore::getKernel()->getContainer()->get(AssetsInstaller::class);
+        $this->assetsInstaller = $assetsInstaller;
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function enable(string $pluginId): void
     {
         $this->setState($pluginId, true);
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function disable(string $pluginId): void
     {
         $this->setState($pluginId, false);
@@ -41,9 +49,12 @@ class BundleMigrationHelper extends AbstractMigrationHelper
         $this->setInstallState($pluginId, false);
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     private function setState(string $pluginId, bool $enabled): void
     {
-        $availableBundles   = $this->pimcoreBundleManager->getAvailableBundles();
+        $availableBundles = $this->pimcoreBundleManager->getAvailableBundles();
         $enabledBundleNames = $this->pimcoreBundleManager->getEnabledBundleNames();
 
         if (!in_array($pluginId, $availableBundles)) {

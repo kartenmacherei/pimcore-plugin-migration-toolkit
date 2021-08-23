@@ -2,34 +2,26 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Exception;
 use Pimcore\Model\Staticroute;
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class StaticRoutesMigrationHelper extends AbstractMigrationHelper
 {
     /**
-     * @param string $name
-     * @param string $pattern
-     * @param string $reverse
-     * @param string $controller
-     * @param string|null $action
-     * @param string|null $variables
-     * @param string|null $defaults
-     * @param string|null $bundle
-     * @param int $priority
-     *
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function create(
         string $name,
         string $pattern,
         string $reverse,
         string $controller,
-        string $action = null,
-        string $variables = null,
-        string $defaults = null,
-        string $bundle = null,
-        int $priority = null
+        ?string $action = null,
+        ?string $variables = null,
+        ?string $defaults = null,
+        ?string $bundle = null,
+        ?int $priority = null
     ): void {
         $route = Staticroute::getByName($name);
         if (!empty($route)) {
@@ -65,6 +57,9 @@ class StaticRoutesMigrationHelper extends AbstractMigrationHelper
         $route->save();
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(string $name): void
     {
         $route = Staticroute::getByName($name);

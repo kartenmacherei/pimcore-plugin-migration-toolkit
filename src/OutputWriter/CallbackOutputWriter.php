@@ -6,8 +6,7 @@ use Closure;
 
 class CallbackOutputWriter implements OutputWriterInterface
 {
-    /** @var Closure */
-    protected $callback;
+    protected Closure $callback;
 
     public function __construct(Closure $callback)
     {

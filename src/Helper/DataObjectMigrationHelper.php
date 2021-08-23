@@ -11,6 +11,10 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
 {
     // bastodo: add support for class objects
 
+    /**
+     * @throws InvalidSettingException
+     * @throws Exception
+     */
     public function createFolderByParentId(string $name, int $parentId): void
     {
         $parent = DataObject::getById($parentId);
@@ -28,19 +32,22 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
         $this->createFolderByPath($intendedPath);
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function createFolderByPath(string $path): void
     {
         try {
             ObjectService::createFolderByPath($path);
         } catch (Exception $exception) {
-            $message = sprintf(
-                'The Folder "%s" could not be created.',
-                $path
-            );
+            $message = sprintf('The Folder "%s" could not be created.', $path);
             throw new InvalidSettingException($message);
         }
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function deleteById(int $id): void
     {
         if ($id === 1) {
@@ -58,6 +65,9 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
         $object->delete();
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function deleteByPath(string $path): void
     {
         if (empty($path)) {

@@ -9,11 +9,11 @@ class QuantityValueUnitMigrationHelper extends AbstractMigrationHelper
     public function createOrUpdate(
         string $abbreviation,
         string $longname,
-        QuantityValueUnit $baseunit = null,
-        float $factor = null,
-        float $conversionOffset = null,
+        ?QuantityValueUnit $baseunit = null,
+        ?float $factor = null,
+        ?float $conversionOffset = null,
         string $converter = ''
-    ) : void {
+    ): void {
         $unit = QuantityValueUnit::getByAbbreviation($abbreviation);
 
         if (empty($unit)) {
@@ -44,7 +44,10 @@ class QuantityValueUnitMigrationHelper extends AbstractMigrationHelper
         $unit = QuantityValueUnit::getByAbbreviation($abbreviation);
 
         if (empty($unit)) {
-            $message = sprintf('Quantity Value Unit with name "%s" can not be deleted, because it does not exist.', $abbreviation);
+            $message = sprintf(
+                'Quantity Value Unit with name "%s" can not be deleted, because it does not exist.',
+                $abbreviation
+            );
             $this->getOutput()->writeMessage($message);
             return;
         }

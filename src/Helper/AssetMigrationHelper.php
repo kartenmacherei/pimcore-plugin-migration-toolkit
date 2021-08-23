@@ -12,6 +12,9 @@ class AssetMigrationHelper extends AbstractMigrationHelper
 {
     // bastodo: add support for asset files
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function createFolderByParentId(string $name, int $parentId): void
     {
         $parent = Folder::getById($parentId);
@@ -29,19 +32,23 @@ class AssetMigrationHelper extends AbstractMigrationHelper
         $this->createFolderByPath($intendedPath);
     }
 
+    /**
+     * @throws InvalidSettingException
+     */
     public function createFolderByPath(string $path): void
     {
         try {
             AssetService::createFolderByPath($path);
         } catch (Exception $exception) {
-            $message = sprintf(
-                'The Folder "%s" could not be created.',
-                $path
-            );
+            $message = sprintf('The Folder "%s" could not be created.', $path);
             throw new InvalidSettingException($message);
         }
     }
 
+    /**
+     * @throws InvalidSettingException
+     * @throws Exception
+     */
     public function deleteById(int $id): void
     {
         if ($id === 1) {
@@ -59,6 +66,10 @@ class AssetMigrationHelper extends AbstractMigrationHelper
         $asset->delete();
     }
 
+    /**
+     * @throws InvalidSettingException
+     * @throws Exception
+     */
     public function deleteByPath(string $path): void
     {
         if (empty($path)) {
