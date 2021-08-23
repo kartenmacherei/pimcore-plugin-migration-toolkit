@@ -11,11 +11,9 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocumentMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ImageThumbnailMigrationHelper;
-use Basilicom\PimcorePluginMigrationToolkit\Helper\LanguageSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\QuantityValueUnitMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
-use Basilicom\PimcorePluginMigrationToolkit\Helper\SystemSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\VideoThumbnailMigrationHelper;
@@ -30,12 +28,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
 {
     /** @var string */
     private $dataFolder;
-
-    /** @var SystemSettingsMigrationHelper */
-    private $systemSettingsMigrationHelper;
-
-    /** @var LanguageSettingsMigrationHelper */
-    private $languageSettingsMigrationHelper;
 
     /** @var WebsiteSettingsMigrationHelper */
     private $websiteSettingsMigrationHelper;
@@ -105,26 +97,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractPimcoreMigration
                 $this->writeMessage($message);
             }
         );
-    }
-
-    public function getSystemSettingsMigrationHelper(): SystemSettingsMigrationHelper
-    {
-        if ($this->systemSettingsMigrationHelper === null) {
-            $this->systemSettingsMigrationHelper = new SystemSettingsMigrationHelper();
-            $this->systemSettingsMigrationHelper->setOutput($this->getOutputWriter());
-        }
-
-        return $this->systemSettingsMigrationHelper;
-    }
-
-    public function getLanguageSettingsMigrationHelper(): LanguageSettingsMigrationHelper
-    {
-        if ($this->languageSettingsMigrationHelper === null) {
-            $this->languageSettingsMigrationHelper = new LanguageSettingsMigrationHelper();
-            $this->languageSettingsMigrationHelper->setOutput($this->getOutputWriter());
-        }
-
-        return $this->languageSettingsMigrationHelper;
     }
 
     public function getWebsiteSettingsMigrationHelper(): WebsiteSettingsMigrationHelper

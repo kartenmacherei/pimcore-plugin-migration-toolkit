@@ -297,7 +297,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $messageTemplate = 'The language "%s" is not a valid language and cannot be set for user roles.';
 
         foreach ($viewWebsiteTranslations as $key => $language) {
-            if (!$this->isLanguageValid($language)) {
+            if (!$this->isValidLanguage($language)) {
                 $message = sprintf(
                     $messageTemplate,
                     $language
@@ -308,7 +308,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         }
 
         foreach ($editWebsiteTranslations as $key => $language) {
-            if (!$this->isLanguageValid($language)) {
+            if (!$this->isValidLanguage($language)) {
                 $message = sprintf(
                     $messageTemplate,
                     $language

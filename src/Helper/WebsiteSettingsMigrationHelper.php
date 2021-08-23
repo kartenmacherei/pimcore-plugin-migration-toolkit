@@ -142,7 +142,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
         }
 
         if ($language) {
-            if (!$this->isLanguageValid($language)) {
+            if (!$this->isValidLanguage($language)) {
                 $message = sprintf(
                     'Not creating Website Setting with name "%s". Language "%s" is not a valid system language.',
                     $name,
