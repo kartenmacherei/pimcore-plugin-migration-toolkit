@@ -46,7 +46,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
             $output->writeln(self::LOG_SEPARATOR_LINE);
 
             $process = new Process(
-                ['bin/console', 'pimcore:migrations:execute', $migration, '--no-interaction'],
+                ['bin/console', 'doctrine:migrations:execute', $migration, '--no-interaction'],
                 PIMCORE_PROJECT_ROOT
             );
             $process->setTimeout(120);
@@ -73,7 +73,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     protected function getUnexecutedMigrations()
     {
         $process = new Process(
-            'bin/console pimcore:migrations:status --show-versions --no-interaction | grep "not migrated" | awk \'{print substr($4, 2, length($4) - 2) }\'',
+            ['bin/console doctrine:migrations:list --no-interaction | grep "not migrated" | awk -F\'\\| \' \'{print $2}\''],
             PIMCORE_PROJECT_ROOT
         );
 
