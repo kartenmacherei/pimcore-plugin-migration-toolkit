@@ -11,18 +11,20 @@ use Symfony\Component\Process\Process;
 
 class MigrateInSeparateProcessesCommand extends AbstractCommand
 {
-    const LOG_EMPTY_LINE     = '                                                            ';
+    const LOG_EMPTY_LINE = '                                                            ';
     const LOG_SEPARATOR_LINE = '============================================================';
 
     protected static $defaultName = 'basilicom:migrations:migrate-in-separate-processes';
 
     protected function configure()
     {
-        $this->setDescription('Executes the same migrations as the pimcore:migrations:migrate command, '.
-            'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.');
+        $this->setDescription(
+            'Executes the same migrations as the pimcore:migrations:migrate command, ' .
+            'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.'
+        );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The following prevents problems when the container changes during runtime - which is the case with migrations
         $eventDispatcher = Pimcore::getKernel()->getContainer()->get('event_dispatcher');
@@ -42,7 +44,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         foreach ($unexecutedMigrations as $migration) {
             $output->writeln(self::LOG_EMPTY_LINE);
             $output->writeln(self::LOG_SEPARATOR_LINE);
-            $output->writeln('                Executing the migration ' . $migration);
+            $output->writeln('        Executing the migration ' . substr($migration, strrpos($migration, '\\') + 1));
             $output->writeln(self::LOG_SEPARATOR_LINE);
 
             $process = new Process(
@@ -50,13 +52,15 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
                 PIMCORE_PROJECT_ROOT
             );
             $process->setTimeout(120);
-            $process->run(function ($type, $buffer) use ($output) {
-                if (Process::ERR === $type) {
-                    $output->writeln('<error>' . $buffer . '</error>');
-                } else {
-                    $output->writeln($buffer);
+            $process->run(
+                function ($type, $buffer) use ($output) {
+                    if (Process::ERR === $type) {
+                        $output->writeln('<error>' . $buffer . '</error>');
+                    } else {
+                        $output->writeln($buffer);
+                    }
                 }
-            });
+            );
 
             if ($process->getExitCode() !== 0) {
                 exit(1);
@@ -68,21 +72,24 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         $output->writeln('                    Migrations finished                     ');
         $output->writeln(self::LOG_SEPARATOR_LINE);
         $output->writeln(self::LOG_EMPTY_LINE);
+
+        return 0;
     }
 
     protected function getUnexecutedMigrations()
     {
         $process = new Process(
-            ['bin/console doctrine:migrations:list --no-interaction | grep "not migrated" | awk -F\'\\| \' \'{print $2}\''],
+            ['bin/console', 'doctrine:migrations:list', '--no-interaction'],
             PIMCORE_PROJECT_ROOT
         );
 
-        $process->run();
+        $process->start();
 
         $unexecutedMigrations = [];
-        foreach ($process as $type => $psOutputLine) {
-            if ($type === 'out') {
-                $unexecutedMigrations = explode(PHP_EOL, $psOutputLine);
+        foreach ($process as $type => $outputLine) {
+            if (strrpos($outputLine, 'not migrated') !== false) {
+                preg_match('/\|([^\|]+)\|/', $outputLine, $matches);
+                $unexecutedMigrations[] = preg_replace('/\s+/', '', $matches[1]);
             }
         }
 
