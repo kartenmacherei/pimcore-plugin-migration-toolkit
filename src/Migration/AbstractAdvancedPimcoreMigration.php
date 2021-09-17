@@ -27,24 +27,24 @@ use ReflectionClass;
 
 abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
 {
-    private WebsiteSettingsMigrationHelper $websiteSettingsMigrationHelper;
-    private StaticRoutesMigrationHelper $staticRoutesMigrationHelper;
-    private UserRolesMigrationHelper $userRolesMigrationHelper;
-    private UserMigrationHelper $userMigrationHelper;
-    private DocTypesMigrationHelper $docTypesMigrationHelper;
-    private BundleMigrationHelper $bundleMigrationHelper;
-    private ClassDefinitionMigrationHelper $classDefinitionMigrationHelper;
-    private ObjectbrickMigrationHelper $objectBrickMigrationHelper;
-    private FieldcollectionMigrationHelper $fieldCollectionMigrationHelper;
-    private CustomLayoutMigrationHelper $customLayoutMigrationHelper;
-    private DocumentMigrationHelper $documentMigrationHelper;
-    private DataObjectMigrationHelper $dataObjectMigrationHelper;
-    private AssetMigrationHelper $assetMigrationHelper;
-    private ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper;
-    private VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper;
-    private QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper;
+    private ?WebsiteSettingsMigrationHelper $websiteSettingsMigrationHelper = null;
+    private ?StaticRoutesMigrationHelper $staticRoutesMigrationHelper = null;
+    private ?UserRolesMigrationHelper $userRolesMigrationHelper = null;
+    private ?UserMigrationHelper $userMigrationHelper = null;
+    private ?DocTypesMigrationHelper $docTypesMigrationHelper = null;
+    private ?BundleMigrationHelper $bundleMigrationHelper = null;
+    private ?ClassDefinitionMigrationHelper $classDefinitionMigrationHelper = null;
+    private ?ObjectbrickMigrationHelper $objectBrickMigrationHelper = null;
+    private ?FieldcollectionMigrationHelper $fieldCollectionMigrationHelper = null;
+    private ?CustomLayoutMigrationHelper $customLayoutMigrationHelper = null;
+    private ?DocumentMigrationHelper $documentMigrationHelper = null;
+    private ?DataObjectMigrationHelper $dataObjectMigrationHelper = null;
+    private ?AssetMigrationHelper $assetMigrationHelper = null;
+    private ?ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper = null;
+    private ?VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper = null;
+    private ?QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper = null;
 
-    private string $dataFolder;
+    private string $dataFolder = '';
 
     public function __construct(Connection $connection, LoggerInterface $logger)
     {
