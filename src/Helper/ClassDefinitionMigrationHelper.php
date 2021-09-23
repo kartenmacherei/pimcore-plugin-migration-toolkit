@@ -19,7 +19,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws InvalidSettingException
      */
-    public function createOrUpdate(string $className, string $pathToJsonConfig)
+    public function createOrUpdate(string $className, string $pathToJsonConfig, ?string $id = null)
     {
         if (!file_exists($pathToJsonConfig)) {
             $message = sprintf(
@@ -30,9 +30,14 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
             throw new InvalidSettingException($message);
         }
 
-        $class = ClassDefinition::getByName($className);
+        if (!empty($id)) {
+            $class = ClassDefinition::getById($id) ?? ClassDefinition::getByName($className);
+        } else {
+            $class = ClassDefinition::getByName($className);
+        }
+
         if (empty($class)) {
-            $class = $this->create($className);
+            $class = $this->create($id, $className);
         }
 
         $configJson = file_get_contents($pathToJsonConfig);
@@ -44,13 +49,13 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws InvalidSettingException
      */
-    private function create(string $className): ClassDefinition
+    private function create(string $id, string $className): ClassDefinition
     {
         try {
             $values = [
+                'id'        => empty($id) ? mb_strtolower($className) : $id,
                 'name'      => $className,
                 'userOwner' => 0,
-                'id'        => mb_strtolower($className)
             ];
 
             $class = ClassDefinition::create($values);
@@ -78,7 +83,10 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
         $classDefinition = ClassDefinition::getByName($className);
 
         if (empty($classDefinition)) {
-            $message = sprintf('Class Definition with name "%s" can not be deleted, because it does not exist.', $className);
+            $message = sprintf(
+                'Class Definition with name "%s" can not be deleted, because it does not exist.',
+                $className
+            );
             $this->getOutput()->writeMessage($message);
             return;
         }
@@ -98,7 +106,6 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
 
     private function getJsonFileNameFor($className, string $direction): string
     {
-
         $dataFolder = $direction === self::DOWN ? $this->dataFolder . '/down/' : $this->dataFolder . '/';
         $dataFolder .= 'class_' . $className . '_export.json';
 
