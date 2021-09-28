@@ -30,17 +30,20 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
             throw new InvalidSettingException($message);
         }
 
+        $configJson = file_get_contents($pathToJsonConfig);
+        $classConfig = json_decode($configJson, true);
+
         if (!empty($id)) {
             $class = ClassDefinition::getById($id) ?? ClassDefinition::getByName($className);
         } else {
-            $class = ClassDefinition::getByName($className);
+            $id = $classConfig['id'];
+            $class = ClassDefinition::getById($id);
         }
 
         if (empty($class)) {
             $class = $this->create($id, $className);
         }
 
-        $configJson = file_get_contents($pathToJsonConfig);
         Service::importClassDefinitionFromJson($class, $configJson, true);
 
         $this->clearCache();
