@@ -30,11 +30,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
             throw new InvalidSettingException($message);
         }
 
-        if (!empty($id)) {
-            $class = ClassDefinition::getById($id) ?? ClassDefinition::getByName($className);
-        } else {
-            $class = ClassDefinition::getByName($className);
-        }
+        $class = ClassDefinition::getByName($className);
 
         $configJson = file_get_contents($pathToJsonConfig);
 
