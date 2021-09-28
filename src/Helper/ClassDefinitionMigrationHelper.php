@@ -19,7 +19,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws InvalidSettingException
      */
-    public function createOrUpdate(string $className, string $pathToJsonConfig, ?string $id = null)
+    public function createOrUpdate(string $className, string $pathToJsonConfig)
     {
         if (!file_exists($pathToJsonConfig)) {
             $message = sprintf(
@@ -30,18 +30,17 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
             throw new InvalidSettingException($message);
         }
 
-        $configJson = file_get_contents($pathToJsonConfig);
-        $classConfig = json_decode($configJson, true);
-
         if (!empty($id)) {
             $class = ClassDefinition::getById($id) ?? ClassDefinition::getByName($className);
         } else {
-            $id = $classConfig['id'];
-            $class = ClassDefinition::getById($id);
+            $class = ClassDefinition::getByName($className);
         }
 
+        $configJson = file_get_contents($pathToJsonConfig);
+
         if (empty($class)) {
-            $class = $this->create($id, $className);
+            $classConfig = json_decode($configJson, true);
+            $class = $this->create($classConfig['id'], $className);
         }
 
         Service::importClassDefinitionFromJson($class, $configJson, true);
@@ -56,7 +55,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
     {
         try {
             $values = [
-                'id'        => empty($id) ? mb_strtolower($className) : $id,
+                'id'        => $id,
                 'name'      => $className,
                 'userOwner' => 0,
             ];
