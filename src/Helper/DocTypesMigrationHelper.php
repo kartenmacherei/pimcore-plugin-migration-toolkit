@@ -12,7 +12,6 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
         string $controller,
         string $type = 'page',
         string $action = '',
-        string $bundle = '',
         string $template = '',
         int $priority = 0,
         string $group = ''
@@ -25,12 +24,14 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
             return;
         }
 
+        if (empty($action)) {
+            $action = 'defaultAction';
+        }
+
         $docType = new DocType();
         $docType->setName($name);
-        $docType->setController($controller);
+        $docType->setController($controller . '::' . $action);
         $docType->setType($type);
-        $docType->setAction($action);
-        $docType->setModule($bundle);
         $docType->setTemplate($template);
         $docType->setPriority($priority);
         $docType->setGroup($group);
@@ -56,7 +57,6 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
         ?string $controller = null,
         ?string $type = null,
         ?string $action = null,
-        ?string $bundle = null,
         ?string $template = null,
         ?int $priority = null,
         ?string $group = null
@@ -73,16 +73,13 @@ class DocTypesMigrationHelper extends AbstractMigrationHelper
             $docType->setName($newName);
         }
         if ($controller !== null) {
-            $docType->setController($controller);
+            if ($action === null) {
+                $action = 'defaultAction';
+            }
+            $docType->setController($controller . '::' . $action);
         }
         if ($type !== null) {
             $docType->setType($type);
-        }
-        if ($action !== null) {
-            $docType->setAction($action);
-        }
-        if ($bundle !== null) {
-            $docType->setModule($bundle);
         }
         if ($template !== null) {
             $docType->setTemplate($template);
