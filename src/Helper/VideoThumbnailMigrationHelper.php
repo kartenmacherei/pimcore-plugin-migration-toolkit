@@ -3,6 +3,7 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Exception;
 use Pimcore\Model\Asset\Video\Thumbnail\Config as VideoThumbnailConfig;
 
 class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
@@ -20,11 +21,12 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
      * @param string $name
      * @param string $description
      * @param string $group
-     * @param int    $videoBitrate
-     * @param int    $audioBitrate
+     * @param int $videoBitrate
+     * @param int $audioBitrate
      *
      * @return VideoThumbnailConfig
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function create(
         string $name,
@@ -56,6 +58,7 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
 
     /**
      * @param string $name
+     * @throws Exception
      */
     public function delete(string $name): void
     {
@@ -67,9 +70,7 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
             return;
         }
 
-        $videoThumbnail->doClearTempFiles(PIMCORE_TEMPORARY_DIRECTORY . '/video-thumbnails', $name);
-        $videoThumbnail->delete();
-
+        $videoThumbnail->delete(true);
         $this->clearCache();
     }
 }

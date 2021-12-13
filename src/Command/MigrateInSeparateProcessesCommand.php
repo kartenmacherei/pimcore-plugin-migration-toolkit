@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
 class MigrateInSeparateProcessesCommand extends AbstractCommand
 {
     const LOG_EMPTY_LINE = '                                                            ';
-    const LOG_SEPARATOR_LINE = '============================================================';
+    const LOG_SEPARATOR_LINE = '======================================================================================';
 
     protected static $defaultName = 'basilicom:migrations:migrate-in-separate-processes';
 
@@ -27,7 +27,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The following prevents problems when the container changes during runtime - which is the case with migrations
-        $eventDispatcher = Pimcore::getKernel()->getContainer()->get('event_dispatcher');
+        $eventDispatcher = Pimcore::getEventDispatcher();
         foreach ($eventDispatcher->getListeners(ConsoleEvents::TERMINATE) as $listener) {
             $eventDispatcher->removeListener(ConsoleEvents::TERMINATE, $listener);
         }
@@ -42,13 +42,15 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         $output->writeln('Following migrations will be executed: ' . PHP_EOL . implode(PHP_EOL, $unexecutedMigrations));
 
         foreach ($unexecutedMigrations as $migration) {
+            $migrationVersion = substr($migration, strrpos($migration, '\\') + 1);
+            $migrationPrefix = substr($migration, 0, strrpos($migration, '\\'));
             $output->writeln(self::LOG_EMPTY_LINE);
             $output->writeln(self::LOG_SEPARATOR_LINE);
-            $output->writeln('        Executing the migration ' . substr($migration, strrpos($migration, '\\') + 1));
+            $output->writeln('        Executing the migration ' . $migrationVersion . ' (' . $migrationPrefix . ')');
             $output->writeln(self::LOG_SEPARATOR_LINE);
 
             $process = new Process(
-                ['bin/console', 'doctrine:migrations:execute', $migration, '--no-interaction'],
+                ['bin/console', '--no-interaction', 'doctrine:migrations:execute', $migration],
                 PIMCORE_PROJECT_ROOT
             );
             $process->setTimeout(120);
@@ -69,7 +71,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
         $output->writeln(self::LOG_EMPTY_LINE);
         $output->writeln(self::LOG_SEPARATOR_LINE);
-        $output->writeln('                    Migrations finished                     ');
+        $output->writeln('        Migrations finished');
         $output->writeln(self::LOG_SEPARATOR_LINE);
         $output->writeln(self::LOG_EMPTY_LINE);
 
@@ -79,7 +81,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     protected function getUnexecutedMigrations()
     {
         $process = new Process(
-            ['bin/console', 'doctrine:migrations:list', '--no-interaction'],
+            ['bin/console', 'doctrine:migrations:list'],
             PIMCORE_PROJECT_ROOT
         );
 

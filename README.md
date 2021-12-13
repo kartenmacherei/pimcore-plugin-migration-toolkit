@@ -4,12 +4,12 @@
 
 | Bundle Version | PHP | Pimcore |
 | ----------- | -----------| ----------- |
-| &lt; 4.0 | ^7.4 | ^6.8 |
-| &gt;= 4.0 | ^8.0 | ^10.0 |
+| &lt; 4.x.x | ^7.4 | ^6.8 |
+| &gt;= 4.x.x. | ^8.0 | ^10.0 |
 
 ## Why?
 
-In every project we have migrations for the same things. Like System Settings, Classes, etc.
+In every project we have migrations for the same things. Like Thumbnails, Classes, etc.
 
 This plugin provides you with the migration helpers and further tools.
 
@@ -20,48 +20,44 @@ For all migrations extend them from the class ```AbstractAdvancedPimcoreMigratio
 ### Migration Data
 
 If a migration needs data it needs to be located in the following folder:
-```/project/app/Migrations/data/<classname-of-the-migration>```
+```<path/to/migrationFolder>/Migrations/data/<classname-of-the-migration>```
 
 ### System Settings
 
-Example: Up
+System Settings can be set via config.yaml.
 
-```
-$systemSettingsMigrationHelper = $this->getSystemSettingsMigrationHelper();
-$systemSettingsMigrationHelper->setAdminColor('#003366');
-$systemSettingsMigrationHelper->setLoginColor('#003366');
-$systemSettingsMigrationHelper->setInvertColorsForLoginScreen(true);
-$systemSettingsMigrationHelper->setHideEditImageTab(true);
+Example: 
+
+```yaml
+pimcore_admin:
+    branding:
+        login_screen_invert_colors: true
+        color_login_screen: '#001b36'
+        color_admin_interface: '#001b36'
+        login_screen_custom_image: '/build/images/backend/background-login-screen.jpg'
 ```
 
-Example: Down
-
-```
-$systemSettingsMigrationHelper = $this->getSystemSettingsMigrationHelper();
-$systemSettingsMigrationHelper->removeAdminColor();
-$systemSettingsMigrationHelper->removeLoginColor();
-$systemSettingsMigrationHelper->removeInvertColorsForLoginScreen();
-$systemSettingsMigrationHelper->removeHideEditImageTab();
-```
 
 ### Language Settings
 
-Example: Up
+Language Settings are part of the System Settings and can be set via config.yaml.
 
-``` 
-$languageSettingsMigrationHelper = $this->getLanguageSettingsMigrationHelper();
-$languageSettingsMigrationHelper->setDefaultLanguageInAdminInterface('de');
-$languageSettingsMigrationHelper->addLanguageWithFallback('de', 'en');
-$languageSettingsMigrationHelper->setDefaultLanguage('de');
-```
+Example: 
 
-Example: Down
-
-```
-$languageSettingsMigrationHelper = $this->getLanguageSettingsMigrationHelper();
-$languageSettingsMigrationHelper->setDefaultLanguageInAdminInterface('en');
-$languageSettingsMigrationHelper->removeLanguage('de');
-$languageSettingsMigrationHelper->setDefaultLanguage('en');
+```yaml
+pimcore:
+    general:
+        timezone: Europe/Berlin
+        redirect_to_maindomain: false
+        language: en
+        valid_languages: 'de,de_CH,en,fr_CH'
+        fallback_languages:
+          de: ''
+          de_CH: ''
+          en: ''
+          fr_CH: ''
+        default_language: en
+        debug_admin_translations: false
 ```
 
 ### Website Settings
@@ -99,10 +95,8 @@ $staticRoutesMigrationHelper->create(
     '/pattern',
     '/reverse',
     'controller',
-    'action',
     'variable1,variable2',
     'default1,default2',
-    'bundle',
     10
 );
 $staticRoutesMigrationHelper->create(
@@ -411,21 +405,21 @@ Example: Up
 
 ``` 
 $quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
-$quantityValueUnitMigrationHelper->createOrUpdate('abr', 'Long Abbreviation');
+$quantityValueUnitMigrationHelper->createOrUpdate('uniqueid', 'abr', 'Long Abbreviation');
 ```
 
 Example: Down
 
 ```
 $quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
-$quantityValueUnitMigrationHelper->delete('abr');
+$quantityValueUnitMigrationHelper->delete('uniqueid');
 ```
 
 ## Commands
 
 ### Migrate in separate process
 
-Executes the same migrations as the ```pimcore:migrations:migrate``` command, but each one is run in a separate process,
+Executes the same migrations as the ```doctrine:migrations:migrate``` command, but each one is run in a separate process,
 to prevent problems with PHP classes that changed during the runtime.
 
 ``` 
@@ -439,9 +433,9 @@ admin translations.
 
 ``` 
 # examples
-bin/console basilicom:import:translations /path/to/shared-translations.csv
-bin/console basilicom:import:translations /path/to/shared-translations.csv --replaceExistingTranslation
-bin/console basilicom:import:translations /path/to/admin-translations.csv --replaceExistingTranslation --admin
+bin/console basilicom:import:translations /path/to/project/translations/shared-translations.csv
+bin/console basilicom:import:translations /path/to/project/translations/shared-translations.csv --replaceExistingTranslation
+bin/console basilicom:import:translations /path/to/project/translations/admin-translations.csv --replaceExistingTranslation --admin
 ```
 
 ## Ideas
@@ -453,4 +447,3 @@ bin/console basilicom:import:translations /path/to/admin-translations.csv --repl
         * ...
 * enhance command: ```basilicom:migrations:migrate-in-separate-processes```
     * to also revert ```prev``` or ```<versionnumber>```
-* Video Thumbnail Migration Helper

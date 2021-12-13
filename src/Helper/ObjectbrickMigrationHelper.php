@@ -9,8 +9,7 @@ use Pimcore\Model\DataObject\Objectbrick\Definition as ObjectbrickDefinition;
 
 class ObjectbrickMigrationHelper extends AbstractMigrationHelper
 {
-    /** @var string */
-    protected $dataFolder;
+    protected string $dataFolder;
 
     public function __construct(string $dataFolder)
     {

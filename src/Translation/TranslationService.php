@@ -19,7 +19,7 @@ class TranslationService
     {
         $this->validateTranslationsFile($filename, $delimiter);
 
-        Translation\Website::importTranslationsFromFile($filename, $replaceExistingTranslation);
+        Translation::importTranslationsFromFile($filename, Translation::DOMAIN_DEFAULT, $replaceExistingTranslation);
     }
 
     /**
@@ -34,7 +34,7 @@ class TranslationService
     {
         $this->validateTranslationsFile($filename, $delimiter);
 
-        Translation\Admin::importTranslationsFromFile($filename, $replaceExistingTranslation);
+        Translation::importTranslationsFromFile($filename, Translation::DOMAIN_ADMIN, $replaceExistingTranslation);
     }
 
     /**

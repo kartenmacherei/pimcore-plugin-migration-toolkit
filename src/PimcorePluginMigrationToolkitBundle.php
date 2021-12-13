@@ -10,7 +10,7 @@ class PimcorePluginMigrationToolkitBundle extends AbstractPimcoreBundle
     /**
      * @inheritDoc
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Set of Migration Helpers and further Migration Tools for Pimcore Migrations.';
     }
@@ -18,7 +18,7 @@ class PimcorePluginMigrationToolkitBundle extends AbstractPimcoreBundle
     /**
      * @inheritDoc
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         $parts = explode('@', Versions::getVersion('basilicom/pimcore-plugin-migration-toolkit'));
 

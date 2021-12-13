@@ -17,10 +17,8 @@ class StaticRoutesMigrationHelper extends AbstractMigrationHelper
         string $pattern,
         string $reverse,
         string $controller,
-        ?string $action = null,
         ?string $variables = null,
         ?string $defaults = null,
-        ?string $bundle = null,
         ?int $priority = null
     ): void {
         $route = Staticroute::getByName($name);
@@ -38,17 +36,11 @@ class StaticRoutesMigrationHelper extends AbstractMigrationHelper
         $route->setReverse($reverse);
         $route->setController($controller);
 
-        if (!empty($action)) {
-            $route->setAction($action);
-        }
         if (!empty($variables)) {
             $route->setVariables($variables);
         }
         if (!empty($defaults)) {
             $route->setDefaults($defaults);
-        }
-        if (!empty($bundle)) {
-            $route->setModule($bundle);
         }
         if (!empty($priority)) {
             $route->setPriority($priority);

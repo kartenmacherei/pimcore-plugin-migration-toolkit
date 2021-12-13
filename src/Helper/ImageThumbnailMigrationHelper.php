@@ -5,6 +5,7 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\MigrationToolkitException;
 use Basilicom\PimcorePluginMigrationToolkit\Exceptions\NotFoundException;
+use Exception;
 use Pimcore\Model\Asset\Image\Thumbnail\Config as ThumbnailConfig;
 
 class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
@@ -30,6 +31,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 
     /**
      * @throws NotFoundException
+     * @throws Exception
      */
     private function getThumbnailByName(string $name): ThumbnailConfig
     {
@@ -43,6 +45,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 
     /**
      * @throws InvalidSettingException
+     * @throws Exception
      */
     public function create(
         string $name,
@@ -84,7 +87,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
     public function resetTransformations(string $name): void
     {
         $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->resetItems();
+        $thumbnail->setItems([]);
+        $thumbnail->setMedias([]);
         $thumbnail->save();
 
         $this->clearCache();
@@ -315,9 +319,14 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
     public function delete(string $name): void
     {
         $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->doClearTempFiles(PIMCORE_TEMPORARY_DIRECTORY . '/image-thumbnails', $name);
-        $thumbnail->delete();
+        if (empty($thumbnail)) {
+            $message = sprintf('Thumbnail with name "%s" can not be deleted, because it does not exist.', $name);
+            $this->getOutput()->writeMessage($message);
 
+            return;
+        }
+
+        $thumbnail->delete(true);
         $this->clearCache();
     }
 }

@@ -15,13 +15,12 @@ class ImportTranslationsCommand extends AbstractCommand
 {
     protected static $defaultName = 'basilicom:import:translations';
 
-    /** @var TranslationService */
-    private $translationService;
+    private TranslationService $translationService;
 
-    public function __construct(string $name = null)
+    public function __construct()
     {
-        parent::__construct($name);
-        $this->translationService = new TranslationService();
+        parent::__construct();
+        $this->translationService = new TranslationService;
     }
 
     protected function configure()
@@ -38,7 +37,8 @@ class ImportTranslationsCommand extends AbstractCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @example bin/console basilicom:import-shared-translations /path/to/shared-translations.csv --delimiter=; --replaceExistingTranslation --admin
+     * @example bin/console basilicom:import-shared-translations /path/to/shared-translations.csv
+     * @example bin/console basilicom:import-shared-translations /path/to/shared-translations.csv --delimiter=, --replaceExistingTranslation --admin
      *
      * the used file is probably an export from the pimcore admin interface. tools > translations > shared translations.
      * this command simply takes this file and imports it via pimcore api.
