@@ -12,8 +12,19 @@ use Pimcore\Model\Property\Predefined as PredefinedProperty;
 
 class DocumentMigrationHelper extends AbstractMigrationHelper
 {
-    // bastodo: add support for folders etc
     const TYPE_PAGE = 'page';
+    const TYPE_EMAIL = 'email';
+    const VALID_DOCUMENT_TYPES = [self::TYPE_EMAIL, self::TYPE_PAGE];
+
+    const EMAIl_PROP_SUBJECT = 'subject';
+    const EMAIl_PROP_FROM = 'from';
+    const EMAIl_PROP_REPLY_TO = 'replyTo';
+    const EMAIl_PROP_TO = 'to';
+    const EMAIl_PROP_CC = 'cc';
+    const EMAIl_PROP_BCC = 'bcc';
+    const EMAIL_PROPS = [self::EMAIl_PROP_SUBJECT, self::EMAIl_PROP_FROM, self::EMAIl_PROP_REPLY_TO, self::EMAIl_PROP_TO, self::EMAIl_PROP_CC, self::EMAIl_PROP_BCC];
+
+    private bool $shouldPublish = false;
 
     /**
      * @throws InvalidSettingException
@@ -24,7 +35,8 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $name,
         string $controller,
         int $parentId
-    ): Page {
+    ): Page
+    {
         $parent = Document::getById($parentId);
 
         return $this->create($parent, $name, $key, $controller, self::TYPE_PAGE);
@@ -39,26 +51,66 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $name,
         string $controller,
         string $parentPath
-    ): Page {
+    ): Page
+    {
         $parent = Document::getByPath($parentPath);
 
         return $this->create($parent, $name, $key, $controller, self::TYPE_PAGE);
     }
 
+    public function createEmailByPath(
+        string $key,
+        string $controller,
+        string $parentPath,
+        ?string $subject = null,
+        ?string $from = null,
+        ?string $replyTo = null,
+        ?string $to = null,
+        ?string $cc = null,
+        ?string $bcc = null
+    )
+    {
+        $parent = Document::getByPath($parentPath);
+
+        $emailDetails = [];
+        if ($subject) {
+            $emailDetails[self::EMAIl_PROP_SUBJECT] = $subject;
+        }
+        if ($from) {
+            $emailDetails[self::EMAIl_PROP_FROM] = $from;
+        }
+        if ($replyTo) {
+            $emailDetails[self::EMAIl_PROP_REPLY_TO] = $replyTo;
+        }
+        if ($to) {
+            $emailDetails[self::EMAIl_PROP_TO] = $to;
+        }
+        if ($cc) {
+            $emailDetails[self::EMAIl_PROP_CC] = $cc;
+        }
+        if ($bcc) {
+            $emailDetails[self::EMAIl_PROP_BCC] = $bcc;
+        }
+
+        return $this->create($parent, $key, $key, $controller, self::TYPE_EMAIL, $emailDetails);
+    }
+
     /**
-     * @see \Pimcore\Bundle\AdminBundle\Controller\Admin\Document\DocumentController::addAction()
-     *
      * @throws InvalidSettingException
      * @throws Exception
+     * @see \Pimcore\Bundle\AdminBundle\Controller\Admin\Document\DocumentController::addAction()
+     *
      */
     private function create(
         ?Document $parent,
         string $name,
         string $key,
         string $controller,
-        string $type
-    ): Page {
-        if ($type !== self::TYPE_PAGE) {
+        string $type,
+        array $emailDetails = [],
+    ): Document
+    {
+        if (in_array($type, self::VALID_DOCUMENT_TYPES) === false) {
             $message = sprintf('Unsupported type "%s".', $type);
             throw new InvalidSettingException($message);
         }
@@ -84,19 +136,37 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         }
 
         $createValues = [
-            'userOwner' => 0,
+            'userOwner'        => 0,
             'userModification' => 0,
-            'published' => false,
-            'key' => Service::getValidKey($key, 'document'),
-            'controller' => $controller,
+            'published'        => false,
+            'key'              => Service::getValidKey($key, 'document'),
+            'controller'       => $controller,
         ];
 
-        $page = Page::create($parent->getId(), $createValues, false);
-        $page->setTitle($name);
-        $page->setProperty('navigation_name', 'text', $name, false, false);
-        $page->save();
+        if ($type === self::TYPE_PAGE) {
+            $doc = Page::create($parent->getId(), $createValues, false);
+            $doc->setTitle($name);
+            $doc->setProperty('navigation_name', 'text', $name, false, false);
+        } elseif ($type === self::TYPE_EMAIL) {
+            $doc = Document\Email::create($parent->getId(), $createValues, false);
 
-        return $page;
+            foreach (self::EMAIL_PROPS as $emailProp) {
+                if (isset($emailDetails[$emailProp]) === true) {
+                    $setter = 'set' . ucfirst($emailProp);
+                    $doc->$setter($emailDetails[$emailProp]);
+                }
+            }
+        }
+
+        $doc->setPublished($this->shouldPublish());
+        $doc->save();
+
+        return $doc;
+    }
+
+    public function createFolderByPath(string $path)
+    {
+        return Document\Service::createFolderByPath($path);
     }
 
     /**
@@ -148,7 +218,8 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $type,
         string $contentType,
         bool $isInheritable = true
-    ): PredefinedProperty {
+    ): PredefinedProperty
+    {
         try {
             $property = PredefinedProperty::getByKey($key);
         } catch (Exception $e) {
@@ -176,5 +247,15 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         if ($property) {
             $property->delete();
         }
+    }
+
+    public function shouldPublish(): bool
+    {
+        return $this->shouldPublish;
+    }
+
+    public function setShouldPublish(bool $shouldPublish): void
+    {
+        $this->shouldPublish = $shouldPublish;
     }
 }
