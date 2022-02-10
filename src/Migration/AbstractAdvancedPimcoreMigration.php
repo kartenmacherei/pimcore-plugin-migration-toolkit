@@ -11,6 +11,7 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocumentMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ImageThumbnailMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\MySqlMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\QuantityValueUnitMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
@@ -43,6 +44,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
     private ?ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper = null;
     private ?VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper = null;
     private ?QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper = null;
+    private ?MySqlMigrationHelper $mySqlMigrationHelper = null;
 
     private string $dataFolder = '';
 
@@ -226,5 +228,15 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         }
 
         return $this->quantityValueUnitMigrationHelper;
+    }
+
+    public function getMySqlMigrationHelper(): MySqlMigrationHelper
+    {
+        if ($this->mySqlMigrationHelper === null) {
+            $this->mySqlMigrationHelper = new MySqlMigrationHelper($this->dataFolder);
+            $this->mySqlMigrationHelper->setOutput($this->getOutputWriter());
+        }
+
+        return $this->mySqlMigrationHelper;
     }
 }

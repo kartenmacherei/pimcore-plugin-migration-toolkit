@@ -64,7 +64,7 @@ pimcore:
 
 Example: Up
 
-``` 
+```php 
 $websiteSettingsMigrationHelper = $this->getWebsiteSettingsMigrationHelper();
 $websiteSettingsMigrationHelper->createOfTypeText('text', 'text hier');
 $websiteSettingsMigrationHelper->createOfTypeDocument('document', 1);
@@ -75,7 +75,7 @@ $websiteSettingsMigrationHelper->createOfTypeBool('bool', false);
 
 Example: Down
 
-```
+```php
 $websiteSettingsMigrationHelper = $this->getWebsiteSettingsMigrationHelper();
 $websiteSettingsMigrationHelper->delete('text');
 $websiteSettingsMigrationHelper->delete('document');
@@ -88,7 +88,7 @@ $websiteSettingsMigrationHelper->delete('bool');
 
 Example: Up
 
-``` 
+```php 
 $staticRoutesMigrationHelper = $this->getStaticRoutesMigrationHelper();
 $staticRoutesMigrationHelper->create(
     'route',
@@ -109,7 +109,7 @@ $staticRoutesMigrationHelper->create(
 
 Example: Down
 
-```
+```php
 $staticRoutesMigrationHelper = $this->getStaticRoutesMigrationHelper();
 $staticRoutesMigrationHelper->delete('route');
 $staticRoutesMigrationHelper->delete('route1');
@@ -123,7 +123,7 @@ Even when deleting a user role in the pimcore backend the workspace data stays i
 
 Example: Up
 
-``` 
+```php 
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
 $userRolesMigrationHelper->create(
     'migrationRole',
@@ -140,7 +140,7 @@ $userRolesMigrationHelper->addWorkspaceAsset($role,$path,true,true,false,true,fa
 
 Example: Down
 
-```
+```php
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
 $userRolesMigrationHelper->delete('migrationRole');
 ```
@@ -149,7 +149,7 @@ $userRolesMigrationHelper->delete('migrationRole');
 
 Example: Up
 
-``` 
+```php 
 $docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
 $docTypesMigrationHelper->create('doktype', 'controller');
 $docTypesMigrationHelper->update('doktype', 'newDoctype', 'newcontroller');
@@ -157,7 +157,7 @@ $docTypesMigrationHelper->update('doktype', 'newDoctype', 'newcontroller');
 
 Example: Down
 
-```
+```php
 $docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
 $docTypesMigrationHelper->delete('newDoctype');
 ```
@@ -173,14 +173,14 @@ the installation.
 
 Example: Up
 
-``` 
+```php 
 $bundleMigrationHelper = $this->getBundleMigrationHelper();
 $bundleMigrationHelper->enable('Basilicom\PimcorePluginMigrationToolkit\PimcorePluginMigrationToolkitBundle');
 ```
 
 Example: Down
 
-```
+```php
 $bundleMigrationHelper = $this->getBundleMigrationHelper();
 $bundleMigrationHelper->disable('Basilicom\PimcorePluginMigrationToolkit\PimcorePluginMigrationToolkitBundle');
 ```
@@ -189,7 +189,7 @@ $bundleMigrationHelper->disable('Basilicom\PimcorePluginMigrationToolkit\Pimcore
 
 Example: Up
 
-``` 
+```php 
 $className = 'testing';
 $classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
 $jsonPath = $classDefinitionMigrationHelper->getJsonDefinitionPathForUpMigration($className);
@@ -198,7 +198,7 @@ $classDefinitionMigrationHelper->createOrUpdate($className, $jsonPath);
 
 Example: Down
 
-```
+```php
 $className = 'testing';
 $classDefinitionMigrationHelper = $this->getClassDefinitionMigrationHelper();
 $classDefinitionMigrationHelper->delete($className);
@@ -211,7 +211,7 @@ $classDefinitionMigrationHelper->createOrUpdate($className, $jsonPath);
 
 Example: Up
 
-``` 
+```php 
 $objectbrickName = 'brick';
 $objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
 $jsonPath = $objectbrickMigrationHelper->getJsonDefinitionPathForUpMigration($className);
@@ -220,7 +220,7 @@ $objectbrickMigrationHelper->createOrUpdate($objectbrickName, $jsonPath);
 
 Example: Down
 
-```
+```php
 $objectbrickName = 'brick';
 $objectbrickMigrationHelper = $this->getObjectbrickMigrationHelper();
 $objectbrickMigrationHelper->delete($objectbrickName);
@@ -233,7 +233,7 @@ $objectbrickMigrationHelper->createOrUpdate($objectbrickName, $jsonPath);
 
 Example: Up
 
-``` 
+```php 
 $key = 'test';
 $fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
 $jsonPath = $fieldcollectionMigrationHelper->getJsonDefinitionPathForUpMigration($className);
@@ -242,7 +242,7 @@ $fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 
 Example: Down
 
-```
+```php
 $key = 'test';
 $fieldcollectionMigrationHelper = $this->getFieldcollectionMigrationHelper();
 $fieldcollectionMigrationHelper->delete($key);
@@ -255,7 +255,7 @@ $fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 
 Custom Layouts will get the id like "lower(<classId><name>)".
 
-``` 
+```php 
 const CUSTOM_LAYOUT = [
     'classId' => 'reference',
     'name' => 'readOnly'
@@ -264,7 +264,7 @@ const CUSTOM_LAYOUT = [
 
 Example: Up
 
-``` 
+```php 
 $customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
 $jsonPath = $customLayoutMigrationHelper->getJsonDefinitionPathForUpMigration(self::CUSTOM_LAYOUT['name'], self::CUSTOM_LAYOUT['classId']);
 $customLayoutMigrationHelper->createOrUpdate(
@@ -276,7 +276,7 @@ $customLayoutMigrationHelper->createOrUpdate(
 
 Example: Down
 
-```
+```php
 $customLayoutMigrationHelper = $this->getCustomLayoutMigrationHelper();
 $customLayoutMigrationHelper->delete(
     self::CUSTOM_LAYOUT['name'],
@@ -293,7 +293,7 @@ $customLayoutMigrationHelper->createOrUpdate(
 
 ### Document (Page)
 
-``` 
+```php 
 const PAGE = [
     'key' => 'diga',
     'name' => 'DiGA',
@@ -304,7 +304,7 @@ const PAGE = [
 
 Example: Up
 
-``` 
+```php 
 $documentMigrationHelper = $this->getDocumentMigrationHelper();
 $documentMigrationHelper->createPageByParentPath(
     self::PAGE['key'],
@@ -316,7 +316,7 @@ $documentMigrationHelper->createPageByParentPath(
 
 Example: Down
 
-```
+```php
 $documentMigrationHelper = $this->getDocumentMigrationHelper();
 $documentMigrationHelper->deleteByPath(
     self::PAGE['parentPath'].self::PAGE['key']
@@ -327,7 +327,7 @@ $documentMigrationHelper->deleteByPath(
 
 Example: Up
 
-``` 
+```php 
 $dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
 $dataObjectMigrationHelper->createFolderByParentId('folder1', 1);
 $dataObjectMigrationHelper->createFolderByPath('/folder2/subfolder');
@@ -335,7 +335,7 @@ $dataObjectMigrationHelper->createFolderByPath('/folder2/subfolder');
 
 Example: Down
 
-```
+```php
 $dataObjectMigrationHelper = $this->getDataObjectMigrationHelper();
 $dataObjectMigrationHelper->deleteById(2);
 $dataObjectMigrationHelper->deleteByPath('/folder2');
@@ -345,7 +345,7 @@ $dataObjectMigrationHelper->deleteByPath('/folder2');
 
 Example: Up
 
-``` 
+```php 
 $assetMigrationHelper = $this->getAssetMigrationHelper();
 $assetMigrationHelper->createFolderByParentId('name', 1);
 $assetMigrationHelper->createFolderByPath('/asset1/subasset');
@@ -353,7 +353,7 @@ $assetMigrationHelper->createFolderByPath('/asset1/subasset');
 
 Example: Down
 
-```
+```php
 $assetMigrationHelper = $this->getAssetMigrationHelper();
 $assetMigrationHelper->deleteById(2);
 $assetMigrationHelper->deleteByPath('/asset1');
@@ -363,7 +363,7 @@ $assetMigrationHelper->deleteByPath('/asset1');
 
 Example: Up
 
-``` 
+```php
 $name = 'thumbnail';
 $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
 $imageThumbnailMigrationHelper->create($name, 'description');
@@ -374,7 +374,7 @@ $imageThumbnailMigrationHelper->addTransformationSetBackgroundColor($name, '#888
 
 Example: Down
 
-```
+```php
 $name = 'thumbnail';
 $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
 $imageThumbnailMigrationHelper->delete($name);
@@ -384,7 +384,7 @@ $imageThumbnailMigrationHelper->delete($name);
 
 Example: Up
 
-``` 
+```php
 $name = 'thumbnail';
 $videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
 $videoThumbnailMigrationHelper->create($name, 'description');
@@ -393,7 +393,7 @@ $videoThumbnailMigrationHelper->create($name, 'description');
 
 Example: Down
 
-```
+```php
 $name = 'thumbnail';
 $videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
 $videoThumbnailMigrationHelper->delete($name);
@@ -403,16 +403,44 @@ $videoThumbnailMigrationHelper->delete($name);
 
 Example: Up
 
-``` 
+```php
 $quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
 $quantityValueUnitMigrationHelper->createOrUpdate('uniqueid', 'abr', 'Long Abbreviation');
 ```
 
 Example: Down
 
-```
+```php
 $quantityValueUnitMigrationHelper = $this->getQuantityValueUnitMigrationHelper();
 $quantityValueUnitMigrationHelper->delete('uniqueid');
+```
+
+### MySQL Helper
+
+#### Example: Up
+
+to load and execute a large sql file, do the following:
+
+```php
+$mysqlHelper = $this->getMySqlMigrationHelper();
+$sqlFile = $mysqlHelper->loadSqlFile('your_sql_file.sql');
+$this->addSql($sqlFile);
+```
+all sql files should be stored in the `sql` subdirectory within the migration's data directory:
+```shell
+project/src/Migrations/data/<YOUR_MIGRATIONS_CLASS_NAME>/sql
+```
+
+#### Example: Down
+```php
+$mysqlHelper = $this->getMySqlMigrationHelper();
+$sqlFile = $mysqlHelper->loadSqlFile('your_sql_file.sql', $mysqlHelper::DOWN);
+$this->addSql($sqlFile);
+```
+
+please keep in mind the changed path in case of down migrations:
+```shell
+project/src/Migrations/data/<YOUR_MIGRATIONS_CLASS_NAME>/sql/down
 ```
 
 ## Commands
@@ -422,7 +450,7 @@ $quantityValueUnitMigrationHelper->delete('uniqueid');
 Executes the same migrations as the ```doctrine:migrations:migrate``` command, but each one is run in a separate process,
 to prevent problems with PHP classes that changed during the runtime.
 
-``` 
+```shell 
 bin/console basilicom:migrations:migrate-in-separate-processes
 ```
 
@@ -431,7 +459,7 @@ bin/console basilicom:migrations:migrate-in-separate-processes
 To import a csv file, like the exported shared translations from pimcore. To Pimcore shared translations. Or to Pimcore
 admin translations.
 
-``` 
+```shell 
 # examples
 bin/console basilicom:import:translations /path/to/project/translations/shared-translations.csv
 bin/console basilicom:import:translations /path/to/project/translations/shared-translations.csv --replaceExistingTranslation
