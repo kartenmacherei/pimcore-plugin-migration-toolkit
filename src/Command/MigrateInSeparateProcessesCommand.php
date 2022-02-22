@@ -2,6 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Command;
 
+use Basilicom\PimcorePluginMigrationToolkit\Trait\ClearCacheTrait;
 use Pimcore;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\ConsoleEvents;
@@ -11,6 +12,8 @@ use Symfony\Component\Process\Process;
 
 class MigrateInSeparateProcessesCommand extends AbstractCommand
 {
+    use ClearCacheTrait;
+
     const LOG_EMPTY_LINE = '                                                            ';
     const LOG_SEPARATOR_LINE = '======================================================================================';
 
@@ -26,6 +29,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->clearCache();
+
         // The following prevents problems when the container changes during runtime - which is the case with migrations
         $eventDispatcher = Pimcore::getEventDispatcher();
         foreach ($eventDispatcher->getListeners(ConsoleEvents::TERMINATE) as $listener) {
@@ -35,7 +40,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         $unexecutedMigrations = $this->getUnexecutedMigrations();
 
         if (count($unexecutedMigrations) < 1) {
-            $output->writeln('No migrations to execute');
+            $output->writeln('<info>No migrations to execute</info>');
             exit(0);
         }
 
@@ -80,8 +85,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
     protected function getUnexecutedMigrations()
     {
-        $process = new Process(
-            ['bin/console', 'doctrine:migrations:list'],
+        $process = Process::fromShellCommandline(
+            'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'',
             PIMCORE_PROJECT_ROOT
         );
 
@@ -89,9 +94,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
         $unexecutedMigrations = [];
         foreach ($process as $type => $outputLine) {
-            if (strrpos($outputLine, 'not migrated') !== false) {
-                preg_match('/\|([^\|]+)\|/', $outputLine, $matches);
-                $unexecutedMigrations[] = preg_replace('/\s+/', '', $matches[1]);
+            if ($type === 'out') {
+                $unexecutedMigrations = explode(PHP_EOL, trim($outputLine));
             }
         }
 
