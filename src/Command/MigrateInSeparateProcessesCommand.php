@@ -3,6 +3,8 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Command;
 
 use Pimcore;
+use Pimcore\Cache;
+use Pimcore\Cache\Runtime as RuntimeCache;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,6 +28,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->clearCache();
+
         // The following prevents problems when the container changes during runtime - which is the case with migrations
         $eventDispatcher = Pimcore::getEventDispatcher();
         foreach ($eventDispatcher->getListeners(ConsoleEvents::TERMINATE) as $listener) {
@@ -80,8 +84,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
     protected function getUnexecutedMigrations()
     {
-        $process = new Process(
-            ['bin/console', 'doctrine:migrations:list'],
+        $process = Process::fromShellCommandline(
+            'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2',
             PIMCORE_PROJECT_ROOT
         );
 
@@ -89,12 +93,17 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
         $unexecutedMigrations = [];
         foreach ($process as $type => $outputLine) {
-            if (strrpos($outputLine, 'not migrated') !== false) {
-                preg_match('/\|([^\|]+)\|/', $outputLine, $matches);
-                $unexecutedMigrations[] = preg_replace('/\s+/', '', $matches[1]);
+            if ($type === 'out') {
+                $unexecutedMigrations[] = trim($outputLine);
             }
         }
 
         return array_filter($unexecutedMigrations);
+    }
+
+    private function clearCache()
+    {
+        Cache::clearAll();
+        RuntimeCache::clear();
     }
 }
