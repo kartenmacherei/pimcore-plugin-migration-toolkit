@@ -2,14 +2,15 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
-use Pimcore\Cache;
-use Pimcore\Cache\Runtime as RuntimeCache;
+use Basilicom\PimcorePluginMigrationToolkit\Trait\ClearCacheTrait;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
 use Pimcore\Tool;
 
 abstract class AbstractMigrationHelper
 {
+    use ClearCacheTrait;
+
     const UP = 'up';
     const DOWN = 'down';
 
@@ -32,11 +33,5 @@ abstract class AbstractMigrationHelper
     protected function isValidLanguage(string $language): bool
     {
         return in_array($language, Tool::getValidLanguages());
-    }
-
-    protected function clearCache(): void
-    {
-        Cache::clearAll();
-        RuntimeCache::clear();
     }
 }

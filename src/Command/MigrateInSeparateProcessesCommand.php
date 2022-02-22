@@ -2,9 +2,8 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Command;
 
+use Basilicom\PimcorePluginMigrationToolkit\Trait\ClearCacheTrait;
 use Pimcore;
-use Pimcore\Cache;
-use Pimcore\Cache\Runtime as RuntimeCache;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +12,8 @@ use Symfony\Component\Process\Process;
 
 class MigrateInSeparateProcessesCommand extends AbstractCommand
 {
+    use ClearCacheTrait;
+
     const LOG_EMPTY_LINE = '                                                            ';
     const LOG_SEPARATOR_LINE = '======================================================================================';
 
@@ -39,7 +40,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         $unexecutedMigrations = $this->getUnexecutedMigrations();
 
         if (count($unexecutedMigrations) < 1) {
-            $output->writeln('No migrations to execute');
+            $output->writeln('<info>No migrations to execute</info>');
             exit(0);
         }
 
@@ -85,7 +86,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     protected function getUnexecutedMigrations()
     {
         $process = Process::fromShellCommandline(
-            'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2',
+            'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'',
             PIMCORE_PROJECT_ROOT
         );
 
@@ -94,16 +95,10 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         $unexecutedMigrations = [];
         foreach ($process as $type => $outputLine) {
             if ($type === 'out') {
-                $unexecutedMigrations[] = trim($outputLine);
+                $unexecutedMigrations = explode(PHP_EOL, trim($outputLine));
             }
         }
 
         return array_filter($unexecutedMigrations);
-    }
-
-    private function clearCache()
-    {
-        Cache::clearAll();
-        RuntimeCache::clear();
     }
 }
