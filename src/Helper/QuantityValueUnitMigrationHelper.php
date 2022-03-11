@@ -19,8 +19,7 @@ class QuantityValueUnitMigrationHelper extends AbstractMigrationHelper
         ?float $conversionOffset = null,
         string $converter = ''
     ): void {
-
-        if (preg_match('/^[[:alnum:]]+$/', $id) === 0){
+        if (preg_match('/^[[:alnum:]]+$/', $id) === 0) {
             throw new InvalidSettingException('The id "' . $id . '" should be only contain "a-zA-Z0-9".');
         }
 
@@ -60,6 +59,7 @@ class QuantityValueUnitMigrationHelper extends AbstractMigrationHelper
                 $id
             );
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

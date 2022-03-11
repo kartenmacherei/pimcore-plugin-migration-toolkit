@@ -251,6 +251,76 @@ $jsonPath = $fieldcollectionMigrationHelper->getJsonDefinitionPathForDownMigrati
 $fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 ```
 
+### Classification Store
+
+Example: Up
+
+```php
+$groupName = 'GroupName';
+$storeId = 1;
+
+$classificationStoreMigrationHelper = $this->getClassificationStoreMigrationHelper();
+$classificationStoreMigrationHelper->createOrUpdateStore(
+    $storeId,
+    'Name',
+    'Description'
+);
+
+$classificationStoreMigrationHelper->createOrUpdateGroup(
+    $groupName,
+    'Description',
+    $storeId
+);
+
+
+$fieldName = 'FieldName';
+$title = 'Title fo FieldName';
+
+// Input
+$definition = new ClassDefinitionData\Input();
+$definition->setWidth(500);
+$definition->setName($fieldName);
+$definition->setTitle($title);
+
+$classificationStoreMigrationHelper->createOrUpdateKey(
+    $fieldName,
+    $title,
+    'Description',
+    $definition,
+    $storeId,
+    $groupName
+);
+```
+
+Example: Down
+
+```php
+$classificationStoreMigrationHelper = $this->getClassificationStoreMigrationHelper();
+$classificationStoreMigrationHelper->deleteGroup($groupName, $storeId);
+$classificationStoreMigrationHelper->deleteKey($fieldName, $storeId);
+$classificationStoreMigrationHelper->deleteStore($storeId);
+```
+
+## FieldDefinition Examples
+```php
+// Textarea
+$definition = new ClassDefinitionData\Textarea();
+$definition->setWidth(500);
+$definition->setHeight(100);
+$definition->setShowCharCount(true);
+$definition->setName($fieldName);
+$definition->setTitle($title);
+
+// Select
+$definition = new ClassDefinitionData\Select();
+$definition->setWidth(500);
+$definition->setDefaultValue('');
+$definition->setOptions([]);
+$definition->setName($fieldName);
+$definition->setTitle($title);
+
+```
+
 ### Custom Layouts
 
 Custom Layouts will get the id like "lower(<classId><name>)".

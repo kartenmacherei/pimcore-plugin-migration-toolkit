@@ -2,14 +2,14 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\Document;
 use Pimcore\Model\User\Role;
-use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
+use Pimcore\Model\User\Workspace\Asset as WorkspaceAsset;
 use Pimcore\Model\User\Workspace\DataObject as WorkspaceDataObject;
 use Pimcore\Model\User\Workspace\Document as WorkspaceDocument;
-use Pimcore\Model\User\Workspace\Asset as WorkspaceAsset;
 
 class UserRolesMigrationHelper extends AbstractMigrationHelper
 {
@@ -35,11 +35,11 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         array $perspectives = [],
         int $parentId = 0
     ): void {
-
         $role = Role::getByName($name);
 
         if ($role) {
             $message = sprintf('Not creating User Role with name "%s". User Role with this name already exists.', $name);
+
             throw new InvalidSettingException($message);
         }
 
@@ -80,11 +80,11 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         array $perspectives = [],
         int $parentId = 0
     ): void {
-
         $role = Role::getByName($name);
 
         if (empty($role)) {
             $message = sprintf('Not updating User Role with name "%s". User Role with this name does not exists.', $name);
+
             throw new InvalidSettingException($message);
         }
 
@@ -139,6 +139,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
                 'Not adding WorkspaceDataObject to User Role with name "%s", because User Role does not exists.',
                 $roleName
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -150,6 +151,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
                 $roleName,
                 $path
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -193,6 +195,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
                 'Not adding WorkspaceDataDocument to User Role with name "%s", because User Role does not exists.',
                 $roleName
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -204,6 +207,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
                 $roleName,
                 $path
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -238,7 +242,6 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         bool $versions = false,
         bool $properties = false
     ): void {
-
         $role = Role::getByName($roleName);
 
         if (empty($role)) {
@@ -246,6 +249,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
                 'Not adding WorkspaceDataAsset to User Role with name "%s", because User Role does not exists.',
                 $roleName
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -257,6 +261,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
                 $roleName,
                 $path
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -283,6 +288,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         if (empty($role)) {
             $message = sprintf('User Role with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

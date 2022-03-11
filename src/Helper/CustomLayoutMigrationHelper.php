@@ -32,6 +32,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
                 $classId,
                 $pathToJsonConfig
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -56,6 +57,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
                 $layoutName,
                 $classId
             );
+
             throw new InvalidSettingException(
                 $message,
                 0,
@@ -85,6 +87,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
                 $layoutName,
                 $classId
             );
+
             throw new InvalidSettingException(
                 $message,
                 0,
@@ -107,6 +110,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
                 $classId
             );
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

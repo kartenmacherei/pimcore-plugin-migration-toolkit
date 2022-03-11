@@ -5,6 +5,7 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Migration;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\AssetMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassificationStoreMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\CustomLayoutMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DataObjectMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
@@ -45,6 +46,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
     private ?VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper = null;
     private ?QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper = null;
     private ?MySqlMigrationHelper $mySqlMigrationHelper = null;
+    private ?ClassificationStoreMigrationHelper $classificationStoreMigrationHelper = null;
 
     private string $dataFolder = '';
 
@@ -238,5 +240,15 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         }
 
         return $this->mySqlMigrationHelper;
+    }
+
+    public function getClassificationStoreMigrationHelper(): ClassificationStoreMigrationHelper
+    {
+        if ($this->classificationStoreMigrationHelper === null) {
+            $this->classificationStoreMigrationHelper = new ClassificationStoreMigrationHelper();
+            $this->classificationStoreMigrationHelper->setOutput($this->getOutputWriter());
+        }
+
+        return $this->classificationStoreMigrationHelper;
     }
 }

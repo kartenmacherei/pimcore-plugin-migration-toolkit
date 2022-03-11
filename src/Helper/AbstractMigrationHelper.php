@@ -2,9 +2,9 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
-use Basilicom\PimcorePluginMigrationToolkit\Trait\ClearCacheTrait;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\NullOutputWriter;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\OutputWriterInterface;
+use Basilicom\PimcorePluginMigrationToolkit\Trait\ClearCacheTrait;
 use Pimcore\Tool;
 
 abstract class AbstractMigrationHelper

@@ -27,6 +27,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
                 $className,
                 $pathToJsonConfig
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -65,6 +66,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
                 'Class Definition "%s" could not be created.',
                 $className
             );
+
             throw new InvalidSettingException(
                 $message,
                 0,
@@ -86,6 +88,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
                 $className
             );
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

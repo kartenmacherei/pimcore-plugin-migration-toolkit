@@ -24,6 +24,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
                 'The Folder "%s" could not be created, because the parent does not exist',
                 $name
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -41,6 +42,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
             ObjectService::createFolderByPath($path);
         } catch (Exception $exception) {
             $message = sprintf('The Folder "%s" could not be created.', $path);
+
             throw new InvalidSettingException($message);
         }
     }
@@ -59,6 +61,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
         if (empty($object)) {
             $message = sprintf('Object with id "%s" can not be deleted, because it does not exist.', $id);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
@@ -79,6 +82,7 @@ class DataObjectMigrationHelper extends AbstractMigrationHelper
         if (empty($object)) {
             $message = sprintf('Object with path "%s" can not be deleted, because it does not exist.', $path);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

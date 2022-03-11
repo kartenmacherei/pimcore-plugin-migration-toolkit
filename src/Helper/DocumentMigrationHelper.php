@@ -35,8 +35,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $name,
         string $controller,
         int $parentId
-    ): Page
-    {
+    ): Page {
         $parent = Document::getById($parentId);
 
         return $this->create($parent, $name, $key, $controller, self::TYPE_PAGE);
@@ -51,8 +50,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $name,
         string $controller,
         string $parentPath
-    ): Page
-    {
+    ): Page {
         $parent = Document::getByPath($parentPath);
 
         return $this->create($parent, $name, $key, $controller, self::TYPE_PAGE);
@@ -68,8 +66,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         ?string $to = null,
         ?string $cc = null,
         ?string $bcc = null
-    )
-    {
+    ) {
         $parent = Document::getByPath($parentPath);
 
         $emailDetails = [];
@@ -98,6 +95,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws InvalidSettingException
      * @throws Exception
+     *
      * @see \Pimcore\Bundle\AdminBundle\Controller\Admin\Document\DocumentController::addAction()
      *
      */
@@ -108,10 +106,10 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $controller,
         string $type,
         array $emailDetails = [],
-    ): Document
-    {
+    ): Document {
         if (in_array($type, self::VALID_DOCUMENT_TYPES) === false) {
             $message = sprintf('Unsupported type "%s".', $type);
+
             throw new InvalidSettingException($message);
         }
 
@@ -121,6 +119,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
                 $name,
                 $key
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -132,6 +131,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
                 $key,
                 $intendedPath
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -218,8 +218,7 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         string $type,
         string $contentType,
         bool $isInheritable = true
-    ): PredefinedProperty
-    {
+    ): PredefinedProperty {
         try {
             $property = PredefinedProperty::getByKey($key);
         } catch (Exception $e) {

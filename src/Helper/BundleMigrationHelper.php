@@ -62,6 +62,7 @@ class BundleMigrationHelper extends AbstractMigrationHelper
                 'The bundle with the id "%s" does not exist.',
                 $pluginId
             );
+
             throw new InvalidSettingException($message);
         }
 
