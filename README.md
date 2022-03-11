@@ -272,6 +272,10 @@ $classificationStoreMigrationHelper->createOrUpdateGroup(
     $storeId
 );
 
+
+$fieldName = 'FieldName';
+$title = 'Title fo FieldName';
+
 // Input
 $definition = new ClassDefinitionData\Input();
 $definition->setWidth(500);

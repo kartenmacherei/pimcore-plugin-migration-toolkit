@@ -12,17 +12,17 @@ use Pimcore\Model\Property\Predefined as PredefinedProperty;
 
 class DocumentMigrationHelper extends AbstractMigrationHelper
 {
-    const TYPE_PAGE            = 'page';
-    const TYPE_EMAIL           = 'email';
+    const TYPE_PAGE = 'page';
+    const TYPE_EMAIL = 'email';
     const VALID_DOCUMENT_TYPES = [self::TYPE_EMAIL, self::TYPE_PAGE];
 
-    const EMAIl_PROP_SUBJECT  = 'subject';
-    const EMAIl_PROP_FROM     = 'from';
+    const EMAIl_PROP_SUBJECT = 'subject';
+    const EMAIl_PROP_FROM = 'from';
     const EMAIl_PROP_REPLY_TO = 'replyTo';
-    const EMAIl_PROP_TO       = 'to';
-    const EMAIl_PROP_CC       = 'cc';
-    const EMAIl_PROP_BCC      = 'bcc';
-    const EMAIL_PROPS         = [self::EMAIl_PROP_SUBJECT, self::EMAIl_PROP_FROM, self::EMAIl_PROP_REPLY_TO, self::EMAIl_PROP_TO, self::EMAIl_PROP_CC, self::EMAIl_PROP_BCC];
+    const EMAIl_PROP_TO = 'to';
+    const EMAIl_PROP_CC = 'cc';
+    const EMAIl_PROP_BCC = 'bcc';
+    const EMAIL_PROPS = [self::EMAIl_PROP_SUBJECT, self::EMAIl_PROP_FROM, self::EMAIl_PROP_REPLY_TO, self::EMAIl_PROP_TO, self::EMAIl_PROP_CC, self::EMAIl_PROP_BCC];
 
     private bool $shouldPublish = false;
 

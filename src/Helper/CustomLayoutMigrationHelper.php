@@ -42,7 +42,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         }
 
         try {
-            $configJson       = $this->decodeJson(file_get_contents($pathToJsonConfig));
+            $configJson = $this->decodeJson(file_get_contents($pathToJsonConfig));
             $layoutDefinition = Service::generateLayoutTreeFromArray(
                 $configJson['layoutDefinitions'],
                 true

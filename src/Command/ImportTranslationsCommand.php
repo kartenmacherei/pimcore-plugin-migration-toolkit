@@ -53,9 +53,9 @@ class ImportTranslationsCommand extends AbstractCommand
     {
         $output->writeln('### Start Import of translation file.');
 
-        $filePath                   = $input->getArgument('path');
-        $isAdminTranslation         = $input->getOption('admin');
-        $delimiter                  = $input->getOption('delimiter');
+        $filePath = $input->getArgument('path');
+        $isAdminTranslation = $input->getOption('admin');
+        $delimiter = $input->getOption('delimiter');
         $replaceExistingTranslation = $input->getOption('replaceExistingTranslation');
 
         try {

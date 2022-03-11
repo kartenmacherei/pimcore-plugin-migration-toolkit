@@ -90,7 +90,7 @@ class ClassificationStoreMigrationHelper extends AbstractMigrationHelper
         $keyConfig->setStoreId($storeId);
         $keyConfig->save();
 
-        $groupConfig      = Classificationstore\GroupConfig::getByName($groupName, $storeId);
+        $groupConfig = Classificationstore\GroupConfig::getByName($groupName, $storeId);
         $keyGroupRelation = new Classificationstore\KeyGroupRelation();
         $keyGroupRelation->setKeyId($keyConfig->getId());
         $keyGroupRelation->setGroupId($groupConfig->getId());

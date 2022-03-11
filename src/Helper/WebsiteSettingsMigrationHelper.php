@@ -12,11 +12,11 @@ use Pimcore\Model\WebsiteSetting;
 
 class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
 {
-    const TYPE_TEXT     = 'text';
+    const TYPE_TEXT = 'text';
     const TYPE_DOCUMENT = 'document';
-    const TYPE_ASSET    = 'asset';
-    const TYPE_OBJECT   = 'object';
-    const TYPE_BOOL     = 'bool';
+    const TYPE_ASSET = 'asset';
+    const TYPE_OBJECT = 'object';
+    const TYPE_BOOL = 'bool';
 
     /**
      * @throws InvalidSettingException

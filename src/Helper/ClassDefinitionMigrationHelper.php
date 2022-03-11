@@ -37,7 +37,7 @@ class ClassDefinitionMigrationHelper extends AbstractMigrationHelper
 
         if (empty($class)) {
             $classConfig = json_decode($configJson, true);
-            $class       = $this->create($classConfig['id'], $className);
+            $class = $this->create($classConfig['id'], $className);
         }
 
         Service::importClassDefinitionFromJson($class, $configJson, true);

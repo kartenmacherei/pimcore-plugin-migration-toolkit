@@ -11,7 +11,7 @@ abstract class AbstractMigrationHelper
 {
     use ClearCacheTrait;
 
-    const UP   = 'up';
+    const UP = 'up';
     const DOWN = 'down';
 
     protected OutputWriterInterface $output;
