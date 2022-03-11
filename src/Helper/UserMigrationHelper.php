@@ -17,13 +17,13 @@ class UserMigrationHelper extends AbstractMigrationHelper
 
         $user = User::create(
             [
-                'parentId' => 0,
-                'name' => $this->getLoginName($name, $surname),
-                'password' => md5(uniqid()),
-                'email' => trim($email),
+                'parentId'  => 0,
+                'name'      => $this->getLoginName($name, $surname),
+                'password'  => md5(uniqid()),
+                'email'     => trim($email),
                 'firstname' => trim($name),
-                'lastname' => trim($surname),
-                'active' => $isActive,
+                'lastname'  => trim($surname),
+                'active'    => $isActive,
             ]
         );
         $user->setAdmin($isAdmin);

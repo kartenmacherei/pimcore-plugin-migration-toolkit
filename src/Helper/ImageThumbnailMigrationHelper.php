@@ -11,12 +11,12 @@ use Pimcore\Model\Asset\Image\Thumbnail\Config as ThumbnailConfig;
 class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 {
     // bastodo: add support for other transformations
-    const TRANSFORMATION_CONTAIN = 'contain';
-    const TRANSFORMATION_COVER = 'cover';
-    const TRANSFORMATION_FRAME = 'frame';
-    const TRANSFORMATION_RESIZE = 'resize';
-    const TRANSFORMATION_SCALE_BY_HEIGHT = 'scaleByHeight';
-    const TRANSFORMATION_SCALE_BY_WIDTH = 'scaleByWidth';
+    const TRANSFORMATION_CONTAIN              = 'contain';
+    const TRANSFORMATION_COVER                = 'cover';
+    const TRANSFORMATION_FRAME                = 'frame';
+    const TRANSFORMATION_RESIZE               = 'resize';
+    const TRANSFORMATION_SCALE_BY_HEIGHT      = 'scaleByHeight';
+    const TRANSFORMATION_SCALE_BY_WIDTH       = 'scaleByWidth';
     const TRANSFORMATION_SET_BACKGROUND_COLOR = 'setBackgroundColor';
 
     const TRANSFORMATIONS_AVAILABLE = [
@@ -59,6 +59,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
                 'Not creating Thumbnail with name "%s". Thumbnail with this name already exists.',
                 $name
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -104,7 +105,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         ?string $mediaQuery = null
     ): void {
         $parameters = [
-            'width' => $width,
+            'width'  => $width,
             'height' => $height,
         ];
 
@@ -125,7 +126,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         ?string $mediaQuery = null
     ): void {
         $parameters = [
-            'height' => $height,
+            'height'      => $height,
             'forceResize' => $forceResize,
         ];
 
@@ -146,7 +147,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         ?string $mediaQuery = null
     ): void {
         $parameters = [
-            'width' => $width,
+            'width'       => $width,
             'forceResize' => $forceResize,
         ];
 
@@ -169,8 +170,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         ?string $mediaQuery = null
     ): void {
         $parameters = [
-            'height' => $height,
-            'width' => $width,
+            'height'      => $height,
+            'width'       => $width,
             'positioning' => $positioning,
             'forceResize' => $forceResize,
         ];
@@ -193,8 +194,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         ?string $mediaQuery = null
     ): void {
         $parameters = [
-            'height' => $height,
-            'width' => $width,
+            'height'      => $height,
+            'width'       => $width,
             'forceResize' => $forceResize,
         ];
 
@@ -216,8 +217,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         ?string $mediaQuery = null
     ): void {
         $parameters = [
-            'height' => $height,
-            'width' => $width,
+            'height'      => $height,
+            'width'       => $width,
             'forceResize' => $forceResize,
         ];
 
@@ -243,6 +244,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
                 'Not adding Background Color to Thumbnail with name "%s" Background Color (#hex) is not set.',
                 $thumbnail->getName()
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -272,8 +274,8 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         }
 
         $thumbnail = $this->getThumbnailByName($name);
-        $items = $thumbnail->getItems();
-        $medias = $thumbnail->getMedias();
+        $items     = $thumbnail->getItems();
+        $medias    = $thumbnail->getMedias();
 
         if (empty($mediaQuery)) {
             foreach ($items as $key => $item) {

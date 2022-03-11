@@ -16,7 +16,9 @@ class MySqlMigrationHelper extends AbstractMigrationHelper
     /**
      * @param string $sqlFile
      * @param string $direction
+     *
      * @return string
+     *
      * @throws NotFoundException
      */
     public function loadSqlFile(string $sqlFile, string $direction = self::UP): string

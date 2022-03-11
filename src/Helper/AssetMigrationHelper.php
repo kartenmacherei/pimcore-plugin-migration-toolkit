@@ -24,6 +24,7 @@ class AssetMigrationHelper extends AbstractMigrationHelper
                 'The Folder "%s" could not be created, because the parent does not exist',
                 $name
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -41,6 +42,7 @@ class AssetMigrationHelper extends AbstractMigrationHelper
             AssetService::createFolderByPath($path);
         } catch (Exception $exception) {
             $message = sprintf('The Folder "%s" could not be created.', $path);
+
             throw new InvalidSettingException($message);
         }
     }
@@ -60,6 +62,7 @@ class AssetMigrationHelper extends AbstractMigrationHelper
         if (empty($asset)) {
             $message = sprintf('Asset with id "%s" can not be deleted, because it does not exist.', $id);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
@@ -81,6 +84,7 @@ class AssetMigrationHelper extends AbstractMigrationHelper
         if (empty($asset)) {
             $message = sprintf('Asset with path "%s" can not be deleted, because it does not exist.', $path);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

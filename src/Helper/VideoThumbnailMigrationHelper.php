@@ -25,6 +25,7 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
      * @param int $audioBitrate
      *
      * @return VideoThumbnailConfig
+     *
      * @throws InvalidSettingException
      * @throws Exception
      */
@@ -58,6 +59,7 @@ class VideoThumbnailMigrationHelper extends AbstractMigrationHelper
 
     /**
      * @param string $name
+     *
      * @throws Exception
      */
     public function delete(string $name): void

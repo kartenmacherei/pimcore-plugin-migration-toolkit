@@ -3,13 +3,13 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Command;
 
 use Basilicom\PimcorePluginMigrationToolkit\Translation\Exception\InvalidTranslationFileFormatException;
+use Basilicom\PimcorePluginMigrationToolkit\Translation\TranslationService;
 use Exception;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Basilicom\PimcorePluginMigrationToolkit\Translation\TranslationService;
 
 class ImportTranslationsCommand extends AbstractCommand
 {

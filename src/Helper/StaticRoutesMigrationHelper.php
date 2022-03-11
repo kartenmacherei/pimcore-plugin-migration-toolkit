@@ -2,9 +2,9 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Exception;
 use Pimcore\Model\Staticroute;
-use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class StaticRoutesMigrationHelper extends AbstractMigrationHelper
 {
@@ -27,6 +27,7 @@ class StaticRoutesMigrationHelper extends AbstractMigrationHelper
                 'Not creating Static Route with name "%s". Static Route with this name already exists.',
                 $name
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -59,6 +60,7 @@ class StaticRoutesMigrationHelper extends AbstractMigrationHelper
         if (empty($route)) {
             $message = sprintf('Static Route with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

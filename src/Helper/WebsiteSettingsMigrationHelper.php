@@ -2,21 +2,21 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 use Exception;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\Document;
 use Pimcore\Model\Site;
 use Pimcore\Model\WebsiteSetting;
-use Basilicom\PimcorePluginMigrationToolkit\Exceptions\InvalidSettingException;
 
 class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
 {
-    const TYPE_TEXT = 'text';
+    const TYPE_TEXT     = 'text';
     const TYPE_DOCUMENT = 'document';
-    const TYPE_ASSET = 'asset';
-    const TYPE_OBJECT = 'object';
-    const TYPE_BOOL = 'bool';
+    const TYPE_ASSET    = 'asset';
+    const TYPE_OBJECT   = 'object';
+    const TYPE_BOOL     = 'bool';
 
     /**
      * @throws InvalidSettingException
@@ -47,6 +47,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
                     $name,
                     $documentId
                 );
+
                 throw new InvalidSettingException($message);
             }
         }
@@ -71,6 +72,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
                     $name,
                     $assetId
                 );
+
                 throw new InvalidSettingException($message);
             }
         }
@@ -95,6 +97,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
                     $name,
                     $objectId
                 );
+
                 throw new InvalidSettingException($message);
             }
         }
@@ -127,6 +130,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
                 $name
             );
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
@@ -137,6 +141,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
                     $name,
                     $language
                 );
+
                 throw new InvalidSettingException($message);
             }
         }
@@ -149,6 +154,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
                     $name,
                     $siteId
                 );
+
                 throw new InvalidSettingException($message);
             }
         }
@@ -182,6 +188,7 @@ class WebsiteSettingsMigrationHelper extends AbstractMigrationHelper
         if (empty($websiteSetting)) {
             $message = sprintf('Website Setting with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

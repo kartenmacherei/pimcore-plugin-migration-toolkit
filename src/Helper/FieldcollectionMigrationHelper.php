@@ -28,6 +28,7 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
                 $key,
                 $pathToJsonConfig
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -58,6 +59,7 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
                 'Fieldcollection "%s" could not be created.',
                 $key
             );
+
             throw new InvalidSettingException(
                 $message,
                 0,
@@ -76,6 +78,7 @@ class FieldcollectionMigrationHelper extends AbstractMigrationHelper
         if (empty($fieldcollection)) {
             $message = sprintf('Fieldcollection "%s" can not be deleted, because it does not exist.', $key);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 

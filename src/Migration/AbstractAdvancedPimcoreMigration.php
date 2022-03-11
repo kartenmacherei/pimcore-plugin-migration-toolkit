@@ -5,6 +5,7 @@ namespace Basilicom\PimcorePluginMigrationToolkit\Migration;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\AssetMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\BundleMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelper;
+use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassificationStoreMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\CustomLayoutMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DataObjectMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
@@ -28,23 +29,24 @@ use ReflectionClass;
 
 abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
 {
-    private ?WebsiteSettingsMigrationHelper $websiteSettingsMigrationHelper = null;
-    private ?StaticRoutesMigrationHelper $staticRoutesMigrationHelper = null;
-    private ?UserRolesMigrationHelper $userRolesMigrationHelper = null;
-    private ?UserMigrationHelper $userMigrationHelper = null;
-    private ?DocTypesMigrationHelper $docTypesMigrationHelper = null;
-    private ?BundleMigrationHelper $bundleMigrationHelper = null;
-    private ?ClassDefinitionMigrationHelper $classDefinitionMigrationHelper = null;
-    private ?ObjectbrickMigrationHelper $objectBrickMigrationHelper = null;
-    private ?FieldcollectionMigrationHelper $fieldCollectionMigrationHelper = null;
-    private ?CustomLayoutMigrationHelper $customLayoutMigrationHelper = null;
-    private ?DocumentMigrationHelper $documentMigrationHelper = null;
-    private ?DataObjectMigrationHelper $dataObjectMigrationHelper = null;
-    private ?AssetMigrationHelper $assetMigrationHelper = null;
-    private ?ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper = null;
-    private ?VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper = null;
-    private ?QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper = null;
-    private ?MySqlMigrationHelper $mySqlMigrationHelper = null;
+    private ?WebsiteSettingsMigrationHelper $websiteSettingsMigrationHelper         = null;
+    private ?StaticRoutesMigrationHelper $staticRoutesMigrationHelper               = null;
+    private ?UserRolesMigrationHelper $userRolesMigrationHelper                     = null;
+    private ?UserMigrationHelper $userMigrationHelper                               = null;
+    private ?DocTypesMigrationHelper $docTypesMigrationHelper                       = null;
+    private ?BundleMigrationHelper $bundleMigrationHelper                           = null;
+    private ?ClassDefinitionMigrationHelper $classDefinitionMigrationHelper         = null;
+    private ?ObjectbrickMigrationHelper $objectBrickMigrationHelper                 = null;
+    private ?FieldcollectionMigrationHelper $fieldCollectionMigrationHelper         = null;
+    private ?CustomLayoutMigrationHelper $customLayoutMigrationHelper               = null;
+    private ?DocumentMigrationHelper $documentMigrationHelper                       = null;
+    private ?DataObjectMigrationHelper $dataObjectMigrationHelper                   = null;
+    private ?AssetMigrationHelper $assetMigrationHelper                             = null;
+    private ?ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper           = null;
+    private ?VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper           = null;
+    private ?QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper     = null;
+    private ?MySqlMigrationHelper $mySqlMigrationHelper                             = null;
+    private ?ClassificationStoreMigrationHelper $classificationStoreMigrationHelper = null;
 
     private string $dataFolder = '';
 
@@ -53,8 +55,8 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         parent::__construct($connection, $logger);
 
         try {
-            $reflection = new ReflectionClass($this);
-            $path = str_replace($reflection->getShortName() . '.php', '', $reflection->getFileName());
+            $reflection       = new ReflectionClass($this);
+            $path             = str_replace($reflection->getShortName() . '.php', '', $reflection->getFileName());
             $this->dataFolder = $path . 'data/' . $reflection->getShortName();
         } catch (Exception $exception) {
             // do nothing
@@ -238,5 +240,15 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         }
 
         return $this->mySqlMigrationHelper;
+    }
+
+    public function getClassificationStoreMigrationHelper(): ClassificationStoreMigrationHelper
+    {
+        if ($this->classificationStoreMigrationHelper === null) {
+            $this->classificationStoreMigrationHelper = new ClassificationStoreMigrationHelper();
+            $this->classificationStoreMigrationHelper->setOutput($this->getOutputWriter());
+        }
+
+        return $this->classificationStoreMigrationHelper;
     }
 }

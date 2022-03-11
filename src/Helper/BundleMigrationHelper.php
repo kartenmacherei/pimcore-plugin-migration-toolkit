@@ -15,11 +15,11 @@ class BundleMigrationHelper extends AbstractMigrationHelper
     public function __construct()
     {
         /** @var PimcoreBundleManager $bundleManager */
-        $bundleManager = Pimcore::getKernel()->getContainer()->get(PimcoreBundleManager::class);
+        $bundleManager              = Pimcore::getKernel()->getContainer()->get(PimcoreBundleManager::class);
         $this->pimcoreBundleManager = $bundleManager;
 
         /** @var AssetsInstaller $assetsInstaller */
-        $assetsInstaller = Pimcore::getKernel()->getContainer()->get(AssetsInstaller::class);
+        $assetsInstaller       = Pimcore::getKernel()->getContainer()->get(AssetsInstaller::class);
         $this->assetsInstaller = $assetsInstaller;
     }
 
@@ -54,7 +54,7 @@ class BundleMigrationHelper extends AbstractMigrationHelper
      */
     private function setState(string $pluginId, bool $enabled): void
     {
-        $availableBundles = $this->pimcoreBundleManager->getAvailableBundles();
+        $availableBundles   = $this->pimcoreBundleManager->getAvailableBundles();
         $enabledBundleNames = $this->pimcoreBundleManager->getEnabledBundleNames();
 
         if (!in_array($pluginId, $availableBundles)) {
@@ -62,6 +62,7 @@ class BundleMigrationHelper extends AbstractMigrationHelper
                 'The bundle with the id "%s" does not exist.',
                 $pluginId
             );
+
             throw new InvalidSettingException($message);
         }
 

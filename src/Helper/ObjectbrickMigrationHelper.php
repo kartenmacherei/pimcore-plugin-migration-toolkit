@@ -30,6 +30,7 @@ class ObjectbrickMigrationHelper extends AbstractMigrationHelper
                 $key,
                 $pathToJsonConfig
             );
+
             throw new InvalidSettingException($message);
         }
 
@@ -64,6 +65,7 @@ class ObjectbrickMigrationHelper extends AbstractMigrationHelper
                 'Objectbrick "%s" could not be created.',
                 $key
             );
+
             throw new InvalidSettingException(
                 $message,
                 0,
@@ -79,6 +81,7 @@ class ObjectbrickMigrationHelper extends AbstractMigrationHelper
         if (empty($objectbricks)) {
             $message = sprintf('Objectbrick "%s" can not be deleted, because it does not exist.', $key);
             $this->getOutput()->writeMessage($message);
+
             return;
         }
 
@@ -89,6 +92,7 @@ class ObjectbrickMigrationHelper extends AbstractMigrationHelper
     {
         return $this->getJsonFileNameFor($className, self::UP);
     }
+
     public function getJsonDefinitionPathForDownMigration($className): string
     {
         return $this->getJsonFileNameFor($className, self::DOWN);

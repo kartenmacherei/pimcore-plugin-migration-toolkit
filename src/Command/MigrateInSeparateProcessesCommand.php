@@ -14,7 +14,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 {
     use ClearCacheTrait;
 
-    const LOG_EMPTY_LINE = '                                                            ';
+    const LOG_EMPTY_LINE     = '                                                            ';
     const LOG_SEPARATOR_LINE = '======================================================================================';
 
     protected static $defaultName = 'basilicom:migrations:migrate-in-separate-processes';
@@ -48,7 +48,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
         foreach ($unexecutedMigrations as $migration) {
             $migrationVersion = substr($migration, strrpos($migration, '\\') + 1);
-            $migrationPrefix = substr($migration, 0, strrpos($migration, '\\'));
+            $migrationPrefix  = substr($migration, 0, strrpos($migration, '\\'));
             $output->writeln(self::LOG_EMPTY_LINE);
             $output->writeln(self::LOG_SEPARATOR_LINE);
             $output->writeln('        Executing the migration ' . $migrationVersion . ' (' . $migrationPrefix . ')');

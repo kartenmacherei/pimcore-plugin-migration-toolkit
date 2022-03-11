@@ -2,15 +2,14 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Translation;
 
-use Pimcore\Model\Translation;
 use Basilicom\PimcorePluginMigrationToolkit\Translation\Exception\InvalidTranslationFileFormatException;
+use Pimcore\Model\Translation;
 
 class TranslationService
 {
     /**
      * @param string $filename
      * @param string $delimiter
-     *
      * @param bool $replaceExistingTranslation
      *
      * @throws InvalidTranslationFileFormatException
@@ -25,7 +24,6 @@ class TranslationService
     /**
      * @param string $filename
      * @param string $delimiter
-     *
      * @param bool $replaceExistingTranslation
      *
      * @throws InvalidTranslationFileFormatException
@@ -77,6 +75,7 @@ class TranslationService
         }
 
         fclose($fileResource);
+
         return $firstRow;
     }
 }
