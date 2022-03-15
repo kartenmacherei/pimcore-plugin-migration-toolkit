@@ -434,20 +434,28 @@ $assetMigrationHelper->deleteByPath('/asset1');
 Example: Up
 
 ```php
-$name = 'thumbnail';
 $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
-$imageThumbnailMigrationHelper->create($name, 'description');
-$imageThumbnailMigrationHelper->addTransformationFrame($name, 40, 50, true);
-$imageThumbnailMigrationHelper->removeTransformation($name, ImageThumbnailMigrationHelper::TRANSFORMATION_SET_BACKGROUND_COLOR);
-$imageThumbnailMigrationHelper->addTransformationSetBackgroundColor($name, '#888888');
+$thumbnail = $imageThumbnailMigrationHelper->create('thumbnail', 'description')
+->addTransformationFrame(40, 50, true)
+->removeTransformation(ImageThumbnailMigrationHelper::TRANSFORMATION_SET_BACKGROUND_COLOR)
+->addTransformationSetBackgroundColor('#888888');
 ```
+
+or updating an existing one:
+
+```php
+$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
+$thumbnail = $imageThumbnailMigrationHelper->getThumbnailByName('thumbnail')
+->addTransformationScaleByHeight(250)
+->addTransformationScaleByWidth(200);
+```
+
 
 Example: Down
 
 ```php
-$name = 'thumbnail';
 $imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
-$imageThumbnailMigrationHelper->delete($name);
+$imageThumbnailMigrationHelper->delete('thumbnail');
 ```
 
 ### Video Thumbnail

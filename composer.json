@@ -5,12 +5,22 @@
     "license": "GPL-3.0-or-later",
     "authors": [
         {
-            "name": "Basilicom",
-            "email": "kerstin.gerull@basilicom.de"
+            "name": "Kerstin Gerull",
+            "email": "kerstin.gerull@basilicom.de",
+            "homepage": "https://www.basilicom.de",
+            "role": "Developer"
         },
         {
-            "name": "Basilicom",
-            "email": "alexander.heidrich@basilicom.de"
+            "name": "Alexander Heidrich",
+            "email": "alexander.heidrich@basilicom.de",
+            "homepage": "https://www.basilicom.de",
+            "role": "Developer"
+        },
+        {
+            "name": "Fabian Fischer",
+            "email": "fabian.fischer@basilicom.de",
+            "homepage": "https://www.basilicom.de",
+            "role": "Developer"
         }
     ],
     "autoload": {

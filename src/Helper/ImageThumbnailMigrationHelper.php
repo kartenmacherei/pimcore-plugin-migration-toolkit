@@ -11,13 +11,13 @@ use Pimcore\Model\Asset\Image\Thumbnail\Config as ThumbnailConfig;
 class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 {
     // bastodo: add support for other transformations
-    const TRANSFORMATION_CONTAIN = 'contain';
-    const TRANSFORMATION_COVER = 'cover';
-    const TRANSFORMATION_FRAME = 'frame';
-    const TRANSFORMATION_RESIZE = 'resize';
-    const TRANSFORMATION_SCALE_BY_HEIGHT = 'scaleByHeight';
-    const TRANSFORMATION_SCALE_BY_WIDTH = 'scaleByWidth';
-    const TRANSFORMATION_SET_BACKGROUND_COLOR = 'setBackgroundColor';
+    public const TRANSFORMATION_CONTAIN = 'contain';
+    public const TRANSFORMATION_COVER = 'cover';
+    public const TRANSFORMATION_FRAME = 'frame';
+    public const TRANSFORMATION_RESIZE = 'resize';
+    public const TRANSFORMATION_SCALE_BY_HEIGHT = 'scaleByHeight';
+    public const TRANSFORMATION_SCALE_BY_WIDTH = 'scaleByWidth';
+    public const TRANSFORMATION_SET_BACKGROUND_COLOR = 'setBackgroundColor';
 
     const TRANSFORMATIONS_AVAILABLE = [
         self::TRANSFORMATION_CONTAIN,
@@ -29,18 +29,21 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         self::TRANSFORMATION_SET_BACKGROUND_COLOR,
     ];
 
+    protected ?ThumbnailConfig $thumbnailConfig = null;
+
     /**
      * @throws NotFoundException
      * @throws Exception
      */
-    private function getThumbnailByName(string $name): ThumbnailConfig
+    private function getThumbnailByName(string $name): ImageThumbnailMigrationHelper
     {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
             throw new NotFoundException('Thumbnail with name "' . $name . '" does not exist.');
         }
 
-        return $thumbnail;
+        $this->thumbnailConfig = $thumbnail;
+        return $this;
     }
 
     /**
@@ -52,7 +55,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         string $description = '',
         string $quality = '',
         string $format = ''
-    ): ThumbnailConfig {
+    ): ImageThumbnailMigrationHelper {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (!empty($thumbnail)) {
             $message = sprintf(
@@ -77,98 +80,109 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 
         $thumbnail->save();
 
+        $this->thumbnailConfig = $thumbnail;
+
         $this->clearCache();
 
-        return $thumbnail;
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
-    public function resetTransformations(string $name): void
+    public function resetTransformations(string $name): ImageThumbnailMigrationHelper
     {
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->setItems([]);
-        $thumbnail->setMedias([]);
-        $thumbnail->save();
+        $this->validateThumbnailConfig();
+        $this->thumbnailConfig->setItems([]);
+        $this->thumbnailConfig->setMedias([]);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
     public function addTransformationResize(
-        string $name,
         int $width,
         int $height,
         ?string $mediaQuery = null
-    ): void {
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         $parameters = [
             'width'  => $width,
             'height' => $height,
         ];
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->addItem(self::TRANSFORMATION_RESIZE, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_RESIZE, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
     public function addTransformationScaleByHeight(
-        string $name,
         int $height,
         bool $forceResize = false,
         ?string $mediaQuery = null
-    ): void {
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         $parameters = [
             'height'      => $height,
             'forceResize' => $forceResize,
         ];
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->addItem(self::TRANSFORMATION_SCALE_BY_HEIGHT, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_SCALE_BY_HEIGHT, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
     public function addTransformationScaleByWidth(
-        string $name,
         int $width,
         bool $forceResize = false,
         ?string $mediaQuery = null
-    ): void {
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         $parameters = [
             'width'       => $width,
             'forceResize' => $forceResize,
         ];
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->addItem(self::TRANSFORMATION_SCALE_BY_WIDTH, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_SCALE_BY_WIDTH, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
     public function addTransformationCover(
-        string $name,
         int $width,
         int $height,
         bool $forceResize = false,
         string $positioning = 'center',
         ?string $mediaQuery = null
-    ): void {
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         $parameters = [
             'height'      => $height,
             'width'       => $width,
@@ -176,73 +190,77 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
             'forceResize' => $forceResize,
         ];
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->addItem(self::TRANSFORMATION_COVER, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_COVER, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
     public function addTransformationContain(
-        string $name,
         int $width,
         int $height,
         bool $forceResize = false,
         ?string $mediaQuery = null
-    ): void {
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         $parameters = [
             'height'      => $height,
             'width'       => $width,
             'forceResize' => $forceResize,
         ];
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->addItem(self::TRANSFORMATION_CONTAIN, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_CONTAIN, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws NotFoundException
      */
     public function addTransformationFrame(
-        string $name,
         int $width,
         int $height,
         bool $forceResize = false,
         ?string $mediaQuery = null
-    ): void {
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         $parameters = [
             'height'      => $height,
             'width'       => $width,
             'forceResize' => $forceResize,
         ];
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $thumbnail->addItem(self::TRANSFORMATION_FRAME, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_FRAME, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws MigrationToolkitException
      */
     public function addTransformationSetBackgroundColor(
-        string $name,
         string $hexColor,
         ?string $mediaQuery = null
-    ): void {
-        $thumbnail = $this->getThumbnailByName($name);
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
 
         if (empty($hexColor)) {
             $message = sprintf(
                 'Not adding Background Color to Thumbnail with name "%s" Background Color (#hex) is not set.',
-                $thumbnail->getName()
+                $this->thumbnailConfig->getName()
             );
 
             throw new InvalidSettingException($message);
@@ -252,30 +270,35 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
             'color' => $hexColor
         ];
 
-        $thumbnail->addItem(self::TRANSFORMATION_SET_BACKGROUND_COLOR, $parameters, $mediaQuery);
-        $thumbnail->save();
+        $this->thumbnailConfig->addItem(self::TRANSFORMATION_SET_BACKGROUND_COLOR, $parameters, $mediaQuery);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
      * @throws MigrationToolkitException
      */
-    public function removeTransformation(string $name, string $transformationKey, ?string $mediaQuery)
-    {
+    public function removeTransformation(
+        string $transformationKey,
+        ?string $mediaQuery
+    ): ImageThumbnailMigrationHelper {
+        $this->validateThumbnailConfig();
+
         if (!in_array($transformationKey, self::TRANSFORMATIONS_AVAILABLE)) {
             $message = sprintf(
                 'Can not remove transformation "%s" from "%s", because it is empty or not supported yet.',
                 $transformationKey,
-                $name
+                $this->thumbnailConfig->getName()
             );
 
             throw new InvalidSettingException($message);
         }
 
-        $thumbnail = $this->getThumbnailByName($name);
-        $items = $thumbnail->getItems();
-        $medias = $thumbnail->getMedias();
+        $items = $this->thumbnailConfig->getItems();
+        $medias = $this->thumbnailConfig->getMedias();
 
         if (empty($mediaQuery)) {
             foreach ($items as $key => $item) {
@@ -288,7 +311,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
                 $message = sprintf(
                     'Media query "%s" is not registered in "%s". ' . PHP_EOL . 'Available: ' . PHP_EOL . '%s',
                     $mediaQuery,
-                    $name,
+                    $this->thumbnailConfig->getName(),
                     implode(PHP_EOL, array_keys($medias))
                 );
 
@@ -305,14 +328,16 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
                 unset($medias[$mediaQuery]);
             }
 
-            $thumbnail->setMedias($medias);
+            $this->thumbnailConfig->setMedias($medias);
         }
 
-        $thumbnail->setItems($items);
-        $thumbnail->setMedias($medias);
-        $thumbnail->save();
+        $this->thumbnailConfig->setItems($items);
+        $this->thumbnailConfig->setMedias($medias);
+        $this->thumbnailConfig->save();
 
         $this->clearCache();
+
+        return $this;
     }
 
     /**
@@ -320,15 +345,25 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
      */
     public function delete(string $name): void
     {
-        $thumbnail = $this->getThumbnailByName($name);
-        if (empty($thumbnail)) {
+        $this->getThumbnailByName($name);
+        if (empty($this->thumbnailConfig)) {
             $message = sprintf('Thumbnail with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
 
             return;
         }
 
-        $thumbnail->delete(true);
+        $this->thumbnailConfig->delete(true);
         $this->clearCache();
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    protected function validateThumbnailConfig()
+    {
+        if (empty($this->thumbnailConfig)) {
+            throw new NotFoundException('missing thumbnailConfig object.');
+        }
     }
 }
