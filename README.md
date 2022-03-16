@@ -253,28 +253,37 @@ $fieldcollectionMigrationHelper->createOrUpdate($key, $jsonPath);
 
 ### Classification Store
 
+Classification Stores cannot be created with given ID.
+
+But the ID is needed for the store field in a class.
+
+Therefore using the name is needed.
+
+But the name is not unique, so always use a unique name.
+
+So be aware of that.
+
 Example: Up
 
 ```php
 $groupName = 'GroupName';
-$storeId = 1;
+$fieldName = 'FieldName';
+$title = 'Title fo FieldName';
 
 $classificationStoreMigrationHelper = $this->getClassificationStoreMigrationHelper();
-$classificationStoreMigrationHelper->createOrUpdateStore(
-    $storeId,
-    'Name',
+$storeConfig = $classificationStoreMigrationHelper->createOrUpdateStore(
+    'StoreName',
     'Description'
 );
+
+// typehint says it should return int, but it is string
+$storeId = (int) $storeConfig->getId();
 
 $classificationStoreMigrationHelper->createOrUpdateGroup(
     $groupName,
     'Description',
     $storeId
 );
-
-
-$fieldName = 'FieldName';
-$title = 'Title fo FieldName';
 
 // Input
 $definition = new ClassDefinitionData\Input();
@@ -295,10 +304,14 @@ $classificationStoreMigrationHelper->createOrUpdateKey(
 Example: Down
 
 ```php
+$storeName = 'StoreName';
 $classificationStoreMigrationHelper = $this->getClassificationStoreMigrationHelper();
+$storeConfig = $classificationStoreMigrationHelper->getStoreByName($storeName);
+// typehint says it should return int, but it is string
+$storeId = (int) $storeConfig->getId();
 $classificationStoreMigrationHelper->deleteGroup($groupName, $storeId);
 $classificationStoreMigrationHelper->deleteKey($fieldName, $storeId);
-$classificationStoreMigrationHelper->deleteStore($storeId);
+$classificationStoreMigrationHelper->deleteStore($storeName);
 ```
 
 ## FieldDefinition Examples

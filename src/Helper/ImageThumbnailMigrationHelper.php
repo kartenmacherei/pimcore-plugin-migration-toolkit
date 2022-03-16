@@ -90,7 +90,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws NotFoundException
      */
-    public function resetTransformations(string $name): ImageThumbnailMigrationHelper
+    public function resetTransformations(): ImageThumbnailMigrationHelper
     {
         $this->validateThumbnailConfig();
         $this->thumbnailConfig->setItems([]);

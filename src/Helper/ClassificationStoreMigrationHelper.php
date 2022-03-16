@@ -2,40 +2,53 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit\Helper;
 
+use Basilicom\PimcorePluginMigrationToolkit\Exceptions\NotFoundException;
 use Pimcore\Model\DataObject\ClassDefinition\Data as ClassDefinitionData;
 use Pimcore\Model\DataObject\Classificationstore;
 
 class ClassificationStoreMigrationHelper extends AbstractMigrationHelper
 {
+    /**
+     * @throws NotFoundException
+     */
+    public function getStoreByName(string $name): Classificationstore\StoreConfig
+    {
+        $storeConfig = Classificationstore\StoreConfig::getByName($name);
+        if (empty($storeConfig)) {
+            $message = sprintf('StoreConfig with name "%s" can not be deleted, because it does not exist.', $name);
+
+            throw new NotFoundException($message);
+        }
+        return $storeConfig;
+    }
+
     public function createOrUpdateStore(
-        int $id,
         string $name,
         string $description
     ): Classificationstore\StoreConfig {
-        $store = Classificationstore\StoreConfig::getById($id);
-        if (empty($store)) {
-            $store = new Classificationstore\StoreConfig();
-            $store->setId($id);
+        $storeConfig = Classificationstore\StoreConfig::getByName($name);
+        if (empty($storeConfig)) {
+            $storeConfig = new Classificationstore\StoreConfig();
         }
 
-        $store->setName($name);
-        $store->setDescription($description);
-        $store->save();
+        $storeConfig->setName($name);
+        $storeConfig->setDescription($description);
+        $storeConfig->save();
 
-        return $store;
+        return $storeConfig;
     }
 
-    public function deleteStore(int $id)
+    public function deleteStore(string $name)
     {
-        $store = Classificationstore\StoreConfig::getById($id);
-        if (empty($store)) {
-            $message = sprintf('Store with id "%s" can not be deleted, because it does not exist.', $id);
+        $storeConfig = Classificationstore\StoreConfig::getByName($name);
+        if (empty($storeConfig)) {
+            $message = sprintf('Store with name "%s" can not be deleted, because it does not exist.', $name);
             $this->getOutput()->writeMessage($message);
 
             return;
         }
 
-        $store->delete();
+        $storeConfig->delete();
     }
 
     public function createOrUpdateGroup(
@@ -52,8 +65,22 @@ class ClassificationStoreMigrationHelper extends AbstractMigrationHelper
         $groupConfig->setDescription($description);
         $groupConfig->save();
 
+        $this->clearCache();
+
         return $groupConfig;
     }
+
+    public function renameGroup(string $oldName, string $newName, int $storeId)
+    {
+        $groupConfig = Classificationstore\GroupConfig::getByName($oldName, $storeId);
+        $groupConfig->setName($newName);
+        $groupConfig->save();
+
+        $this->clearCache();
+
+        return $groupConfig;
+    }
+
 
     public function deleteGroup(string $name, int $storeId)
     {
