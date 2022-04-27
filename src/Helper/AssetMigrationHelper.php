@@ -7,10 +7,56 @@ use Exception;
 use Pimcore\Model\Asset;
 use Pimcore\Model\Asset\Folder;
 use Pimcore\Model\Asset\Service as AssetService;
+use Pimcore\Model\Element\Service;
 
 class AssetMigrationHelper extends AbstractMigrationHelper
 {
-    // bastodo: add support for asset files
+    /**
+     * @throws Exception
+     */
+    public function createAsset(string $dataSource, string $targetFolderPath, ?string $assetKey = null): Asset
+    {
+        if (file_exists($dataSource) === false || is_readable($dataSource) === false) {
+            throw new Exception('could not find or read file for asset creation');
+        }
+
+        /** @var Asset\Folder $targetFolder */
+        $targetFolder = AssetService::createFolderByPath($targetFolderPath);
+
+        $fileinfo = pathinfo($dataSource);
+        $key = Service::getValidKey($assetKey ?? $fileinfo['basename'], 'asset');
+
+        $fullPath = $targetFolder->getFullPath() . '/' . $key;
+        if (Asset::getByPath($fullPath, true) instanceof Asset) {
+            $message = sprintf('The Asset "%s" could not be created, because already exists at "%s".', $key, $fullPath);
+            throw new InvalidSettingException($message);
+        }
+
+        $asset = new Asset();
+        $asset->setKey($key);
+        $asset->setParent($targetFolder);
+        $asset->setData(file_get_contents($dataSource));
+        $asset->save();
+
+        return $asset;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function updateAsset(Asset $asset, string $dataSource, ?string $newAssetName = null): void
+    {
+        if (file_exists($dataSource) === false || is_readable($dataSource) === false) {
+            throw new Exception('could not find or read file for asset creation');
+        }
+
+        $fileinfo = pathinfo($dataSource);
+        $key = Service::getValidKey($newAssetName ?? $fileinfo['basename'], 'asset');
+
+        $asset->setKey($key);
+        $asset->setData(file_get_contents($dataSource));
+        $asset->save();
+    }
 
     /**
      * @throws InvalidSettingException
