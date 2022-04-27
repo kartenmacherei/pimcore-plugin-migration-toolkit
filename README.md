@@ -424,6 +424,20 @@ $dataObjectMigrationHelper->deleteById(2);
 $dataObjectMigrationHelper->deleteByPath('/folder2');
 ```
 
+### Asset (File)
+Example: Up
+``` 
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$newAsset = $assetMigrationHelper->createAsset('./project/folder/asset.png', '/pimcore/asset/folder', 'myAsset.png');
+$assetMigrationHelper->updateAsset($newAsset, './project/folder/updatedAsset.png', 'updatedAsset.png');
+```
+Example: Down
+```
+$assetMigrationHelper = $this->getAssetMigrationHelper();
+$assetMigrationHelper->deleteById(2);
+$assetMigrationHelper->deleteByPath('/pimcore/asset/folder/myAsset.png');
+```
+
 ### Asset (Folder)
 
 Example: Up
