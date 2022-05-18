@@ -158,7 +158,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $workspaceDataObject = new WorkspaceDataObject();
         $workspaceDataObject->setUserId($role->getId());
         $workspaceDataObject->setCid($dataObject->getId());
-        $workspaceDataObject->setCpath($dataObject->getPath());
+        $workspaceDataObject->setCpath($dataObject->getFullPath());
         $workspaceDataObject->setList($list);
         $workspaceDataObject->setView($view);
         $workspaceDataObject->setSave($save);
