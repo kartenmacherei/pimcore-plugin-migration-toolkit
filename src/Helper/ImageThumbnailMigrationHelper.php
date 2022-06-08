@@ -43,6 +43,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
         }
 
         $this->thumbnailConfig = $thumbnail;
+
         return $this;
     }
 
