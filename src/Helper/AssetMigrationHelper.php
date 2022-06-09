@@ -29,6 +29,7 @@ class AssetMigrationHelper extends AbstractMigrationHelper
         $fullPath = $targetFolder->getFullPath() . '/' . $key;
         if (Asset::getByPath($fullPath, true) instanceof Asset) {
             $message = sprintf('The Asset "%s" could not be created, because already exists at "%s".', $key, $fullPath);
+
             throw new InvalidSettingException($message);
         }
 

@@ -19,6 +19,7 @@ class ClassificationStoreMigrationHelper extends AbstractMigrationHelper
 
             throw new NotFoundException($message);
         }
+
         return $storeConfig;
     }
 
@@ -80,7 +81,6 @@ class ClassificationStoreMigrationHelper extends AbstractMigrationHelper
 
         return $groupConfig;
     }
-
 
     public function deleteGroup(string $name, int $storeId)
     {
