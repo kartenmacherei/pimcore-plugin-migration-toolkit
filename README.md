@@ -124,25 +124,51 @@ Even when deleting a user role in the pimcore backend the workspace data stays i
 Example: Up
 
 ```php 
+$roleName = 'migrationRole';
+$path = '/';
+
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
 $userRolesMigrationHelper->create(
-    'migrationRole',
+    $roleName,
     ['dashboards', 'admin_translations'],
     ['doctype'],
     ['class'],
     ['de', 'en'],
     ['de']
 );
-$userRolesMigrationHelper->addWorkspaceDataObject($role,$path,true,true,false,true,false,true,true,true,true,true,true);
-$userRolesMigrationHelper->addWorkspaceDocument($role,$path,true,true,false,true,false,true,true,true,true,true,true);
-$userRolesMigrationHelper->addWorkspaceAsset($role,$path,true,true,false,true,false,true,true,true,true);
+
+$userRolesMigrationHelper->addWorkspaceDataObject($roleName, $path, true, true, false, true, false, false, false, false, false, false, false, 'layout1,layout2', 'de,en', 'de,en');
+$userRolesMigrationHelper->addWorkspaceDocument($roleName, $path, true, true, false, true, false, true, false, false, false, false, false);
+$userRolesMigrationHelper->addWorkspaceAsset($roleName, $path, true, true, true, false, false, false, false, false, false);
+
+// PHP 8 - Named Arguments with the same setting as above
+$userRolesMigrationHelper->addWorkspaceDataObject($roleName, $path, list: true, view: true, publish: true, layouts: 'product_productproductpolo', lEdit: 'en,de,de_CH,fr_CH', lView: 'en,de,de_CH,fr_CH');
+$userRolesMigrationHelper->addWorkspaceDocument($roleName, $path, list: true, view: true, publish: true);
+$userRolesMigrationHelper->addWorkspaceAsset($roleName, $path, list: true, view: true, publish: true);
+
 ```
 
 Example: Down
 
 ```php
+$roleName = 'migrationRole';
+$path = '/';
 $userRolesMigrationHelper = $this->getUserRolesMigrationHelper();
-$userRolesMigrationHelper->delete('migrationRole');
+
+$userRolesMigrationHelper->updateWorkspaceDataObject($roleName, $path, true, true, false, true, false, false, false, false, false, false, false, 'layout1,layout2', 'de,en', 'de,en');
+$userRolesMigrationHelper->updateWorkspaceDocument($roleName, $path, true, true, false, true, false, false, false, false, false, false, false);
+$userRolesMigrationHelper->updateWorkspaceAsset($roleName, $path, true, true, true, false, false, false, false, false, false);
+
+// PHP 8 - Named Arguments with the same setting as above
+$userRolesMigrationHelper->updateWorkspaceDataObject($roleName, $path, list: true, view: true, publish: true, layouts: 'product_productproductpolo', lEdit: 'en,de,de_CH,fr_CH', lView: 'en,de,de_CH,fr_CH');
+$userRolesMigrationHelper->updateWorkspaceDocument($roleName, $path, list: true, view: true, publish: true);
+$userRolesMigrationHelper->updateWorkspaceAsset($roleName, $path, list: true, view: true, publish: true);
+
+$userRolesMigrationHelper->deleteWorkspaceDataObject($roleName, $path);
+$userRolesMigrationHelper->deleteWorkspaceDocument($roleName, $path);
+$userRolesMigrationHelper->deleteWorkspaceAsset($roleName, $path);
+
+$userRolesMigrationHelper->delete($roleName);
 ```
 
 ### Document Types

@@ -7,7 +7,6 @@ use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\Document;
 use Pimcore\Model\User\Role;
-use Pimcore\Model\User\Workspace\AbstractWorkspace;
 use Pimcore\Model\User\Workspace\Asset as WorkspaceAsset;
 use Pimcore\Model\User\Workspace\DataObject as WorkspaceDataObject;
 use Pimcore\Model\User\Workspace\Document as WorkspaceDocument;
@@ -81,13 +80,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         array $perspectives = [],
         int $parentId = 0
     ): void {
-        $role = Role::getByName($name);
-
-        if (empty($role)) {
-            $message = sprintf('Not updating User Role with name "%s". User Role with this name does not exists.', $name);
-
-            throw new InvalidSettingException($message);
-        }
+        $role = $this->getRole($name, 'Not updating User Role with name "%s". User Role with this name does not exists.');
 
         if (!empty($parentId)) {
             $role->setParentId($parentId);
@@ -136,16 +129,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         string $lEdit = null,
         string $lView = null,
     ): void {
-        $role = Role::getByName($roleName);
-
-        if (empty($role)) {
-            $message = sprintf(
-                'Not adding WorkspaceDataObject to User Role with name "%s", because User Role does not exists.',
-                $roleName
-            );
-
-            throw new InvalidSettingException($message);
-        }
+        $role = $this->getRole($roleName, 'Not adding WorkspaceDataObject to User Role with name "%s", because User Role does not exists.');
 
         $dataObject = DataObject::getByPath($path);
 
@@ -201,34 +185,86 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         string $lEdit = null,
         string $lView = null,
     ): void {
-        $role = Role::getByName($roleName);
+        $role = $this->getRole($roleName, 'Not updating WorkspaceDataObject of User Role with name "%s", because User Role does not exists.');
 
-        if (empty($role)) {
+        $workspaceElements = $role->getWorkspacesObject();
+        $workspaceElementExists = false;
+
+        foreach ($workspaceElements as &$workspaceElement) {
+            /** @var WorkspaceDataObject */
+            if ($workspaceElement->getCpath() === $path) {
+                $workspaceElement->setList($list);
+                $workspaceElement->setView($view);
+                $workspaceElement->setSave($save);
+                $workspaceElement->setPublish($publish);
+                $workspaceElement->setUnpublish($unpublish);
+                $workspaceElement->setDelete($delete);
+                $workspaceElement->setRename($rename);
+                $workspaceElement->setCreate($create);
+                $workspaceElement->setSettings($settings);
+                $workspaceElement->setVersions($versions);
+                $workspaceElement->setProperties($properties);
+                $workspaceElement->setLayouts($layouts);
+                $workspaceElement->setLEdit($lEdit);
+                $workspaceElement->setLView($lView);
+
+                $workspaceElementExists = true;
+
+                break;
+            }
+        }
+
+        if (!$workspaceElementExists) {
             $message = sprintf(
-                'Not updating WorkspaceDataObject of User Role with name "%s", because User Role does not exists.',
-                $roleName
+                'Not updating WorkspaceDataObject of User Role with name "%s", because the workspace path "%s" does not exists.',
+                $roleName,
+                $path
             );
 
             throw new InvalidSettingException($message);
         }
 
-        $currentWorkspaceObject = $this->getWorkspaceElement($role->getWorkspacesObject(), $path, $roleName);
+        $role->setWorkspacesObject($workspaceElements);
+        $role->save();
 
-        $currentWorkspaceObject->setList($list);
-        $currentWorkspaceObject->setView($view);
-        $currentWorkspaceObject->setSave($save);
-        $currentWorkspaceObject->setPublish($publish);
-        $currentWorkspaceObject->setUnpublish($unpublish);
-        $currentWorkspaceObject->setDelete($delete);
-        $currentWorkspaceObject->setRename($rename);
-        $currentWorkspaceObject->setCreate($create);
-        $currentWorkspaceObject->setSettings($settings);
-        $currentWorkspaceObject->setVersions($versions);
-        $currentWorkspaceObject->setProperties($properties);
-        $currentWorkspaceObject->setLayouts($layouts);
-        $currentWorkspaceObject->setLEdit($lEdit);
-        $currentWorkspaceObject->setLView($lView);
-        $currentWorkspaceObject->save();
+        $this->clearCache();
+    }
+
+    /**
+     * @throws InvalidSettingException
+     */
+    public function deleteWorkspaceDataObject(string $roleName, string $path): void
+    {
+        $role = $this->getRole($roleName, 'Not deleting WorkspaceDataObject of User Role with name "%s", because User Role does not exists.');
+
+        $workspaceElements = $role->getWorkspacesObject();
+        $workspaceElementExists = false;
+
+        foreach ($workspaceElements as $key => $workspaceElement) {
+            /** @var WorkspaceDataObject */
+            if ($workspaceElement->getCpath() === $path) {
+                unset($workspaceElements[$key]);
+
+                $workspaceElementExists = true;
+
+                break;
+            }
+        }
+
+        if (!$workspaceElementExists) {
+            $message = sprintf(
+                'Not deleting WorkspaceDataObject of User Role with name "%s", because the workspace path "%s" does not exists.',
+                $roleName,
+                $path
+            );
+
+            $this->getOutput()->writeMessage($message);
+        }
+
+        $role->setWorkspacesObject($workspaceElements);
+        $role->save();
+
+        $this->clearCache();
     }
 
     public function addWorkspaceDocument(
@@ -246,16 +282,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         bool $versions = false,
         bool $properties = false
     ): void {
-        $role = Role::getByName($roleName);
-
-        if (empty($role)) {
-            $message = sprintf(
-                'Not adding WorkspaceDocument to User Role with name "%s", because User Role does not exists.',
-                $roleName
-            );
-
-            throw new InvalidSettingException($message);
-        }
+        $role = $this->getRole($roleName, 'Not adding WorkspaceDocument to User Role with name "%s", because User Role does not exists.');
 
         $document = Document::getByPath($path);
 
@@ -305,31 +332,83 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         bool $versions = false,
         bool $properties = false
     ): void {
-        $role = Role::getByName($roleName);
+        $role = $this->getRole($roleName, 'Not updating WorkspaceDocument of User Role with name "%s", because User Role does not exists.');
 
-        if (empty($role)) {
+        $workspaceElements = $role->getWorkspacesDocument();
+        $workspaceElementExists = false;
+
+        foreach ($workspaceElements as &$workspaceElement) {
+            /** @var WorkspaceDocument */
+            if ($workspaceElement->getCpath() === $path) {
+                $workspaceElement->setList($list);
+                $workspaceElement->setView($view);
+                $workspaceElement->setSave($save);
+                $workspaceElement->setPublish($publish);
+                $workspaceElement->setUnpublish($unpublish);
+                $workspaceElement->setDelete($delete);
+                $workspaceElement->setRename($rename);
+                $workspaceElement->setCreate($create);
+                $workspaceElement->setSettings($settings);
+                $workspaceElement->setVersions($versions);
+                $workspaceElement->setProperties($properties);
+
+                $workspaceElementExists = true;
+
+                break;
+            }
+        }
+
+        if (!$workspaceElementExists) {
             $message = sprintf(
-                'Not updating WorkspaceDocument of User Role with name "%s", because User Role does not exists.',
-                $roleName
+                'Not updating WorkspaceDocument of User Role with name "%s", because the workspace path "%s" does not exists.',
+                $roleName,
+                $path
             );
 
             throw new InvalidSettingException($message);
         }
 
-        $currentWorkspaceDocument = $this->getWorkspaceElement($role->getWorkspacesDocument(), $path, $roleName);
+        $role->setWorkspacesDocument($workspaceElements);
+        $role->save();
 
-        $currentWorkspaceDocument->setList($list);
-        $currentWorkspaceDocument->setView($view);
-        $currentWorkspaceDocument->setSave($save);
-        $currentWorkspaceDocument->setPublish($publish);
-        $currentWorkspaceDocument->setUnpublish($unpublish);
-        $currentWorkspaceDocument->setDelete($delete);
-        $currentWorkspaceDocument->setRename($rename);
-        $currentWorkspaceDocument->setCreate($create);
-        $currentWorkspaceDocument->setSettings($settings);
-        $currentWorkspaceDocument->setVersions($versions);
-        $currentWorkspaceDocument->setProperties($properties);
-        $currentWorkspaceDocument->save();
+        $this->clearCache();
+    }
+
+    /**
+     * @throws InvalidSettingException
+     */
+    public function deleteWorkspaceDocument(string $roleName, string $path): void
+    {
+        $role = $this->getRole($roleName, 'Not deleting WorkspaceDocument of User Role with name "%s", because User Role does not exists.');
+
+        $workspaceElements = $role->getWorkspacesDocument();
+        $workspaceElementExists = false;
+
+        foreach ($workspaceElements as $key => $workspaceElement) {
+            /** @var WorkspaceDocument */
+            if ($workspaceElement->getCpath() === $path) {
+                unset($workspaceElements[$key]);
+
+                $workspaceElementExists = true;
+
+                break;
+            }
+        }
+
+        if (!$workspaceElementExists) {
+            $message = sprintf(
+                'Not deleting WorkspaceDocument of User Role with name "%s", because the workspace path "%s" does not exists.',
+                $roleName,
+                $path
+            );
+
+            $this->getOutput()->writeMessage($message);
+        }
+
+        $role->setWorkspacesDocument($workspaceElements);
+        $role->save();
+
+        $this->clearCache();
     }
 
     public function addWorkspaceAsset(
@@ -345,16 +424,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         bool $versions = false,
         bool $properties = false
     ): void {
-        $role = Role::getByName($roleName);
-
-        if (empty($role)) {
-            $message = sprintf(
-                'Not adding WorkspaceAsset to User Role with name "%s", because User Role does not exists.',
-                $roleName
-            );
-
-            throw new InvalidSettingException($message);
-        }
+        $role = $this->getRole($roleName, 'Not adding WorkspaceAsset to User Role with name "%s", because User Role does not exists.');
 
         $asset = Asset::getByPath($path);
 
@@ -400,29 +470,81 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         bool $versions = false,
         bool $properties = false
     ): void {
-        $role = Role::getByName($roleName);
+        $role = $this->getRole($roleName, 'Not updating WorkspaceAsset of User Role with name "%s", because User Role does not exists.');
 
-        if (empty($role)) {
+        $workspaceElements = $role->getWorkspacesAsset();
+        $workspaceElementExists = false;
+
+        foreach ($workspaceElements as &$workspaceElement) {
+            /** @var WorkspaceAsset */
+            if ($workspaceElement->getCpath() === $path) {
+                $workspaceElement->setList($list);
+                $workspaceElement->setView($view);
+                $workspaceElement->setPublish($publish);
+                $workspaceElement->setDelete($delete);
+                $workspaceElement->setRename($rename);
+                $workspaceElement->setCreate($create);
+                $workspaceElement->setSettings($settings);
+                $workspaceElement->setVersions($versions);
+                $workspaceElement->setProperties($properties);
+
+                $workspaceElementExists = true;
+
+                break;
+            }
+        }
+
+        if (!$workspaceElementExists) {
             $message = sprintf(
-                'Not updating WorkspaceAsset of User Role with name "%s", because User Role does not exists.',
-                $roleName
+                'Not updating WorkspaceAsset of User Role with name "%s", because the workspace path "%s" does not exists.',
+                $roleName,
+                $path
             );
 
             throw new InvalidSettingException($message);
         }
 
-        $currentWorkspaceAsset = $this->getWorkspaceElement($role->getWorkspacesAsset(), $path, $roleName);
+        $role->setWorkspacesAsset($workspaceElements);
+        $role->save();
 
-        $currentWorkspaceAsset->setList($list);
-        $currentWorkspaceAsset->setView($view);
-        $currentWorkspaceAsset->setPublish($publish);
-        $currentWorkspaceAsset->setDelete($delete);
-        $currentWorkspaceAsset->setRename($rename);
-        $currentWorkspaceAsset->setCreate($create);
-        $currentWorkspaceAsset->setSettings($settings);
-        $currentWorkspaceAsset->setVersions($versions);
-        $currentWorkspaceAsset->setProperties($properties);
-        $currentWorkspaceAsset->save();
+        $this->clearCache();
+    }
+
+    /**
+     * @throws InvalidSettingException
+     */
+    public function deleteWorkspaceAsset(string $roleName, string $path): void
+    {
+        $role = $this->getRole($roleName, 'Not deleting WorkspaceAsset of User Role with name "%s", because User Role does not exists.');
+
+        $workspaceElements = $role->getWorkspacesAsset();
+        $workspaceElementExists = false;
+
+        foreach ($workspaceElements as $key => $workspaceElement) {
+            /** @var WorkspaceAsset */
+            if ($workspaceElement->getCpath() === $path) {
+                unset($workspaceElements[$key]);
+
+                $workspaceElementExists = true;
+
+                break;
+            }
+        }
+
+        if (!$workspaceElementExists) {
+            $message = sprintf(
+                'Not deleting WorkspaceAsset of User Role with name "%s", because the workspace path "%s" does not exists.',
+                $roleName,
+                $path
+            );
+
+            $this->getOutput()->writeMessage($message);
+        }
+
+        $role->setWorkspacesAsset($workspaceElements);
+        $role->save();
+
+        $this->clearCache();
     }
 
     public function delete(string $name): void
@@ -475,27 +597,19 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws InvalidSettingException
      */
-    private function getWorkspaceElement(array $workspaceElements, string $path, string $roleName): AbstractWorkspace
+    private function getRole(string $roleName, string $messageTemplate): Role
     {
-        $workspaceElement = null;
-        foreach ($workspaceElements as $element) {
-            if ($element->getCpath() === $path) {
-                $workspaceElement = $element;
+        $role = Role::getByName($roleName);
 
-                break;
-            }
-        }
-
-        if (empty($workspaceElement)) {
+        if (empty($role)) {
             $message = sprintf(
-                'Not updating WorkspaceElement of User Role with name "%s", because the path "%s" does not exists.',
-                $roleName,
-                $path
+                $messageTemplate,
+                $roleName
             );
 
             throw new InvalidSettingException($message);
         }
 
-        return $workspaceElement;
+        return $role;
     }
 }
