@@ -35,7 +35,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
      * @throws NotFoundException
      * @throws Exception
      */
-    private function getThumbnailByName(string $name): ImageThumbnailMigrationHelper
+    public function getThumbnailByName(string $name): ImageThumbnailMigrationHelper
     {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
