@@ -90,14 +90,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
             PIMCORE_PROJECT_ROOT
         );
 
-        $process->start();
-
-        $unexecutedMigrations = [];
-        foreach ($process as $type => $outputLine) {
-            if ($type === 'out') {
-                $unexecutedMigrations = explode(PHP_EOL, trim($outputLine));
-            }
-        }
+        $process->run();
+        $unexecutedMigrations = explode(PHP_EOL, $process->getOutput());
 
         return array_filter($unexecutedMigrations);
     }
