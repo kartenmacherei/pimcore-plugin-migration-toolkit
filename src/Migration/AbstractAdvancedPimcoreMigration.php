@@ -202,6 +202,9 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         return $this->assetMigrationHelper;
     }
 
+    /**
+     * @deprecated in favor of versioning YAML thumbnail configs in `./var/config/image-thumbnails/*.yaml`
+     */
     public function getImageThumbnailMigrationHelper(): ImageThumbnailMigrationHelper
     {
         if ($this->imageThumbnailMigrationHelper === null) {
