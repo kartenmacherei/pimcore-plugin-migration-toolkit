@@ -14,17 +14,27 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 {
     use ClearCacheTrait;
 
-    const LOG_EMPTY_LINE = '                                                            ';
-    const LOG_SEPARATOR_LINE = '======================================================================================';
+    private const OPTION_BUNDLE = 'bundle';
+    private const LOG_EMPTY_LINE = '                                                            ';
+    private const LOG_SEPARATOR_LINE = '======================================================================================';
+
 
     protected static $defaultName = 'basilicom:migrations:migrate-in-separate-processes';
 
     protected function configure()
     {
-        $this->setDescription(
-            'Executes the same migrations as the pimcore:migrations:migrate command, ' .
-            'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.'
-        );
+        $this
+            ->setDescription(
+                'Executes the same migrations as the pimcore:migrations:migrate command, ' .
+                'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.'
+            )
+            ->addOption(
+                self::OPTION_BUNDLE,
+                'b',
+                InputOption::VALUE_OPTIONAL,
+                'The bundle which should be migrated',
+                null
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -37,7 +47,8 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
             $eventDispatcher->removeListener(ConsoleEvents::TERMINATE, $listener);
         }
 
-        $unexecutedMigrations = $this->getUnexecutedMigrations();
+        $bundle = $input->getOption(self::OPTION_BUNDLE);
+        $unexecutedMigrations = $this->getUnexecutedMigrations($bundle);
 
         if (count($unexecutedMigrations) < 1) {
             $output->writeln('<info>No migrations to execute</info>');
@@ -83,13 +94,13 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
         return 0;
     }
 
-    protected function getUnexecutedMigrations()
+    protected function getUnexecutedMigrations(?string $bundle = null)
     {
-        $process = Process::fromShellCommandline(
-            'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'',
-            PIMCORE_PROJECT_ROOT
-        );
+        $command = $bundle
+            ? sprintf('bin/console doctrine:migrations:list --prefix="%s" | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'', $bundle)
+            : 'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'';
 
+        $process = Process::fromShellCommandline($command, PIMCORE_PROJECT_ROOT);
         $process->run();
         $unexecutedMigrations = explode(PHP_EOL, $process->getOutput());
 
