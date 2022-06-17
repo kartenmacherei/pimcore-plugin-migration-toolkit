@@ -8,6 +8,9 @@ use Basilicom\PimcorePluginMigrationToolkit\Exceptions\NotFoundException;
 use Exception;
 use Pimcore\Model\Asset\Image\Thumbnail\Config as ThumbnailConfig;
 
+/**
+ * @deprecated in favor of versioning YAML thumbnail configs in `./var/config/image-thumbnails/*.yaml`
+ */
 class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
 {
     // bastodo: add support for other transformations
@@ -35,7 +38,7 @@ class ImageThumbnailMigrationHelper extends AbstractMigrationHelper
      * @throws NotFoundException
      * @throws Exception
      */
-    private function getThumbnailByName(string $name): ImageThumbnailMigrationHelper
+    public function getThumbnailByName(string $name): ImageThumbnailMigrationHelper
     {
         $thumbnail = ThumbnailConfig::getByName($name);
         if (empty($thumbnail)) {
