@@ -7,6 +7,7 @@ use Pimcore;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -17,7 +18,6 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     private const OPTION_BUNDLE = 'bundle';
     private const LOG_EMPTY_LINE = '                                                            ';
     private const LOG_SEPARATOR_LINE = '======================================================================================';
-
 
     protected static $defaultName = 'basilicom:migrations:migrate-in-separate-processes';
 
