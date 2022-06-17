@@ -484,6 +484,8 @@ $assetMigrationHelper->deleteByPath('/asset1');
 
 ### Image Thumbnail
 
+⚠️ this helper is deprecated as Pimxore X is storing Image Thumbnails in YAML-files.
+
 Example: Up
 
 ```php
@@ -583,6 +585,13 @@ to prevent problems with PHP classes that changed during the runtime.
 
 ```shell 
 bin/console basilicom:migrations:migrate-in-separate-processes
+```
+
+You're also able to migrate only specific bundles using the bundle prefix.
+
+```shell 
+bin/console basilicom:migrations:migrate-in-separate-processes --bundle "App"
+bin/console basilicom:migrations:migrate-in-separate-processes --bundle "Pimcore"
 ```
 
 ### Import Translations

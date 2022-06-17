@@ -25,7 +25,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     {
         $this
             ->setDescription(
-                'Executes the same migrations as the pimcore:migrations:migrate command, ' .
+                'Executes the same migrations as the doctrine:migrations:execute command, ' .
                 'but each one is run in a separate process, to prevent problems with PHP classes that changed during the runtime.'
             )
             ->addOption(
