@@ -16,8 +16,9 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     use ClearCacheTrait;
 
     private const OPTION_BUNDLE = 'bundle';
+    private const OPTION_TIMEOUT = 'timeout';
     private const LOG_EMPTY_LINE = '                                                            ';
-    private const LOG_SEPARATOR_LINE = '======================================================================================';
+    private const LOG_SEPARATOR_LINE = '<info>======================================================================================</info>';
 
     protected static $defaultName = 'basilicom:migrations:migrate-in-separate-processes';
 
@@ -34,11 +35,21 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
                 InputOption::VALUE_OPTIONAL,
                 'The bundle which should be migrated',
                 null
+            )
+            ->addOption(
+                self::OPTION_TIMEOUT,
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'An optional timeout to allow execution of very huge migrations. Set "0" to disable timeout.',
+                120
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $bundle = $input->getOption(self::OPTION_BUNDLE);
+        $timeout = (int) $input->getOption(self::OPTION_TIMEOUT);
+
         $this->clearCache();
 
         // The following prevents problems when the container changes during runtime - which is the case with migrations
@@ -47,29 +58,36 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
             $eventDispatcher->removeListener(ConsoleEvents::TERMINATE, $listener);
         }
 
-        $bundle = $input->getOption(self::OPTION_BUNDLE);
-        $unexecutedMigrations = $this->getUnexecutedMigrations($bundle);
+        $idleMigrations = $this->getIdleMigrations($bundle);
 
-        if (count($unexecutedMigrations) < 1) {
-            $output->writeln('<info>No migrations to execute</info>');
+        if (count($idleMigrations) < 1) {
+            $output->writeln('<error>No migrations to execute</error>');
             exit(0);
         }
 
-        $output->writeln('Following migrations will be executed: ' . PHP_EOL . implode(PHP_EOL, $unexecutedMigrations));
+        $output->writeln(self::LOG_EMPTY_LINE);
+        $output->writeln(self::LOG_SEPARATOR_LINE);
+        $output->writeln('                           Following migrations will be executed:                           ');
+        $output->writeln(self::LOG_SEPARATOR_LINE);
+        $output->writeln(' > ' . implode(PHP_EOL . ' > ', $idleMigrations));
 
-        foreach ($unexecutedMigrations as $migration) {
+        if ($timeout <= 0) {
+            $output->writeln(PHP_EOL . '<comment>⚠️ Migration timeout has been disabled.</comment>' . PHP_EOL);
+        }
+
+        foreach ($idleMigrations as $migration) {
             $migrationVersion = substr($migration, strrpos($migration, '\\') + 1);
             $migrationPrefix = substr($migration, 0, strrpos($migration, '\\'));
             $output->writeln(self::LOG_EMPTY_LINE);
             $output->writeln(self::LOG_SEPARATOR_LINE);
-            $output->writeln('        Executing the migration ' . $migrationVersion . ' (' . $migrationPrefix . ')');
+            $output->writeln('        Executing the migration ' . $migrationVersion . ' (' . $migrationPrefix . ')        ');
             $output->writeln(self::LOG_SEPARATOR_LINE);
 
             $process = new Process(
                 ['bin/console', '--no-interaction', 'doctrine:migrations:execute', $migration],
                 PIMCORE_PROJECT_ROOT
             );
-            $process->setTimeout(120);
+            $process->setTimeout($timeout > 0 ? $timeout : null);
             $process->run(
                 function ($type, $buffer) use ($output) {
                     if (Process::ERR === $type) {
@@ -87,23 +105,26 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
 
         $output->writeln(self::LOG_EMPTY_LINE);
         $output->writeln(self::LOG_SEPARATOR_LINE);
-        $output->writeln('        Migrations finished');
+        $output->writeln('<info>                                  Migrations finished                                  </info>');
         $output->writeln(self::LOG_SEPARATOR_LINE);
         $output->writeln(self::LOG_EMPTY_LINE);
 
         return 0;
     }
 
-    protected function getUnexecutedMigrations(?string $bundle = null)
+    protected function getIdleMigrations(?string $bundle = null)
     {
         $command = $bundle
-            ? sprintf('bin/console doctrine:migrations:list --prefix="%s" | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'', $bundle)
+            ? sprintf(
+                'bin/console doctrine:migrations:list --prefix="%s" | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'',
+                $bundle
+            )
             : 'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'';
 
         $process = Process::fromShellCommandline($command, PIMCORE_PROJECT_ROOT);
         $process->run();
-        $unexecutedMigrations = explode(PHP_EOL, $process->getOutput());
+        $idleMigrations = explode(PHP_EOL, $process->getOutput());
 
-        return array_filter($unexecutedMigrations);
+        return array_filter($idleMigrations);
     }
 }

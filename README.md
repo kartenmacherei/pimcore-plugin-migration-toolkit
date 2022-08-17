@@ -592,6 +592,22 @@ You're also able to migrate only specific bundles using the bundle prefix.
 ```shell 
 bin/console basilicom:migrations:migrate-in-separate-processes --bundle "App"
 bin/console basilicom:migrations:migrate-in-separate-processes --bundle "Pimcore"
+
+bin/console basilicom:migrations:migrate-in-separate-processes -b "App"
+bin/console basilicom:migrations:migrate-in-separate-processes -b "Pimcore"
+```
+
+In some cases you might run migrations on large datasets. Therefor 120s of timeout per migration won't be enough. 
+To adapt the timeout just pass the `--timeout` option. To unset the timeout at all, pass `0`.
+
+```shell 
+bin/console basilicom:migrations:migrate-in-separate-processes --timeout 0
+bin/console basilicom:migrations:migrate-in-separate-processes --timeout 180
+```
+
+```shell 
+bin/console basilicom:migrations:migrate-in-separate-processes -t 0
+bin/console basilicom:migrations:migrate-in-separate-processes -t 180
 ```
 
 ### Import Translations
