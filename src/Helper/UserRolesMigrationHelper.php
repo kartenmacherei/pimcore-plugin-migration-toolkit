@@ -299,7 +299,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $workspaceDocument = new WorkspaceDocument();
         $workspaceDocument->setUserId($role->getId());
         $workspaceDocument->setCid($document->getId());
-        $workspaceDocument->setCpath($document->getPath());
+        $workspaceDocument->setCpath($document->getFullPath());
         $workspaceDocument->setList($list);
         $workspaceDocument->setView($view);
         $workspaceDocument->setSave($save);
@@ -441,7 +441,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $workspaceAsset = new WorkspaceAsset();
         $workspaceAsset->setUserId($role->getId());
         $workspaceAsset->setCid($asset->getId());
-        $workspaceAsset->setCpath($asset->getPath());
+        $workspaceAsset->setCpath($asset->getFullPath());
         $workspaceAsset->setList($list);
         $workspaceAsset->setView($view);
         $workspaceAsset->setPublish($publish);
