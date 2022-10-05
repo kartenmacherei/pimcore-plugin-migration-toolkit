@@ -2,7 +2,7 @@
 
 namespace Basilicom\PimcorePluginMigrationToolkit;
 
-use PackageVersions\Versions;
+use Composer\InstalledVersions;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 
 class PimcorePluginMigrationToolkitBundle extends AbstractPimcoreBundle
@@ -20,8 +20,6 @@ class PimcorePluginMigrationToolkitBundle extends AbstractPimcoreBundle
      */
     public function getVersion(): string
     {
-        $parts = explode('@', Versions::getVersion('basilicom/pimcore-plugin-migration-toolkit'));
-
-        return $parts[0];
+        return InstalledVersions::getVersion('basilicom/pimcore-plugin-migration-toolkit');
     }
 }
