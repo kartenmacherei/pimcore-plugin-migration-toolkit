@@ -84,7 +84,7 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
             $output->writeln(self::LOG_SEPARATOR_LINE);
 
             $process = new Process(
-                ['bin/console', '--no-interaction', 'doctrine:migrations:execute', $migration],
+                ['bin/console', 'doctrine:migrations:execute', '--no-interaction', '--ignore-maintenance-mode', $migration],
                 PIMCORE_PROJECT_ROOT
             );
             $process->setTimeout($timeout > 0 ? $timeout : null);
@@ -116,10 +116,10 @@ class MigrateInSeparateProcessesCommand extends AbstractCommand
     {
         $command = $bundle
             ? sprintf(
-                'bin/console doctrine:migrations:list --prefix="%s" | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'',
+                'bin/console --ignore-maintenance-mode doctrine:migrations:list --prefix="%s" | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'',
                 $bundle
             )
-            : 'bin/console doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'';
+            : 'bin/console --ignore-maintenance-mode doctrine:migrations:list | grep "not migrated" | cut -d"|" -f2 | awk \'{$1=$1};1\'';
 
         $process = Process::fromShellCommandline($command, PIMCORE_PROJECT_ROOT);
         $process->run();
