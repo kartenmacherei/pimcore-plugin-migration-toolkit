@@ -8,17 +8,14 @@ use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassDefinitionMigrationHelpe
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ClassificationStoreMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\CustomLayoutMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DataObjectMigrationHelper;
-use Basilicom\PimcorePluginMigrationToolkit\Helper\DocTypesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\DocumentMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\FieldcollectionMigrationHelper;
-use Basilicom\PimcorePluginMigrationToolkit\Helper\ImageThumbnailMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\MySqlMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\ObjectbrickMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\QuantityValueUnitMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\StaticRoutesMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\UserRolesMigrationHelper;
-use Basilicom\PimcorePluginMigrationToolkit\Helper\VideoThumbnailMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\Helper\WebsiteSettingsMigrationHelper;
 use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Connection;
@@ -33,7 +30,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
     private ?StaticRoutesMigrationHelper $staticRoutesMigrationHelper = null;
     private ?UserRolesMigrationHelper $userRolesMigrationHelper = null;
     private ?UserMigrationHelper $userMigrationHelper = null;
-    private ?DocTypesMigrationHelper $docTypesMigrationHelper = null;
     private ?BundleMigrationHelper $bundleMigrationHelper = null;
     private ?ClassDefinitionMigrationHelper $classDefinitionMigrationHelper = null;
     private ?ObjectbrickMigrationHelper $objectBrickMigrationHelper = null;
@@ -42,8 +38,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
     private ?DocumentMigrationHelper $documentMigrationHelper = null;
     private ?DataObjectMigrationHelper $dataObjectMigrationHelper = null;
     private ?AssetMigrationHelper $assetMigrationHelper = null;
-    private ?ImageThumbnailMigrationHelper $imageThumbnailMigrationHelper = null;
-    private ?VideoThumbnailMigrationHelper $videoThumbnailMigrationHelper = null;
     private ?QuantityValueUnitMigrationHelper $quantityValueUnitMigrationHelper = null;
     private ?MySqlMigrationHelper $mySqlMigrationHelper = null;
     private ?ClassificationStoreMigrationHelper $classificationStoreMigrationHelper = null;
@@ -110,16 +104,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         }
 
         return $this->userMigrationHelper;
-    }
-
-    public function getDocTypesMigrationHelper(): DocTypesMigrationHelper
-    {
-        if ($this->docTypesMigrationHelper === null) {
-            $this->docTypesMigrationHelper = new DocTypesMigrationHelper();
-            $this->docTypesMigrationHelper->setOutput($this->getOutputWriter());
-        }
-
-        return $this->docTypesMigrationHelper;
     }
 
     public function getBundleMigrationHelper(): BundleMigrationHelper
@@ -200,29 +184,6 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
         }
 
         return $this->assetMigrationHelper;
-    }
-
-    /**
-     * @deprecated in favor of versioning YAML thumbnail configs in `./var/config/image-thumbnails/*.yaml`
-     */
-    public function getImageThumbnailMigrationHelper(): ImageThumbnailMigrationHelper
-    {
-        if ($this->imageThumbnailMigrationHelper === null) {
-            $this->imageThumbnailMigrationHelper = new ImageThumbnailMigrationHelper();
-            $this->imageThumbnailMigrationHelper->setOutput($this->getOutputWriter());
-        }
-
-        return $this->imageThumbnailMigrationHelper;
-    }
-
-    public function getVideoThumbnailMigrationHelper(): VideoThumbnailMigrationHelper
-    {
-        if ($this->videoThumbnailMigrationHelper === null) {
-            $this->videoThumbnailMigrationHelper = new VideoThumbnailMigrationHelper();
-            $this->videoThumbnailMigrationHelper->setOutput($this->getOutputWriter());
-        }
-
-        return $this->videoThumbnailMigrationHelper;
     }
 
     public function getQuantityValueUnitMigrationHelper(): QuantityValueUnitMigrationHelper

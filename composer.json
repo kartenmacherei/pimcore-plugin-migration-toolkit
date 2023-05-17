@@ -30,6 +30,6 @@
     },
     "require": {
         "php": "^8.0",
-        "pimcore/pimcore": "^10.0"
+        "pimcore/pimcore": "^10.0 || ^11.0"
     }
 }

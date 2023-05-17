@@ -171,23 +171,6 @@ $userRolesMigrationHelper->deleteWorkspaceAsset($roleName, $path);
 $userRolesMigrationHelper->delete($roleName);
 ```
 
-### Document Types
-
-Example: Up
-
-```php 
-$docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
-$docTypesMigrationHelper->create('doktype', 'controller');
-$docTypesMigrationHelper->update('doktype', 'newDoctype', 'newcontroller');
-```
-
-Example: Down
-
-```php
-$docTypesMigrationHelper = $this->getDocTypesMigrationHelper();
-$docTypesMigrationHelper->delete('newDoctype');
-```
-
 ### Bundle / Extension
 
 It is not possible to enable and install one bundle in one migration!
@@ -480,56 +463,6 @@ Example: Down
 $assetMigrationHelper = $this->getAssetMigrationHelper();
 $assetMigrationHelper->deleteById(2);
 $assetMigrationHelper->deleteByPath('/asset1');
-```
-
-### Image Thumbnail
-
-⚠️ this helper is deprecated as Pimxore X is storing Image Thumbnails in YAML-files.
-
-Example: Up
-
-```php
-$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
-$thumbnail = $imageThumbnailMigrationHelper->create('thumbnail', 'description')
-->addTransformationFrame(40, 50, true)
-->removeTransformation(ImageThumbnailMigrationHelper::TRANSFORMATION_SET_BACKGROUND_COLOR)
-->addTransformationSetBackgroundColor('#888888');
-```
-
-or updating an existing one:
-
-```php
-$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
-$thumbnail = $imageThumbnailMigrationHelper->getThumbnailByName('thumbnail')
-->addTransformationScaleByHeight(250)
-->addTransformationScaleByWidth(200);
-```
-
-
-Example: Down
-
-```php
-$imageThumbnailMigrationHelper = $this->getImageThumbnailMigrationHelper();
-$imageThumbnailMigrationHelper->delete('thumbnail');
-```
-
-### Video Thumbnail
-
-Example: Up
-
-```php
-$name = 'thumbnail';
-$videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
-$videoThumbnailMigrationHelper->create($name, 'description');
-
-```
-
-Example: Down
-
-```php
-$name = 'thumbnail';
-$videoThumbnailMigrationHelper = $this->getVideoThumbnailMigrationHelper();
-$videoThumbnailMigrationHelper->delete($name);
 ```
 
 ### QuantityValue Unit

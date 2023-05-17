@@ -190,7 +190,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $workspaceElements = $role->getWorkspacesObject();
         $workspaceElementExists = false;
 
-        foreach ($workspaceElements as &$workspaceElement) {
+        foreach ($workspaceElements as $workspaceElement) {
             /** @var WorkspaceDataObject */
             if ($workspaceElement->getCpath() === $path) {
                 $workspaceElement->setList($list);
@@ -337,7 +337,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $workspaceElements = $role->getWorkspacesDocument();
         $workspaceElementExists = false;
 
-        foreach ($workspaceElements as &$workspaceElement) {
+        foreach ($workspaceElements as $workspaceElement) {
             /** @var WorkspaceDocument */
             if ($workspaceElement->getCpath() === $path) {
                 $workspaceElement->setList($list);
@@ -475,7 +475,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
         $workspaceElements = $role->getWorkspacesAsset();
         $workspaceElementExists = false;
 
-        foreach ($workspaceElements as &$workspaceElement) {
+        foreach ($workspaceElements as $workspaceElement) {
             /** @var WorkspaceAsset */
             if ($workspaceElement->getCpath() === $path) {
                 $workspaceElement->setList($list);
@@ -562,7 +562,7 @@ class UserRolesMigrationHelper extends AbstractMigrationHelper
     }
 
     private function addSharedTranslationSettings(
-        Role &$role,
+        Role $role,
         array $viewWebsiteTranslations,
         array $editWebsiteTranslations
     ): void {

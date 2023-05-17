@@ -8,7 +8,6 @@ use Pimcore\Model\Document;
 use Pimcore\Model\Document\Page;
 use Pimcore\Model\Document\Service as DocumentService;
 use Pimcore\Model\Element\Service;
-use Pimcore\Model\Property\Predefined as PredefinedProperty;
 
 class DocumentMigrationHelper extends AbstractMigrationHelper
 {
@@ -209,43 +208,6 @@ class DocumentMigrationHelper extends AbstractMigrationHelper
         }
 
         $document->delete();
-    }
-
-    public function createOrUpdatePredefinedProperty(
-        string $key,
-        string $name,
-        string $description,
-        string $type,
-        string $contentType,
-        bool $isInheritable = true
-    ): PredefinedProperty {
-        try {
-            $property = PredefinedProperty::getByKey($key);
-        } catch (Exception $e) {
-            $property = null;
-        }
-
-        if (!$property) {
-            $property = PredefinedProperty::create();
-            $property->setKey($key);
-        }
-
-        $property->setName($name);
-        $property->setDescription($description);
-        $property->setType($type);
-        $property->setCtype($contentType);
-        $property->setInheritable($isInheritable);
-        $property->save();
-
-        return $property;
-    }
-
-    public function removePredefinedProperty(string $key): void
-    {
-        $property = PredefinedProperty::getByKey($key);
-        if ($property) {
-            $property->delete();
-        }
     }
 
     public function shouldPublish(): bool
