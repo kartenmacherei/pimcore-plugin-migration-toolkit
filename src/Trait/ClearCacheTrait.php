@@ -3,7 +3,7 @@
 namespace Basilicom\PimcorePluginMigrationToolkit\Trait;
 
 use Pimcore\Cache;
-use Pimcore\Cache\Runtime as RuntimeCache;
+use Pimcore\Cache\RuntimeCache;
 
 trait ClearCacheTrait
 {
