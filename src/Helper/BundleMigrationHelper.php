@@ -11,14 +11,9 @@ class BundleMigrationHelper extends AbstractMigrationHelper
     private PimcoreBundleManager $pimcoreBundleManager;
     private AssetsInstaller $assetsInstaller;
 
-    public function __construct()
+    public function __construct(PimcoreBundleManager $bundleManager, AssetsInstaller $assetsInstaller)
     {
-        /** @var PimcoreBundleManager $bundleManager */
-        $bundleManager = Pimcore::getKernel()->getContainer()->get(PimcoreBundleManager::class);
         $this->pimcoreBundleManager = $bundleManager;
-
-        /** @var AssetsInstaller $assetsInstaller */
-        $assetsInstaller = Pimcore::getKernel()->getContainer()->get(AssetsInstaller::class);
         $this->assetsInstaller = $assetsInstaller;
     }
 

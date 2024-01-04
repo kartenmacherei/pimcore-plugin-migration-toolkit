@@ -13,10 +13,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CustomLayoutMigrationHelper extends AbstractMigrationHelper
 {
     protected string $dataFolder;
+    protected SerializerInterface $serializer;
 
-    public function __construct(string $dataFolder)
+    public function __construct(string $dataFolder, SerializerInterface $serializer)
     {
         $this->dataFolder = $dataFolder;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -42,7 +44,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         }
 
         try {
-            $configJson = $this->decodeJson((string) file_get_contents($pathToJsonConfig));
+            $configJson = $this->decodeJson((string)file_get_contents($pathToJsonConfig));
             $layoutDefinition = Service::generateLayoutTreeFromArray($configJson['layoutDefinitions'], true);
             $customLayout->setLayoutDefinitions($layoutDefinition);
             $customLayout->setDescription($configJson['description']);
@@ -116,13 +118,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
 
     protected function decodeJson(string $json): array
     {
-        $serializer = Pimcore::getKernel()->getContainer()->get('serializer');
-        $context = [
-            'json_decode_associative' => true
-        ];
-
-        /** @var SerializerInterface|DecoderInterface $serializer */
-        return $serializer->decode($json, 'json', $context);
+        return $this->serializer->decode($json, 'json', ['json_decode_associative' => true]);
     }
 
     public function getJsonDefinitionPathForUpMigration(string $layoutName, string $classId): string

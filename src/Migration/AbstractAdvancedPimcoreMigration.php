@@ -22,8 +22,14 @@ use Basilicom\PimcorePluginMigrationToolkit\OutputWriter\CallbackOutputWriter;
 use Doctrine\DBAL\Connection;
 use Doctrine\Migrations\AbstractMigration;
 use Exception;
+use Pimcore;
+use Pimcore\Extension\Bundle\PimcoreBundleManager;
+use Pimcore\Tool\AssetsInstaller;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
 {
@@ -54,8 +60,7 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
             $reflection = new ReflectionClass($this);
             $path = str_replace($reflection->getShortName() . '.php', '', $reflection->getFileName());
             $this->dataFolder = $path . 'data/' . $reflection->getShortName();
-        } catch (Exception $exception) {
-            // do nothing
+        } catch (Exception) {
         }
     }
 
@@ -111,7 +116,10 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
     public function getBundleMigrationHelper(): BundleMigrationHelper
     {
         if ($this->bundleMigrationHelper === null) {
-            $this->bundleMigrationHelper = new BundleMigrationHelper();
+            $bundleManager = Pimcore::getContainer()->get(PimcoreBundleManager::class);
+            $assetsInstaller = Pimcore::getContainer()->get(AssetsInstaller::class);
+
+            $this->bundleMigrationHelper = new BundleMigrationHelper($bundleManager, $assetsInstaller);
             $this->bundleMigrationHelper->setOutput($this->getOutputWriter());
         }
 
@@ -151,7 +159,11 @@ abstract class AbstractAdvancedPimcoreMigration extends AbstractMigration
     public function getCustomLayoutMigrationHelper(): CustomLayoutMigrationHelper
     {
         if ($this->customLayoutMigrationHelper === null) {
-            $this->customLayoutMigrationHelper = new CustomLayoutMigrationHelper($this->dataFolder);
+            $encoders = [new JsonEncoder()];
+            $normalizers = [new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+
+            $this->customLayoutMigrationHelper = new CustomLayoutMigrationHelper($this->dataFolder, $serializer);
             $this->customLayoutMigrationHelper->setOutput($this->getOutputWriter());
         }
 
