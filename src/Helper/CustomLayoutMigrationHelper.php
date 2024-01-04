@@ -23,7 +23,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
      * @throws InvalidSettingException
      * @throws Exception
      */
-    public function createOrUpdate(string $layoutName, string $classId, string $pathToJsonConfig)
+    public function createOrUpdate(string $layoutName, string $classId, string $pathToJsonConfig): void
     {
         if (!file_exists($pathToJsonConfig)) {
             $message = sprintf(
@@ -42,11 +42,8 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         }
 
         try {
-            $configJson = $this->decodeJson(file_get_contents($pathToJsonConfig));
-            $layoutDefinition = Service::generateLayoutTreeFromArray(
-                $configJson['layoutDefinitions'],
-                true
-            );
+            $configJson = $this->decodeJson((string) file_get_contents($pathToJsonConfig));
+            $layoutDefinition = Service::generateLayoutTreeFromArray($configJson['layoutDefinitions'], true);
             $customLayout->setLayoutDefinitions($layoutDefinition);
             $customLayout->setDescription($configJson['description']);
             $customLayout->setDefault($configJson['default']);
@@ -99,7 +96,7 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
     /**
      * @throws Exception
      */
-    public function delete(string $layoutName, string $classId)
+    public function delete(string $layoutName, string $classId): void
     {
         $customLayout = CustomLayout::getByNameAndClassId($layoutName, $classId);
 
@@ -117,33 +114,12 @@ class CustomLayoutMigrationHelper extends AbstractMigrationHelper
         $customLayout->delete();
     }
 
-    /**
-     * Decodes a JSON string into an array/object
-     *
-     * @param mixed $json The data to be decoded
-     * @param bool  $associative Whether to decode into associative array or object
-     * @param array $context Context to pass to serializer when using serializer component
-     * @param bool  $useAdminSerializer
-     *
-     * @return array
-     */
-    protected function decodeJson(
-        $json,
-        $associative = true,
-        array $context = [],
-        bool $useAdminSerializer = true
-    ): array {
-        $container = Pimcore::getKernel()->getContainer();
-
-        if ($useAdminSerializer) {
-            $serializer = $container->get('pimcore_admin.serializer');
-        } else {
-            $serializer = $container->get('serializer');
-        }
-
-        if ($associative) {
-            $context['json_decode_associative'] = true;
-        }
+    protected function decodeJson(string $json): array
+    {
+        $serializer = Pimcore::getKernel()->getContainer()->get('serializer');
+        $context = [
+            'json_decode_associative' => true
+        ];
 
         /** @var SerializerInterface|DecoderInterface $serializer */
         return $serializer->decode($json, 'json', $context);
