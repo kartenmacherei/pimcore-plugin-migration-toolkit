@@ -1,4 +1,5 @@
 # Pimcore Plugin Migration Toolkit
+License: GPL v3
 
 ## Version information
 
