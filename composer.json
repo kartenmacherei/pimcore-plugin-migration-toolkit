@@ -1,5 +1,5 @@
 {
-    "name": "basilicom/pimcore-plugin-migration-toolkit",
+    "name": "kartenmacherei/pimcore-plugin-migration-toolkit",
     "description": "Set of Migration Helpers and further Migration Tools for Pimcore Migrations.",
     "type": "pimcore-bundle",
     "license": "GPL-3.0-or-later",
